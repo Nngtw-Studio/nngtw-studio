@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0C0C0C"/>
+      <stop offset="30%" stop-color="#1a0a0a"/>
+      <stop offset="60%" stop-color="#2d1010"/>
+      <stop offset="100%" stop-color="#1a0505"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="60%" cy="35%" r="45%">
+      <stop offset="0%" stop-color="#F58A1F" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#F58A1F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="20%" cy="70%" r="35%">
+      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <rect width="1920" height="1080" fill="url(#glow2)"/>
+  <!-- Crown silhouette -->
+  <g transform="translate(860, 280)" opacity="0.12" fill="#F58A1F">
+    <path d="M100,0 L120,80 L160,40 L200,100 L200,160 L0,160 L0,100 L40,40 L80,80 Z"/>
+  </g>
+  <!-- Battlefield lines -->
+  <g opacity="0.06" stroke="#F2EFE7" stroke-width="1" fill="none">
+    <line x1="0" y1="900" x2="1920" y2="900"/>
+    <line x1="0" y1="950" x2="1920" y2="950"/>
+    <circle cx="960" cy="500" r="300"/>
+    <circle cx="960" cy="500" r="450"/>
+  </g>
+  <!-- Summoning runes -->
+  <g opacity="0.1" stroke="#F58A1F" stroke-width="2" fill="none">
+    <polygon points="960,150 980,200 920,200"/>
+    <rect x="900" y="700" width="120" height="120" transform="rotate(45 960 760)"/>
+  </g>
+</svg>

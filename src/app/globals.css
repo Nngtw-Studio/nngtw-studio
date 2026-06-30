@@ -1,0 +1,116 @@
+/** @format */
+
+@import 'tailwindcss';
+
+@theme inline {
+  --color-brand-orange: #f58a1f;
+  --color-brand-bg: #1a0f0f;
+  --color-brand-black: #090909;
+  --color-brand-white: #f2efe7;
+  --color-brand-grey: #8b8b8b;
+  --color-brand-muted: #3a3530;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-white);
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+::selection {
+  background-color: color-mix(
+    in srgb,
+    var(--color-brand-orange) 35%,
+    transparent
+  );
+  color: var(--color-brand-white);
+}
+
+@utility font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+@utility font-body {
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@utility font-secondary {
+  font-family: var(--font-secondary), Georgia, serif;
+}
+
+@utility font-accent {
+  font-family: var(--font-accent), 'Times New Roman', serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .section-padding {
+    @apply px-6 md:px-12 lg:px-20 xl:px-28 py-28 md:py-40;
+  }
+
+  /* Display headings: luxurious, heavy, title case — never uppercase */
+  .editorial-heading {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  /* Small editorial labels: Posterama accent, uppercase, wide tracking */
+  .label-overline {
+    font-family: var(--font-accent), 'Times New Roman', serif;
+    font-size: 0.625rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .accent-line {
+    @apply h-px w-10 bg-brand-orange;
+  }
+
+  .glass-panel {
+    background: color-mix(in srgb, var(--color-brand-white) 3%, transparent);
+    border: 1px solid
+      color-mix(in srgb, var(--color-brand-white) 6%, transparent);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Scrollbar — neutral, unobtrusive */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(
+    in srgb,
+    var(--color-brand-white) 12%,
+    transparent
+  );
+  border-radius: 2px;
+}

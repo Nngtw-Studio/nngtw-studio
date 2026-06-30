@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="40%" stop-color="#0f2847"/>
+      <stop offset="70%" stop-color="#1a4a3a"/>
+      <stop offset="100%" stop-color="#0C0C0C"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="30%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#F58A1F" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#F58A1F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="75%" cy="65%" r="40%">
+      <stop offset="0%" stop-color="#4ade80" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <rect width="1920" height="1080" fill="url(#glow2)"/>
+  <!-- Abstract number grid -->
+  <g opacity="0.08" fill="#F2EFE7" font-family="monospace" font-size="48">
+    <text x="120" y="200">1 2 3 5 8 13</text>
+    <text x="800" y="400"> �  +</text>
+    <text x="1400" y="600">0 1 1 2 3 5</text>
+    <text x="300" y="800">2 � � + </text>
+  </g>
+  <!-- Floating geometric shapes -->
+  <circle cx="400" cy="300" r="120" fill="none" stroke="#F58A1F" stroke-width="1" opacity="0.15"/>
+  <circle cx="1500" cy="700" r="200" fill="none" stroke="#4ade80" stroke-width="1" opacity="0.1"/>
+  <polygon points="1200,200 1300,350 1100,350" fill="#F58A1F" opacity="0.06"/>
+</svg>
