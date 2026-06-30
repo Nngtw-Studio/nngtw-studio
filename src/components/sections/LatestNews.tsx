@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
 import { Button } from '@/components/ui/Button';
-import { newsArticles, newsCategoryLabels } from '@/lib/data/content';
+import { newsCategoryLabels } from '@/lib/data/content';
+import { getLatestNews } from '@/lib/supabase/queries/news';
 import { formatDate } from '@/lib/utils';
 
-export function LatestNews() {
-  const [featured, ...rest] = newsArticles.slice(0, 4);
+export async function LatestNews() {
+  const articles = await getLatestNews(4);
+  const [featured, ...rest] = articles;
 
   return (
     <section className="section-padding mx-auto max-w-[1600px]">

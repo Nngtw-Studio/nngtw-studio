@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
 import { Button } from '@/components/ui/Button';
-import { careers, careerStatusLabels } from '@/lib/data/content';
+import { careerStatusLabels } from '@/lib/data/content';
+import { getActiveCareers } from '@/lib/supabase/queries/careers';
 import { cn } from '@/lib/utils';
 
 const statusStyles: Record<string, string> = {
@@ -13,8 +14,8 @@ const statusStyles: Record<string, string> = {
   closed: 'border-red-500/15 bg-red-500/5 text-red-400/50',
 };
 
-export function Careers() {
-  const highlighted = careers.filter((c) => c.status !== 'closed').slice(0, 6);
+export async function Careers() {
+  const highlighted = await getActiveCareers(6);
 
   return (
     <section className="relative overflow-hidden bg-brand-black">

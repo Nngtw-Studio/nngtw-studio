@@ -7,7 +7,12 @@ import {
   StaggerContainer,
   StaggerItem,
 } from '@/components/motion/FadeIn';
-import { studioContent, teamMembers } from '@/lib/data/content';
+import { studioContent } from '@/lib/data/content';
+import { getTeamMembers } from '@/lib/supabase/queries/team';
+import { getPhilosophyValues } from '@/lib/supabase/queries/philosophy';
+import { BRAND_ASSETS } from '@/lib/brand';
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Studio',
@@ -15,7 +20,12 @@ export const metadata: Metadata = {
     'Learn about NNGTW Studio — our vision, mission, values, team, and long-term goals.',
 };
 
-export default function StudioPage() {
+export default async function StudioPage() {
+  const [teamMembers, values] = await Promise.all([
+    getTeamMembers(),
+    getPhilosophyValues(),
+  ]);
+
   return (
     <>
       <PageHeader
@@ -25,6 +35,14 @@ export default function StudioPage() {
       />
 
       <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">
+        <FadeIn className="mb-20">
+          <img
+            src={BRAND_ASSETS.primaryLogoTagline}
+            alt="NNGTW Studio"
+            className="h-20 w-auto"
+          />
+        </FadeIn>
+
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
           <FadeIn>
             <div>
@@ -53,7 +71,7 @@ export default function StudioPage() {
             Values
           </h2>
           <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {studioContent.values.map((value) => (
+            {values.map((value) => (
               <StaggerItem key={value.id}>
                 <div className="border border-brand-white/5 p-8">
                   <h3 className="font-display text-sm tracking-[0.08em] text-brand-orange uppercase">

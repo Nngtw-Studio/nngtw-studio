@@ -4,24 +4,25 @@ import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
-import {
-  allGames,
-  gameStatusLabels,
-  newsArticles,
-} from "@/lib/data/content";
+import { gameStatusLabels, newsCategoryLabels } from "@/lib/data/content";
+import { getAllGames, getGameBySlug, getRelatedNews } from "@/lib/supabase/queries/games";
 import { SOCIAL } from "@/lib/constants";
+
+export const revalidate = 3600;
+export const dynamicParams = true;
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return allGames.map((game) => ({ slug: game.slug }));
+  const games = await getAllGames();
+  return games.map((game) => ({ slug: game.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const game = allGames.find((g) => g.slug === slug);
+  const game = await getGameBySlug(slug);
   if (!game) return { title: "Game Not Found" };
   return {
     title: game.title,
@@ -31,15 +32,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function GameDetailPage({ params }: Props) {
   const { slug } = await params;
-  const game = allGames.find((g) => g.slug === slug);
+  const [game, relatedNews] = await Promise.all([
+    getGameBySlug(slug),
+    getRelatedNews(slug.split("-")[0]),
+  ]);
   if (!game) notFound();
-
-  const relatedNews = newsArticles.filter(
-    (n) =>
-      n.title.toLowerCase().includes(game.title.split(" ")[0].toLowerCase()) ||
-      n.category === "game-update" ||
-      n.category === "development-log"
-  ).slice(0, 3);
 
   return (
     <>
@@ -51,13 +48,13 @@ export default async function GameDetailPage({ params }: Props) {
 
       <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">
         <FadeIn>
-          <div className="relative mb-16 aspect-[21/9] overflow-hidden bg-gradient-to-br from-brand-orange/10 to-brand-black">
+          <div className="relative mb-16 aspect-21/9 overflow-hidden bg-linear-to-br from-brand-orange/10 to-brand-black">
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="font-display text-7xl tracking-wider text-brand-white/5 uppercase md:text-9xl">
                 {game.title.split(" ")[0]}
               </span>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-brand-bg via-transparent to-transparent" />
           </div>
         </FadeIn>
 
@@ -94,7 +91,7 @@ export default async function GameDetailPage({ params }: Props) {
                       className="flex gap-6 border-l border-brand-white/10 py-6 pl-8"
                     >
                       <div className="relative">
-                        <span className="absolute -left-[37px] flex h-3 w-3 items-center justify-center rounded-full border border-brand-orange bg-brand-black">
+                        <span className="absolute -left-9.25 flex h-3 w-3 items-center justify-center rounded-full border border-brand-orange bg-brand-black">
                           <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" />
                         </span>
                       </div>
@@ -174,7 +171,10 @@ export default async function GameDetailPage({ params }: Props) {
                     href={`/news/${article.slug}`}
                     className="group block border border-brand-white/5 p-6 transition-colors hover:border-brand-orange/20"
                   >
-                    <h3 className="font-display text-lg tracking-wide text-brand-white uppercase transition-colors group-hover:text-brand-orange">
+                    <span className="text-[10px] tracking-[0.2em] text-brand-orange uppercase">
+                      {newsCategoryLabels[article.category]}
+                    </span>
+                    <h3 className="mt-2 font-display text-lg tracking-wide text-brand-white uppercase transition-colors group-hover:text-brand-orange">
                       {article.title}
                     </h3>
                     <p className="mt-2 text-sm text-brand-grey">{article.excerpt}</p>

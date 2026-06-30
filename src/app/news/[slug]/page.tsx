@@ -3,20 +3,25 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn } from "@/components/motion/FadeIn";
-import { newsArticles, newsCategoryLabels } from "@/lib/data/content";
+import { newsCategoryLabels } from "@/lib/data/content";
+import { getAllNews, getNewsBySlug } from "@/lib/supabase/queries/news";
 import { formatDate } from "@/lib/utils";
+
+export const revalidate = 300;
+export const dynamicParams = true;
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return newsArticles.map((article) => ({ slug: article.slug }));
+  const articles = await getAllNews();
+  return articles.map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = newsArticles.find((a) => a.slug === slug);
+  const article = await getNewsBySlug(slug);
   if (!article) return { title: "Article Not Found" };
   return {
     title: article.title,
@@ -26,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params;
-  const article = newsArticles.find((a) => a.slug === slug);
+  const article = await getNewsBySlug(slug);
   if (!article) notFound();
 
   return (

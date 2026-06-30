@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
-import { newsArticles, newsCategoryLabels } from "@/lib/data/content";
+import { newsCategoryLabels } from "@/lib/data/content";
+import { getAllNews } from "@/lib/supabase/queries/news";
 import { formatDate } from "@/lib/utils";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "News",
@@ -13,7 +16,9 @@ export const metadata: Metadata = {
 
 const categories = Object.entries(newsCategoryLabels);
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const articles = await getAllNews();
+
   return (
     <>
       <PageHeader
@@ -37,7 +42,7 @@ export default function NewsPage() {
         </FadeIn>
 
         <StaggerContainer className="space-y-6">
-          {newsArticles.map((article) => (
+          {articles.map((article) => (
             <StaggerItem key={article.id}>
               <Link href={`/news/${article.slug}`} className="group block">
                 <article className="grid gap-6 border border-brand-white/5 p-8 transition-colors hover:border-brand-orange/20 md:grid-cols-[200px_1fr] md:p-10">

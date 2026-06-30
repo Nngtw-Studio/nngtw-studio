@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     if (isSupabaseConfigured()) {
       const supabase = await createClient();
-      const { error } = await supabase.from("contact_messages").insert({
+      const { error } = await supabase.from("studio_contact_messages").insert({
         name,
         email,
         subject,

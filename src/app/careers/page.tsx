@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
-import { careers, careerStatusLabels } from "@/lib/data/content";
+import { careerStatusLabels } from "@/lib/data/content";
+import { getAllCareers } from "@/lib/supabase/queries/careers";
 import { cn } from "@/lib/utils";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -18,7 +21,9 @@ const statusStyles: Record<string, string> = {
   closed: "border-red-500/20 bg-red-500/5 text-red-400/60",
 };
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const careers = await getAllCareers();
+
   return (
     <>
       <PageHeader

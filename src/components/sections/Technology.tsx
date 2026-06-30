@@ -1,9 +1,10 @@
 /** @format */
 
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { technologyCategories } from '@/lib/data/content';
+import { getTechnologyCategories } from '@/lib/supabase/queries/technology';
 
-export function Technology() {
+export async function Technology() {
+  const technologyCategories = await getTechnologyCategories();
   return (
     <section className="section-padding mx-auto max-w-[1600px]">
       <FadeIn>

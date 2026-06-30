@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_LINKS, SOCIAL, BRAND } from '@/lib/constants';
+import { BRAND_ASSETS } from '@/lib/brand';
 import { cn } from '@/lib/utils';
 
 export function Header() {
@@ -37,13 +38,19 @@ export function Header() {
       >
         <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-6 md:px-12 lg:px-20">
           {/* Logo */}
-          <Link href="/" className="group flex flex-col">
-            <span className="font-display text-lg tracking-[0.25em] text-brand-white transition-opacity duration-300 group-hover:opacity-70">
-              NNGTW
-            </span>
-            <span className="font-accent text-[9px] tracking-[0.45em] text-brand-grey uppercase">
-              Studio
-            </span>
+          <Link href="/" className="group shrink-0 transition-opacity duration-300 hover:opacity-70">
+            {/* Web logo — desktop */}
+            <img
+              src={BRAND_ASSETS.webLogo}
+              alt="NNGTW Studio"
+              className="hidden h-7 w-auto sm:block"
+            />
+            {/* Compact logo — mobile */}
+            <img
+              src={BRAND_ASSETS.compactLogo}
+              alt="NNGTW Studio"
+              className="h-8 w-auto sm:hidden"
+            />
           </Link>
 
           {/* Desktop nav */}

@@ -1,9 +1,10 @@
 /** @format */
 
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { philosophyValues } from '@/lib/data/content';
+import { getPhilosophyValues } from '@/lib/supabase/queries/philosophy';
 
-export function StudioPhilosophy() {
+export async function StudioPhilosophy() {
+  const philosophyValues = await getPhilosophyValues();
   return (
     <section className="relative overflow-hidden bg-brand-black">
       <div className="section-padding mx-auto max-w-[1600px]">

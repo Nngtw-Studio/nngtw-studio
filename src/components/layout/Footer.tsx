@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { NAV_LINKS, SOCIAL, BRAND } from '@/lib/constants';
+import { BRAND_ASSETS } from '@/lib/brand';
 
 export function Footer() {
   return (
@@ -10,14 +11,9 @@ export function Footer() {
         <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-12">
           {/* Brand column */}
           <div className="lg:col-span-4">
-            <Link href="/" className="inline-block group">
-              <span className="font-display text-2xl tracking-[0.25em] text-brand-white transition-opacity duration-300 group-hover:opacity-70">
-                NNGTW
-              </span>
-              <span className="mt-1 block font-accent text-[9px] tracking-[0.45em] text-brand-grey uppercase">
-                Studio
-              </span>
-            </Link>
+            <p className="label-overline text-brand-grey/50">
+              Brand Statement
+            </p>
             <p className="mt-8 max-w-xs text-sm leading-8 text-brand-grey/70">
               An independent game studio building original worlds for PC, mobile, and XR.
             </p>
@@ -114,7 +110,24 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-20 flex flex-col items-start justify-between gap-4 border-t border-brand-white/4 pt-8 md:flex-row md:items-center">
+        {/* Big logo strip */}
+        <Link
+          href="/"
+          className="mt-20 block border-t border-brand-white/4 pt-16 transition-opacity duration-300 hover:opacity-80 md:pt-20"
+        >
+          <img
+            src={BRAND_ASSETS.primaryLogoTagline}
+            alt="NNGTW Studio"
+            className="w-full max-w-xl md:hidden"
+          />
+          <img
+            src={BRAND_ASSETS.horizontalLogo}
+            alt="NNGTW Studio"
+            className="hidden w-full max-w-5xl md:block"
+          />
+        </Link>
+
+        <div className="mt-12 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <p className="label-overline text-brand-grey/30">
             &copy; {new Date().getFullYear()} {BRAND.name}. All rights reserved.
           </p>

@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { BRAND } from '@/lib/constants';
+import { BRAND_ASSETS } from '@/lib/brand';
 import './globals.css';
 
 const chillax = localFont({
@@ -93,6 +94,7 @@ const posteramaText = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BRAND.url),
   title: {
     default: `${BRAND.name} — ${BRAND.tagline}`,
     template: `%s | ${BRAND.name}`,
@@ -115,18 +117,21 @@ export const metadata: Metadata = {
     siteName: BRAND.name,
     title: BRAND.name,
     description: BRAND.description,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: BRAND.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: BRAND.name,
     description: BRAND.description,
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
     follow: true,
   },
   icons: {
-    icon: '/favicon.svg',
+    icon: BRAND_ASSETS.faviconIcon,
+    apple: '/apple-touch-icon.png',
   },
 };
 

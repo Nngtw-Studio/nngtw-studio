@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { BRAND_ASSETS } from "@/lib/brand";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -36,8 +37,12 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-brand-bg px-6">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <span className="font-display text-2xl tracking-[0.3em] text-brand-white">NNGTW</span>
-          <p className="mt-2 text-xs tracking-[0.3em] text-brand-grey uppercase">Admin Panel</p>
+          <img
+            src={BRAND_ASSETS.primaryLogo}
+            alt="NNGTW Studio"
+            className="mx-auto h-16 w-auto"
+          />
+          <p className="mt-4 text-xs tracking-[0.3em] text-brand-grey uppercase">Admin Panel</p>
         </div>
 
         <form onSubmit={handleLogin} className="border border-brand-white/5 p-8">

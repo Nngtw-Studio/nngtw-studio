@@ -1,9 +1,10 @@
 /** @format */
 
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { teamMembers } from '@/lib/data/content';
+import { getTeamMembers } from '@/lib/supabase/queries/team';
 
-export function AboutStudio() {
+export async function AboutStudio() {
+  const teamMembers = await getTeamMembers();
   const founder = teamMembers.find((m) => m.order === 1);
   const others = teamMembers.filter((m) => m.order !== 1);
 

@@ -4,8 +4,11 @@
 
 @theme inline {
   --color-brand-orange: #f58a1f;
-  --color-brand-bg: #1a0f0f;
-  --color-brand-black: #090909;
+  --color-brand-secondary: #df138a;
+  /* Light-background contexts only — do not use on dark surfaces. */
+  --color-brand-orange-dark: #d46b08;
+  --color-brand-bg: #1d1010;
+  --color-brand-black: #1d1010;
   --color-brand-white: #f2efe7;
   --color-brand-grey: #8b8b8b;
   --color-brand-muted: #3a3530;

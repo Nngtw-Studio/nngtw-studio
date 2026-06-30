@@ -4,20 +4,25 @@ import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
-import { careers, careerStatusLabels } from "@/lib/data/content";
+import { careerStatusLabels } from "@/lib/data/content";
+import { getAllCareers, getCareerBySlug } from "@/lib/supabase/queries/careers";
 import { cn } from "@/lib/utils";
+
+export const revalidate = 3600;
+export const dynamicParams = true;
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
+  const careers = await getAllCareers();
   return careers.map((career) => ({ slug: career.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const career = careers.find((c) => c.slug === slug);
+  const career = await getCareerBySlug(slug);
   if (!career) return { title: "Role Not Found" };
   return {
     title: career.title,
@@ -34,7 +39,7 @@ const statusStyles: Record<string, string> = {
 
 export default async function CareerDetailPage({ params }: Props) {
   const { slug } = await params;
-  const career = careers.find((c) => c.slug === slug);
+  const career = await getCareerBySlug(slug);
   if (!career) notFound();
 
   return (

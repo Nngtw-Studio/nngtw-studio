@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { fallbackFeaturedGames } from "@/lib/data/featured-games";
 import { SOCIAL } from "@/lib/constants";
@@ -44,9 +44,9 @@ export async function getFeaturedGames(): Promise<FeaturedGame[]> {
   }
 
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
-      .from("games")
+      .from("studio_games")
       .select(
         "id, slug, title, genre, platforms, engine, status, description, trailer_url, banner_image_url, project_link, follow_link, featured_order"
       )

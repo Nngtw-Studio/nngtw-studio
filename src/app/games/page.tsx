@@ -9,12 +9,11 @@ import {
   StaggerItem,
 } from '@/components/motion/FadeIn';
 import { Button } from '@/components/ui/Button';
-import {
-  activeGames,
-  plannedGames,
-  gameStatusLabels,
-} from '@/lib/data/content';
+import { gameStatusLabels } from '@/lib/data/content';
+import { getActiveGames, getPlannedGames } from '@/lib/supabase/queries/games';
 import { SOCIAL } from '@/lib/constants';
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Games',
@@ -22,7 +21,12 @@ export const metadata: Metadata = {
     'Explore games in active development and planned projects from NNGTW Studio.',
 };
 
-export default function GamesPage() {
+export default async function GamesPage() {
+  const [activeGames, plannedGames] = await Promise.all([
+    getActiveGames(),
+    getPlannedGames(),
+  ]);
+
   return (
     <>
       <PageHeader
@@ -48,13 +52,13 @@ export default function GamesPage() {
             <StaggerItem key={game.id}>
               <Link href={`/games/${game.slug}`} className="group block">
                 <article className="border border-brand-white/5 transition-colors hover:border-brand-orange/20">
-                  <div className="relative aspect-[16/9] bg-gradient-to-br from-brand-orange/10 to-brand-black">
+                  <div className="relative aspect-video bg-linear-to-br from-brand-orange/10 to-brand-black">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="font-display text-5xl tracking-[0.06em] text-brand-white/5 uppercase">
                         {game.title.split(' ')[0]}
                       </span>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-brand-black to-transparent" />
                     <div className="absolute right-0 bottom-0 left-0 p-8">
                       <span className="font-secondary text-[10px] tracking-[0.2em] text-brand-orange uppercase">
                         {gameStatusLabels[game.status]}
