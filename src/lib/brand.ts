@@ -5,19 +5,22 @@ const BRANDS_FOLDER = 'brands';
 
 export function getStorageUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  console.log('[brand] base =', base);
+  console.log('[brand] path =', path);
+
   if (!base) {
-    // React drops the `src` attribute entirely when it's an empty string
-    // (to avoid the browser re-requesting the current page), so a missing
-    // env var here silently renders <img> tags with no src at all instead
-    // of a broken image — this log is the only signal that would otherwise
-    // exist in production.
     console.error(
-      '[brand] NEXT_PUBLIC_SUPABASE_URL is not set at build time — all brand asset URLs will be empty. ' +
-        'Set it in the deployment platform\'s environment variables (not just .env.local, which is gitignored) and redeploy.',
+      '[brand] NEXT_PUBLIC_SUPABASE_URL is not set at build time — all brand asset URLs will be empty.',
     );
     return '';
   }
-  return `${base}/storage/v1/object/public/${BUCKET}/${path}`;
+
+  const url = `${base}/storage/v1/object/public/${BUCKET}/${path}`;
+
+  console.log('[brand] url =', url);
+
+  return url;
 }
 
 function brandAsset(filename: string): string {
@@ -26,8 +29,6 @@ function brandAsset(filename: string): string {
 
 export const BRAND_ASSETS = {
   // ─── UI logos ────────────────────────────────────────────────────────────
-  // Purpose-built for the website interface. Use these in all navigation and
-  // layout contexts. Do NOT substitute marketing logos here.
 
   /** Desktop navbar, footer, admin header, dashboard. */
   webLogo: brandAsset('nngtw-studio-web-logo.svg'),
@@ -35,12 +36,10 @@ export const BRAND_ASSETS = {
   /** Mobile navbar, mobile drawer, compact layouts. */
   compactLogo: brandAsset('nngtw-studio-compact-logo.svg'),
 
-  /** Browser favicon only. Do NOT render inside the UI. Served locally from /public. */
+  /** Browser favicon only. */
   faviconIcon: '/nngtw-favcon.svg',
 
   // ─── Marketing logos ─────────────────────────────────────────────────────
-  // Official brand assets for content, press, and marketing. Do NOT use
-  // inside navigation or any UI chrome.
 
   /** Authentication pages, loading screen, company info, letterhead. */
   primaryLogo: brandAsset('nngtw-studio-primary-logo.svg'),
