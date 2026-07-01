@@ -5,7 +5,18 @@ const BRANDS_FOLDER = 'brands';
 
 export function getStorageUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!base) return '';
+  if (!base) {
+    // React drops the `src` attribute entirely when it's an empty string
+    // (to avoid the browser re-requesting the current page), so a missing
+    // env var here silently renders <img> tags with no src at all instead
+    // of a broken image — this log is the only signal that would otherwise
+    // exist in production.
+    console.error(
+      '[brand] NEXT_PUBLIC_SUPABASE_URL is not set at build time — all brand asset URLs will be empty. ' +
+        'Set it in the deployment platform\'s environment variables (not just .env.local, which is gitignored) and redeploy.',
+    );
+    return '';
+  }
   return `${base}/storage/v1/object/public/${BUCKET}/${path}`;
 }
 
