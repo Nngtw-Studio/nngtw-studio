@@ -10,7 +10,7 @@ export default function AdminDashboard() {
           Dashboard
         </h1>
         <p className="mt-2 text-sm text-brand-grey">
-          Manage all content for NNGTW Studio.
+          Manage all content for Nngtw Studio.
         </p>
       </div>
 

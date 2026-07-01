@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { SmoothCursor } from '@/registry/magicui/smooth-cursor';
 import { BRAND } from '@/lib/constants';
 import { BRAND_ASSETS } from '@/lib/brand';
 import './globals.css';
@@ -103,7 +104,7 @@ export const metadata: Metadata = {
   keywords: [
     'game studio',
     'independent games',
-    'NNGTW Studio',
+    'Nngtw Studio',
     'game development',
     'XR',
     'VR',
@@ -146,6 +147,7 @@ export default function RootLayout({
       className={`${chillax.variable} ${cabinetGrotesk.variable} ${posterama2001.variable} ${posteramaText.variable}`}
     >
       <body className="antialiased">
+        <SmoothCursor />
         <Header />
         <main>{children}</main>
         <Footer />

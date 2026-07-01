@@ -4,10 +4,50 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 import { NAV_LINKS, SOCIAL, BRAND } from '@/lib/constants';
 import { BRAND_ASSETS } from '@/lib/brand';
+import { NAV_ICONS } from '@/components/layout/NavIcons';
 import { cn } from '@/lib/utils';
+
+/**
+ * Wraps a nav icon with a rare, tiny idle twitch — independent of hover —
+ * so the nav feels quietly alive without ever looping or drawing attention.
+ * Each icon reschedules itself on its own randomized 9–18s interval.
+ */
+function IdleIcon({ children }: { children: React.ReactNode }) {
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    let cancelled = false;
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const schedule = () => {
+      const delay = 9000 + Math.random() * 9000;
+      timeout = setTimeout(() => {
+        if (cancelled) return;
+        controls.start({
+          rotate: [0, -5, 0],
+          scale: [1, 1.05, 1],
+          transition: { duration: 0.7, ease: 'easeInOut' },
+        });
+        schedule();
+      }, delay);
+    };
+
+    schedule();
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [controls]);
+
+  return (
+    <motion.span animate={controls} className="inline-flex">
+      {children}
+    </motion.span>
+  );
+}
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,8 +65,6 @@ export function Header() {
       document.body.style.overflow = '';
     };
   }, [mobileOpen]);
-
-  console.log('WEB LOGO:', BRAND_ASSETS.webLogo);
 
   return (
     <>
@@ -47,29 +85,36 @@ export function Header() {
             {/* Web logo — desktop */}
             <img
               src={BRAND_ASSETS.webLogo}
-              alt="NNGTW Studio"
+              alt="Nngtw Studio"
               className="hidden h-7 w-auto sm:block"
             />
             {/* Compact logo — mobile */}
             <img
               src={BRAND_ASSETS.compactLogo}
-              alt="NNGTW Studio"
+              alt="Nngtw Studio"
               className="h-8 w-auto sm:hidden"
             />
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-10 lg:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="group relative font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey transition-colors duration-300 hover:text-brand-white"
-              >
-                {link.label}
-                <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-brand-white/30 transition-all duration-500 group-hover:w-full" />
-              </Link>
-            ))}
+          {/* Desktop nav — icon reveals label on hover */}
+          <nav className="hidden items-center gap-3 lg:flex">
+            {NAV_LINKS.map((link) => {
+              const Icon = NAV_ICONS[link.href];
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="group flex items-center rounded-full px-3.5 py-2.5 text-brand-grey transition-colors duration-300 hover:text-brand-white hover:bg-brand-white/5"
+                >
+                  <IdleIcon>
+                    <Icon className="h-4.5 w-4.5 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(245,138,31,0.35)]" />
+                  </IdleIcon>
+                  <span className="max-w-0 overflow-hidden font-accent text-[10px] tracking-[0.25em] whitespace-nowrap uppercase opacity-0 transition-all duration-500 ease-out group-hover:ml-2 group-hover:max-w-25 group-hover:opacity-100">
+                    {link.label}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Desktop Discord link */}

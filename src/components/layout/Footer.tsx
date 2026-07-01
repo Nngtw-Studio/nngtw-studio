@@ -117,12 +117,12 @@ export function Footer() {
         >
           <img
             src={BRAND_ASSETS.primaryLogoTagline}
-            alt="NNGTW Studio"
+            alt="Nngtw Studio"
             className="w-full max-w-xl md:hidden"
           />
           <img
             src={BRAND_ASSETS.horizontalLogo}
-            alt="NNGTW Studio"
+            alt="Nngtw Studio"
             className="hidden w-full max-w-5xl md:block"
           />
         </Link>

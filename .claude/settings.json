@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(npx --no-install playwright --version)",
+      "Bash(mkdir -p /c/Users/reaga/AppData/Local/Temp/claude/e--Nngtw-Studio-Official-Webpage-July2026-site-june26-preview-nngtwS/3b64beb9-a3d0-4497-a469-2cfd6cf8ff4b/scratchpad/pw)",
+      "Read(//c/Users/reaga/AppData/Local/Temp/claude/e--Nngtw-Studio-Official-Webpage-July2026-site-june26-preview-nngtwS/3b64beb9-a3d0-4497-a469-2cfd6cf8ff4b/scratchpad/**)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(node debug-repro.mjs)"
+    ]
+  }
+}

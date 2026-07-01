@@ -7,13 +7,13 @@ import { BRAND, SOCIAL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with NNGTW Studio for business enquiries, partnerships, or general contact.",
+  description: "Get in touch with Nngtw Studio for business enquiries, partnerships, or general contact.",
 };
 
 const contactLinks = [
   { label: "Email", href: `mailto:${BRAND.email}`, value: BRAND.email },
   { label: "Discord", href: SOCIAL.discord, value: "Join our community" },
-  { label: "LinkedIn", href: SOCIAL.linkedin, value: "NNGTW Studio" },
+  { label: "LinkedIn", href: SOCIAL.linkedin, value: "Nngtw Studio" },
   { label: "GitHub", href: SOCIAL.github, value: "nngtw-studio" },
 ];
 

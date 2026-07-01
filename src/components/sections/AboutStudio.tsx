@@ -15,7 +15,7 @@ export async function AboutStudio() {
         {/* Studio intro — asymmetric 2-column */}
         <div className="grid gap-20 lg:grid-cols-12 lg:gap-16">
           <FadeIn className="lg:col-span-4">
-            <p className="label-overline mb-8 text-brand-grey/60">About NNGTW Studio</p>
+            <p className="label-overline mb-8 text-brand-grey/60">About Nngtw Studio</p>
             <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
               An independent
               <br />
@@ -28,7 +28,7 @@ export async function AboutStudio() {
           <FadeIn delay={0.15} className="lg:col-span-7 lg:col-start-6 lg:pt-4">
             <div className="space-y-7 text-base leading-9 text-brand-grey md:text-lg">
               <p>
-                NNGTW Studio is an independent game development company with a
+                Nngtw Studio is an independent game development company with a
                 clear long-term vision. We create original games for PC, mobile,
                 and eventually XR platforms — built by a small but growing team
                 with a belief that quality scales independently of budget.

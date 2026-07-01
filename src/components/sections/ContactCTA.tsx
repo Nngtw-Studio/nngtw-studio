@@ -39,7 +39,7 @@ export function ContactCTA() {
           <div className="mt-20 grid gap-10 border-t border-brand-white/4 pt-14 sm:grid-cols-3">
             {[
               { label: 'Email', href: `mailto:${BRAND.email}`, value: BRAND.email },
-              { label: 'LinkedIn', href: SOCIAL.linkedin, value: 'NNGTW Studio' },
+              { label: 'LinkedIn', href: SOCIAL.linkedin, value: 'Nngtw Studio' },
               { label: 'GitHub', href: SOCIAL.github, value: 'nngtw-studio' },
             ].map((link) => (
               <Link

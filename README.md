@@ -1,6 +1,6 @@
-# NNGTW Studio Website
+# Nngtw Studio Website
 
-Official website for **NNGTW Studio** — an independent game development studio creating original games for PC, Mobile, XR and Virtual Reality.
+Official website for **Nngtw Studio** — an independent game development studio creating original games for PC, Mobile, XR and Virtual Reality.
 
 ## Tech Stack
 

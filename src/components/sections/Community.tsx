@@ -91,7 +91,7 @@ export function Community() {
 
             <FadeIn delay={0.15}>
               <p className="mt-10 max-w-md text-base leading-9 text-brand-grey/70">
-                Our Discord is where NNGTW Studio develops its games in public.
+                Our Discord is where Nngtw Studio develops its games in public.
                 Follow progress, shape decisions, and be there from the very
                 beginning — not as an audience, but as part of the process.
               </p>
@@ -136,7 +136,7 @@ export function Community() {
                 {/* Server info */}
                 <div className="mt-10">
                   <p className="font-display text-2xl font-semibold tracking-tight text-brand-white">
-                    NNGTW Studio
+                    Nngtw Studio
                   </p>
                   <p className="mt-2 font-accent text-[10px] tracking-[0.35em] uppercase text-brand-grey/50">
                     Players · Developers · Creators

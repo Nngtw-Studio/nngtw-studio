@@ -275,7 +275,7 @@ export const newsArticles: NewsArticle[] = [
   {
     id: "3",
     slug: "studio-discord-community-launch",
-    title: "NNGTW Discord Community Now Open",
+    title: "Nngtw Discord Community Now Open",
     excerpt:
       "Join our Discord to follow development, share feedback, and participate in future playtests.",
     content:
@@ -297,11 +297,11 @@ export const newsArticles: NewsArticle[] = [
   {
     id: "5",
     slug: "welcome-to-nngtw-studio",
-    title: "Welcome to NNGTW Studio",
+    title: "Welcome to Nngtw Studio",
     excerpt:
       "Introducing our studio — an independent team building original games with a vision for immersive futures.",
     content:
-      "NNGTW Studio is officially launching its public presence. We're a small, focused team creating original games for PC, mobile, and eventually XR platforms.\n\nOur first titles — Arithmetic Destination and King Summon — are actively in development. Follow along as we share our journey.",
+      "Nngtw Studio is officially launching its public presence. We're a small, focused team creating original games for PC, mobile, and eventually XR platforms.\n\nOur first titles — Arithmetic Destination and King Summon — are actively in development. Follow along as we share our journey.",
     category: "studio-news",
     publishedAt: "2026-05-01",
   },
@@ -497,7 +497,7 @@ export const studioContent = {
   vision:
     "To create original interactive worlds that inspire players to imagine, explore, and evolve — from screens to immersive realities.",
   mission:
-    "NNGTW Studio develops original games and interactive products with AAA presentation quality, built by a passionate independent team focused on player-first experiences.",
+    "Nngtw Studio develops original games and interactive products with AAA presentation quality, built by a passionate independent team focused on player-first experiences.",
   values: philosophyValues,
   developmentPhilosophy:
     "We prototype fast, iterate with community feedback, and polish until every interaction feels intentional. Small team, big ambition — we leverage modern tools and cross-platform thinking to compete with studios ten times our size.",

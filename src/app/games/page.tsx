@@ -18,7 +18,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: 'Games',
   description:
-    'Explore games in active development and planned projects from NNGTW Studio.',
+    'Explore games in active development and planned projects from Nngtw Studio.',
 };
 
 export default async function GamesPage() {
@@ -32,7 +32,7 @@ export default async function GamesPage() {
       <PageHeader
         label="Projects"
         title="Games"
-        description="Original titles in active development and future concepts from NNGTW Studio."
+        description="Original titles in active development and future concepts from Nngtw Studio."
       />
 
       <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">

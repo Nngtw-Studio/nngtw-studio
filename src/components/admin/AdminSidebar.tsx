@@ -24,7 +24,7 @@ export function AdminSidebar() {
         <Link href="/admin" className="flex items-center gap-3">
           <img
             src={BRAND_ASSETS.compactLogo}
-            alt="NNGTW Studio"
+            alt="Nngtw Studio"
             className="h-8 w-auto shrink-0"
           />
           <span className="text-[10px] tracking-[0.3em] text-brand-grey uppercase">

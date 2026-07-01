@@ -6,7 +6,7 @@ import { technologyPageContent, technologyCategories } from "@/lib/data/content"
 export const metadata: Metadata = {
   title: "Technology",
   description:
-    "How NNGTW Studio builds games — engines, art pipelines, programming, and XR vision.",
+    "How Nngtw Studio builds games — engines, art pipelines, programming, and XR vision.",
 };
 
 export default function TechnologyPage() {

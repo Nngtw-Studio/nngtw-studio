@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+      <stop offset="9%" stop-color="#ffffff" stop-opacity="1" />
+      <stop offset="90%" stop-color="#ffffff" stop-opacity="1" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+    <mask id="fadeMask">
+      <rect x="0" y="0" width="300" height="100" fill="url(#fade)" />
+    </mask>
+  </defs>
+  <g mask="url(#fadeMask)">
+    <path
+      d="M6,68 C40,58 70,62 100,54 C135,45 165,49 200,42
+         C225,37 250,39 292,34
+         C294,38 294,42 292,46
+         C250,43 225,41 200,48
+         C165,55 135,50 100,60
+         C70,68 40,64 6,74 Z"
+      fill="#f58a1f"
+      fill-opacity="0.88"
+    />
+  </g>
+</svg>

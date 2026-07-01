@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
         <div className="mb-8 text-center">
           <img
             src={BRAND_ASSETS.primaryLogo}
-            alt="NNGTW Studio"
+            alt="Nngtw Studio"
             className="mx-auto h-16 w-auto"
           />
           <p className="mt-4 text-xs tracking-[0.3em] text-brand-grey uppercase">Admin Panel</p>

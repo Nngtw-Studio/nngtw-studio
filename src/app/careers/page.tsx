@@ -11,7 +11,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "Join NNGTW Studio — game development careers and future opportunities.",
+    "Join Nngtw Studio — game development careers and future opportunities.",
 };
 
 const statusStyles: Record<string, string> = {
@@ -29,7 +29,7 @@ export default async function CareersPage() {
       <PageHeader
         label="Join Us"
         title="Careers"
-        description="We're building a team of passionate creators. Explore current and future opportunities at NNGTW Studio."
+        description="We're building a team of passionate creators. Explore current and future opportunities at Nngtw Studio."
       />
 
       <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">

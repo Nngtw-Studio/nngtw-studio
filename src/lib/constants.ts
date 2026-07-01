@@ -1,8 +1,8 @@
 export const BRAND = {
-  name: "NNGTW Studio",
+  name: "Nngtw Studio",
   tagline: "Imagine. Explore. Evolve.",
   description:
-    "NNGTW Studio is an independent game development studio creating original games for PC, Mobile, XR and Virtual Reality.",
+    "Nngtw Studio is an independent game development studio creating original games for PC, Mobile, XR and Virtual Reality.",
   url: "https://nngtw.studio",
   email: "hello@nngtw.studio",
 } as const;

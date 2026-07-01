@@ -17,7 +17,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: 'Studio',
   description:
-    'Learn about NNGTW Studio — our vision, mission, values, team, and long-term goals.',
+    'Learn about Nngtw Studio — our vision, mission, values, team, and long-term goals.',
 };
 
 export default async function StudioPage() {
@@ -38,7 +38,7 @@ export default async function StudioPage() {
         <FadeIn className="mb-20">
           <img
             src={BRAND_ASSETS.primaryLogoTagline}
-            alt="NNGTW Studio"
+            alt="Nngtw Studio"
             className="h-20 w-auto"
           />
         </FadeIn>

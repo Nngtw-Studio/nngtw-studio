@@ -11,7 +11,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "News",
   description:
-    "Development logs, game updates, studio news, and technology articles from NNGTW Studio.",
+    "Development logs, game updates, studio news, and technology articles from Nngtw Studio.",
 };
 
 const categories = Object.entries(newsCategoryLabels);
