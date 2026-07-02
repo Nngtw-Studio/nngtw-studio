@@ -1,7 +1,12 @@
 /** @format */
 
+'use client';
+
+import type { MouseEvent } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { useRipple } from '@/hooks/useRipple';
+import { RippleLayer } from '@/components/ui/RippleLayer';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'discord';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -15,9 +20,9 @@ interface ButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand-orange text-brand-black border border-brand-orange hover:bg-brand-white hover:border-brand-white active:scale-[0.98]',
+    'rounded-xl bg-brand-orange/15 text-brand-orange border-[0.5px] border-brand-orange text-[18px]! font-normal shadow-[inset_0_0_12px_var(--color-brand-orange)] hover:shadow-[inset_0_0_18px_var(--color-brand-orange)] active:scale-[0.98]',
   secondary:
-    'bg-transparent text-brand-white border border-brand-white/20 hover:border-brand-white/70 hover:bg-brand-white/5 active:scale-[0.98]',
+    'rounded-xl bg-brand-white/15 text-brand-white/60 border-[0.5px] border-brand-white/60 text-[18px]! font-normal shadow-[inset_0_0_12px_rgba(242,239,231,0.6)] hover:shadow-[inset_0_0_18px_rgba(242,239,231,0.6)] active:scale-[0.98]',
   ghost:
     'bg-transparent text-brand-white/70 hover:text-brand-white border border-transparent hover:border-brand-white/10',
   discord:
@@ -37,13 +42,28 @@ export function Button({
   size = 'md',
   href,
   external,
+  onClick,
   ...props
 }: ButtonProps) {
+  const { ripples, addRipple } = useRipple();
+
   const classes = cn(
-    'inline-flex items-center justify-center font-secondary transition-all duration-300',
+    'cursor-target relative isolate inline-flex items-center justify-center overflow-hidden font-secondary transition-all duration-300',
     variants[variant],
     sizes[size],
     className,
+  );
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    addRipple(event);
+    onClick?.(event);
+  };
+
+  const content = (
+    <>
+      <span className="relative z-10">{children}</span>
+      <RippleLayer ripples={ripples} />
+    </>
   );
 
   if (external) {
@@ -53,16 +73,17 @@ export function Button({
         target="_blank"
         rel="noopener noreferrer"
         className={classes}
+        onClick={handleClick}
         {...props}
       >
-        {children}
+        {content}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={classes} {...props}>
-      {children}
+    <Link href={href} className={classes} onClick={handleClick} {...props}>
+      {content}
     </Link>
   );
 }

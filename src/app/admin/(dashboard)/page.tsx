@@ -1,8 +1,18 @@
 import Link from "next/link";
 import { ADMIN_SECTIONS } from "@/lib/admin/sections";
-import { activeGames, newsArticles, careers } from "@/lib/data/content";
+import { getAdminCounts } from "@/lib/supabase/queries/admin/counts";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const counts = await getAdminCounts();
+
+  const stats = [
+    { label: "Active Games", value: counts.games },
+    { label: "News Articles", value: counts.news },
+    { label: "Career Roles", value: counts.careers },
+    { label: "Pending Applications", value: counts.pendingApplications },
+    { label: "Unread Messages", value: counts.unreadMessages },
+  ];
+
   return (
     <div>
       <div className="mb-8">
@@ -14,12 +24,8 @@ export default function AdminDashboard() {
         </p>
       </div>
 
-      <div className="mb-12 grid gap-4 sm:grid-cols-3">
-        {[
-          { label: "Active Games", value: activeGames.length },
-          { label: "News Articles", value: newsArticles.length },
-          { label: "Career Roles", value: careers.length },
-        ].map((stat) => (
+      <div className="mb-12 grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {stats.map((stat) => (
           <div key={stat.label} className="border border-brand-white/5 p-6">
             <p className="text-xs tracking-wider text-brand-grey uppercase">{stat.label}</p>
             <p className="mt-2 font-display text-4xl text-brand-orange">{stat.value}</p>

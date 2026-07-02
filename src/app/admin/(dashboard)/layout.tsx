@@ -8,8 +8,8 @@ export default function AdminDashboardLayout({
   return (
     <>
       <AdminSidebar />
-      <div className="ml-64 min-h-screen">
-        <main className="p-8">{children}</main>
+      <div className="min-h-screen lg:ml-64">
+        <main className="p-8 pt-20 lg:pt-8">{children}</main>
       </div>
     </>
   );

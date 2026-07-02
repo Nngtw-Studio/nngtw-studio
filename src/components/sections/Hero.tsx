@@ -4,7 +4,6 @@
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { MagneticButton } from '@/components/motion/FadeIn';
 import { HeroButton } from '@/components/sections/HeroButton';
 
 function AmbientField() {
@@ -128,21 +127,40 @@ export function Hero() {
           style={{ lineHeight: 0.98 }}
           className="editorial-heading mx-auto max-w-5xl text-[clamp(3.5rem,9vw,9rem)] text-brand-white"
         >
-          Building
+          <span className="relative z-10">
+            Buildin
+            <span data-cursor-spawn-anchor className="relative inline-block">
+              g
+            </span>
+          </span>
           <br />
-          <span
-            className="bg-no-repeat px-[0.1em]"
-            style={{
-              backgroundImage: "url('/highlights/immersive-highlight.svg')",
-              backgroundSize: 'cover',
-              backgroundPosition: '50% 56%',
-            }}
-          >
+          <span className="relative isolate inline-block px-[0.1em]">
+            <motion.span
+              aria-hidden="true"
+              initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
+              animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+              transition={{ duration: 0.5, delay: 1.3, ease: [0.65, 0, 0.35, 1] }}
+              className="pointer-events-none absolute inset-0 bg-no-repeat"
+              style={{
+                backgroundImage: "url('/highlights/immersive-highlight.svg')",
+                backgroundSize: 'cover',
+                backgroundPosition: '50% 50%',
+                transform: 'rotate(-2.5deg) scale(1.1, 0.97)',
+                zIndex: -1,
+              }}
+            />
             immersive
           </span>
           <br />
           worlds
-          <span className="text-brand-secondary text-[0.72em] align-baseline">.</span>
+          <motion.span
+            initial={{ color: '#f2efe7' }}
+            animate={{ color: '#df138a' }}
+            transition={{ duration: 0.35, delay: 1.85 }}
+            className="text-[0.72em] align-baseline"
+          >
+            .
+          </motion.span>
         </motion.h1>
 
         {/* CTAs */}
@@ -152,16 +170,12 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.65 }}
           className="mt-20 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
-          <MagneticButton>
-            <HeroButton href="/games" variant="primary">
-              Explore Worlds
-            </HeroButton>
-          </MagneticButton>
-          <MagneticButton>
-            <HeroButton href="/studio" variant="secondary">
-              Enter Studio
-            </HeroButton>
-          </MagneticButton>
+          <HeroButton href="/games" variant="primary">
+            Explore Worlds
+          </HeroButton>
+          <HeroButton href="/studio" variant="secondary">
+            Enter Studio
+          </HeroButton>
         </motion.div>
       </div>
 

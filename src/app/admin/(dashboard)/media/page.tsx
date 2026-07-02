@@ -1,17 +1,16 @@
-function AdminPlaceholder({ title, description }: { title: string; description: string }) {
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { getAdminMedia } from "@/lib/supabase/queries/admin/media";
+import { MediaUploadForm } from "./MediaUploadForm";
+import { MediaGrid } from "./MediaGrid";
+
+export default async function AdminMediaPage() {
+  const items = await getAdminMedia();
+
   return (
     <div>
-      <h1 className="font-display text-3xl tracking-wide text-brand-white uppercase">{title}</h1>
-      <p className="mt-2 text-sm text-brand-grey">{description}</p>
-      <div className="mt-12 border border-dashed border-brand-white/10 p-12 text-center">
-        <p className="text-sm text-brand-grey">
-          Connect Supabase to enable full CRUD operations for this section.
-        </p>
-      </div>
+      <AdminPageHeader title="Media" description="Upload and manage images and video assets." />
+      <MediaUploadForm />
+      <MediaGrid items={items} />
     </div>
   );
-}
-
-export default function AdminMediaPage() {
-  return <AdminPlaceholder title="Media" description="Manage uploaded files and assets." />;
 }

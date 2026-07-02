@@ -99,9 +99,41 @@ export interface ContactMessage {
   email: string;
   subject: string;
   message: string;
-  type: "business" | "general";
+  type: "business" | "general" | "career" | "press";
   createdAt: string;
   read: boolean;
+}
+
+export interface NavigationItem {
+  id: string;
+  label: string;
+  href: string;
+  order: number;
+  visible: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MediaItem {
+  id: string;
+  filename: string;
+  url: string;
+  altText: string | null;
+  mimeType: string | null;
+  sizeBytes: number | null;
+  context: string | null;
+  createdAt: string;
+}
+
+export interface CareerApplication {
+  id: string;
+  careerId: string | null;
+  name: string;
+  email: string;
+  portfolioUrl: string | null;
+  message: string;
+  status: "pending" | "reviewing" | "accepted" | "rejected";
+  createdAt: string;
 }
 
 export interface SiteSettings {
@@ -122,11 +154,8 @@ export type AdminSection =
   | "team"
   | "technology"
   | "media"
-  | "gallery"
-  | "seo"
   | "contact-messages"
   | "settings"
-  | "uploads"
   | "discord"
   | "navigation";
 
