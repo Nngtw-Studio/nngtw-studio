@@ -4,8 +4,11 @@ export interface AdminTeamMemberRow {
   id: string;
   name: string;
   role: string;
+  contribution: string | null;
   bio: string | null;
   avatar_url: string | null;
+  profile_url: string | null;
+  contribution_weight: number | null;
   order: number;
   visible: boolean;
   created_at: string;

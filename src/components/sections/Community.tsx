@@ -59,7 +59,7 @@ const communityPillars = [
 
 export function Community() {
   return (
-    <section className="relative overflow-hidden bg-brand-black">
+    <section className="relative overflow-hidden border-t border-brand-white/5 bg-brand-black">
       {/* Atmosphere: very faint Discord blue bleeding in */}
       <div className="pointer-events-none absolute inset-0 bg-[#5865F2]/2" />
       <div className="pointer-events-none absolute -top-1/4 left-1/3 h-200 w-300 -translate-x-1/2 rounded-full bg-[#5865F2]/4 blur-[250px]" />

@@ -20,13 +20,13 @@ interface ButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'rounded-xl bg-brand-orange/15 text-brand-orange border-[0.5px] border-brand-orange text-[18px]! font-normal shadow-[inset_0_0_12px_var(--color-brand-orange)] hover:shadow-[inset_0_0_18px_var(--color-brand-orange)] active:scale-[0.98]',
+    'rounded-xl bg-brand-orange/15 text-brand-orange border-[0.5px] border-brand-orange text-[18px]! font-normal shadow-[inset_0_0_12px_var(--color-brand-orange)] hover:shadow-[inset_0_0_18px_var(--color-brand-orange)] active:scale-[0.98] focus-visible:ring-brand-orange/70',
   secondary:
-    'rounded-xl bg-brand-white/15 text-brand-white/60 border-[0.5px] border-brand-white/60 text-[18px]! font-normal shadow-[inset_0_0_12px_rgba(242,239,231,0.6)] hover:shadow-[inset_0_0_18px_rgba(242,239,231,0.6)] active:scale-[0.98]',
+    'rounded-xl bg-brand-white/15 text-brand-white/60 border-[0.5px] border-brand-white/60 text-[18px]! font-normal shadow-[inset_0_0_12px_rgba(242,239,231,0.6)] hover:shadow-[inset_0_0_18px_rgba(242,239,231,0.6)] active:scale-[0.98] focus-visible:ring-brand-white/50',
   ghost:
-    'bg-transparent text-brand-white/70 hover:text-brand-white border border-transparent hover:border-brand-white/10',
+    'bg-transparent text-brand-white/70 hover:text-brand-white border border-transparent hover:border-brand-white/10 focus-visible:ring-brand-white/40',
   discord:
-    'bg-[#5865F2] text-white border border-[#5865F2] hover:bg-[#6B77F5] hover:border-[#6B77F5] active:scale-[0.98]',
+    'bg-[#5865F2] text-white border border-[#5865F2] hover:bg-[#6B77F5] hover:border-[#6B77F5] active:scale-[0.98] focus-visible:ring-[#5865F2]/70',
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -49,6 +49,7 @@ export function Button({
 
   const classes = cn(
     'cursor-target relative isolate inline-flex items-center justify-center overflow-hidden font-secondary transition-all duration-300',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-black',
     variants[variant],
     sizes[size],
     className,

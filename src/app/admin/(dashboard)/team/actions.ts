@@ -9,8 +9,11 @@ export type ActionResult = { error: string } | { error?: undefined };
 function teamFieldsFromFormData(formData: FormData) {
   return {
     role: String(formData.get("role") ?? ""),
+    contribution: String(formData.get("contribution") ?? "") || null,
     bio: String(formData.get("bio") ?? ""),
     avatar_url: String(formData.get("avatar_url") ?? "") || null,
+    profile_url: String(formData.get("profile_url") ?? "") || null,
+    contribution_weight: Number(formData.get("contribution_weight") ?? 50),
     order: Number(formData.get("order") ?? 0),
     visible: formData.get("visible") === "on",
   };

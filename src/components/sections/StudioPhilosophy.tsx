@@ -6,14 +6,17 @@ import { getPhilosophyValues } from '@/lib/supabase/queries/philosophy';
 export async function StudioPhilosophy() {
   const philosophyValues = await getPhilosophyValues();
   return (
-    <section className="relative overflow-hidden bg-brand-black">
+    <section className="relative overflow-hidden border-t border-brand-white/5 bg-brand-black">
       <div className="section-padding mx-auto max-w-[1600px]">
 
         {/* Header */}
         <FadeIn>
           <div className="mb-20 grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-5">
-              <p className="label-overline mb-8 text-brand-grey/60">Studio Philosophy</p>
+              <div className="mb-8 flex items-center gap-4">
+                <div className="accent-line" />
+                <p className="label-overline text-brand-grey/60">Studio Philosophy</p>
+              </div>
               <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
                 The principles
                 <br />
@@ -30,8 +33,8 @@ export async function StudioPhilosophy() {
           {philosophyValues.map((value, index) => (
             <StaggerItem key={value.id}>
               <div className="group flex gap-8 border-b border-brand-white/5 py-10 md:py-12 md:px-2 transition-colors duration-500 hover:bg-brand-white/1.5">
-                {/* Number */}
-                <span className="font-accent text-[11px] tracking-[0.25em] text-brand-grey/25 pt-1 shrink-0 w-8">
+                {/* Number — warms up when its principle is explored */}
+                <span className="font-accent text-[11px] tracking-[0.25em] text-brand-grey/25 pt-1 shrink-0 w-8 transition-colors duration-500 group-hover:text-brand-orange/70">
                   {String(index + 1).padStart(2, '0')}
                 </span>
 

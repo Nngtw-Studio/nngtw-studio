@@ -30,13 +30,60 @@ export function TeamMemberForm({ member }: { member?: AdminTeamMemberRow }) {
       </div>
 
       <div className={blockClass}>
-        <label className={labelClass} htmlFor="bio">Bio</label>
+        <label className={labelClass} htmlFor="contribution">Contribution (shown on the team card)</label>
+        <textarea
+          id="contribution"
+          name="contribution"
+          rows={2}
+          defaultValue={member?.contribution ?? ""}
+          placeholder="Leading NNGTW's vision, product strategy, creative direction..."
+          className={`${fieldClass} resize-none`}
+        />
+      </div>
+
+      <div className={blockClass}>
+        <label className={labelClass} htmlFor="bio">Bio (longer-form, reserved for future profile pages)</label>
         <textarea id="bio" name="bio" rows={3} defaultValue={member?.bio ?? ""} className={`${fieldClass} resize-none`} />
       </div>
 
       <div className={blockClass}>
-        <label className={labelClass} htmlFor="avatar_url">Avatar URL</label>
-        <input id="avatar_url" name="avatar_url" defaultValue={member?.avatar_url ?? ""} className={fieldClass} />
+        <label className={labelClass} htmlFor="avatar_url">Avatar Path (Supabase Storage, nngtw-assets bucket)</label>
+        <input
+          id="avatar_url"
+          name="avatar_url"
+          defaultValue={member?.avatar_url ?? ""}
+          placeholder="profile/Nngtw_team/lenin.png"
+          className={fieldClass}
+        />
+        <p className="mt-2 text-xs text-brand-grey/50">
+          A storage path, not a full URL — resolved automatically on the site.
+        </p>
+      </div>
+
+      <div className={blockClass}>
+        <label className={labelClass} htmlFor="profile_url">Profile Link</label>
+        <input
+          id="profile_url"
+          name="profile_url"
+          defaultValue={member?.profile_url ?? ""}
+          placeholder="https://reagan.nngtw.com or /team/lenin"
+          className={fieldClass}
+        />
+      </div>
+
+      <div className={blockClass}>
+        <label className={labelClass} htmlFor="contribution_weight">
+          Contribution Weight (drives bento card size — higher is larger)
+        </label>
+        <input
+          id="contribution_weight"
+          name="contribution_weight"
+          type="number"
+          min={1}
+          max={100}
+          defaultValue={member?.contribution_weight ?? 50}
+          className={fieldClass}
+        />
       </div>
 
       <div className={blockClass}>

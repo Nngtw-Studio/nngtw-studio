@@ -12,12 +12,16 @@ export async function LatestNews() {
   const [featured, ...rest] = articles;
 
   return (
-    <section className="section-padding mx-auto max-w-[1600px]">
+    <section className="relative border-t border-brand-white/5">
+      <div className="section-padding mx-auto max-w-[1600px]">
       {/* Header */}
       <FadeIn>
         <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="label-overline mb-8 text-brand-grey/60">Latest News</p>
+            <div className="mb-8 flex items-center gap-4">
+              <div className="accent-line" />
+              <p className="label-overline text-brand-grey/60">Latest News</p>
+            </div>
             <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
               Development
               <br />
@@ -81,7 +85,7 @@ export async function LatestNews() {
                   </span>
                 </div>
                 <div className="md:col-span-6">
-                  <h3 className="font-display text-base font-semibold tracking-tight text-brand-white/80 transition-colors duration-300 group-hover:text-brand-white md:text-lg">
+                  <h3 className="font-display text-base font-semibold tracking-tight text-brand-white/80 transition-all duration-300 group-hover:translate-x-1 group-hover:text-brand-white md:text-lg">
                     {article.title}
                   </h3>
                 </div>
@@ -95,6 +99,7 @@ export async function LatestNews() {
           </StaggerItem>
         ))}
       </StaggerContainer>
+      </div>
     </section>
   );
 }

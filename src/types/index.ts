@@ -53,7 +53,15 @@ export interface TeamMember {
   id: string;
   name: string;
   role: string;
+  /** Short editorial summary shown on the team card — distinct from the longer bio. */
+  contribution?: string;
   bio?: string;
+  /** Resolved, ready-to-render image URL — never a raw storage path. */
+  image?: string | null;
+  /** External URL (opens in a new tab) or internal route like "/team/lenin". */
+  profileUrl?: string;
+  /** Drives bento sizing — higher weight reads as more prominent. */
+  contributionWeight: number;
   order: number;
 }
 

@@ -6,6 +6,10 @@ import type {
   TeamMember,
   TechnologyCategory,
 } from "@/types";
+import { getStorageUrl } from "@/lib/brand";
+
+const TEAM_FOLDER = "profile/Nngtw_team";
+const teamAvatar = (filename: string) => getStorageUrl(`${TEAM_FOLDER}/${filename}`);
 
 export const activeGames: Game[] = [
   {
@@ -127,30 +131,50 @@ export const allGames = [...activeGames, ...plannedGames];
 export const teamMembers: TeamMember[] = [
   {
     id: "1",
-    name: "Founder",
+    name: "Reagan Sagolsem",
     role: "Founder & Creative Director",
+    contribution:
+      "Leading NNGTW's vision, product strategy, creative direction, studio culture and long-term roadmap.",
     bio: "Vision, creative direction, and studio leadership.",
+    image: teamAvatar("reagan.png"),
+    profileUrl: "https://reagan.nngtw.com",
+    contributionWeight: 100,
     order: 1,
   },
   {
     id: "2",
-    name: "Community Lead",
-    role: "Marketing & Community",
-    bio: "Player engagement, social presence, and community growth.",
+    name: "Lenin Akoijam",
+    role: "Game Developer",
+    contribution:
+      "Gameplay programming, systems design, prototyping and technical implementation across studio projects.",
+    bio: "Core gameplay systems and technical implementation.",
+    image: teamAvatar("lenin.png"),
+    profileUrl: "/team/lenin",
+    contributionWeight: 80,
     order: 2,
   },
   {
     id: "3",
-    name: "XR Developer",
-    role: "XR Developer",
-    bio: "Immersive technology research and XR prototyping.",
+    name: "Nirmala Salam",
+    role: "Digital Marketing Associate",
+    contribution:
+      "Community growth, social media, campaigns, brand visibility and player engagement.",
+    bio: "Player engagement, social presence, and community growth.",
+    image: teamAvatar("nirmala.jpeg"),
+    profileUrl: "/team/nirmala",
+    contributionWeight: 60,
     order: 3,
   },
   {
     id: "4",
-    name: "Frontend Developer",
-    role: "Frontend Developer",
-    bio: "Web applications, studio tools, and interactive experiences.",
+    name: "Akash Meishnam",
+    role: "Technical Advisor",
+    contribution:
+      "Technical consulting, architecture reviews and strategic engineering guidance.",
+    bio: "Engineering guidance and architecture reviews.",
+    image: teamAvatar("akash.png"),
+    profileUrl: "/team/akash",
+    contributionWeight: 40,
     order: 4,
   },
 ];

@@ -18,14 +18,17 @@ export async function Careers() {
   const highlighted = await getActiveCareers(6);
 
   return (
-    <section className="relative overflow-hidden bg-brand-black">
+    <section className="relative overflow-hidden border-t border-brand-white/5 bg-brand-black">
       <div className="section-padding mx-auto max-w-[1600px]">
 
         {/* Header */}
         <FadeIn>
           <div className="mb-16 grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-5">
-              <p className="label-overline mb-8 text-brand-grey/60">Careers</p>
+              <div className="mb-8 flex items-center gap-4">
+                <div className="accent-line" />
+                <p className="label-overline text-brand-grey/60">Careers</p>
+              </div>
               <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
                 Join the
                 <br />
@@ -68,7 +71,7 @@ export async function Careers() {
                   <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/40">
                     {career.department}&ensp;·&ensp;{career.location}&ensp;·&ensp;{career.type}
                   </p>
-                  <span className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/30 transition-colors duration-300 group-hover:text-brand-white/60">
+                  <span className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-brand-orange">
                     &rarr;
                   </span>
                 </div>

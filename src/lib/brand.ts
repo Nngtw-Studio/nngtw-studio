@@ -6,21 +6,14 @@ const BRANDS_FOLDER = 'brands';
 export function getStorageUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-  console.log('[brand] base =', base);
-  console.log('[brand] path =', path);
-
   if (!base) {
     console.error(
-      '[brand] NEXT_PUBLIC_SUPABASE_URL is not set at build time — all brand asset URLs will be empty.',
+      '[brand] NEXT_PUBLIC_SUPABASE_URL is not set at build time — all storage asset URLs will be empty.',
     );
     return '';
   }
 
-  const url = `${base}/storage/v1/object/public/${BUCKET}/${path}`;
-
-  console.log('[brand] url =', url);
-
-  return url;
+  return `${base}/storage/v1/object/public/${BUCKET}/${path}`;
 }
 
 function brandAsset(filename: string): string {
