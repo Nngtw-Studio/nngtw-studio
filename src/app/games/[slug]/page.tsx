@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
+import { GameTrailer } from "@/components/sections/GameTrailer";
 import { Button } from "@/components/ui/Button";
 import { gameStatusLabels, newsCategoryLabels } from "@/lib/data/content";
 import { getAllGames, getGameBySlug, getRelatedNews } from "@/lib/supabase/queries/games";
@@ -47,16 +48,31 @@ export default async function GameDetailPage({ params }: Props) {
       />
 
       <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">
-        <FadeIn>
-          <div className="relative mb-16 aspect-21/9 overflow-hidden bg-linear-to-br from-brand-orange/10 to-brand-black">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-display text-7xl tracking-wider text-brand-white/5 uppercase md:text-9xl">
-                {game.title.split(" ")[0]}
-              </span>
+        {game.trailerUrl ? (
+          <FadeIn>
+            <h2 className="mb-6 font-display text-2xl tracking-wide text-brand-white uppercase">
+              Official Trailer
+            </h2>
+            <div className="mb-16">
+              <GameTrailer
+                title={game.title}
+                trailerUrl={game.trailerUrl}
+                posterUrl={game.bannerImageUrl}
+              />
             </div>
-            <div className="absolute inset-0 bg-linear-to-t from-brand-bg via-transparent to-transparent" />
-          </div>
-        </FadeIn>
+          </FadeIn>
+        ) : (
+          <FadeIn>
+            <div className="relative mb-16 aspect-21/9 overflow-hidden bg-linear-to-br from-brand-orange/10 to-brand-black">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-display text-7xl tracking-wider text-brand-white/5 uppercase md:text-9xl">
+                  {game.title.split(" ")[0]}
+                </span>
+              </div>
+              <div className="absolute inset-0 bg-linear-to-t from-brand-bg via-transparent to-transparent" />
+            </div>
+          </FadeIn>
+        )}
 
         <div className="grid gap-16 lg:grid-cols-3">
           <div className="lg:col-span-2">

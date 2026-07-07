@@ -13,6 +13,8 @@ function gameFieldsFromFormData(formData: FormData) {
     engine: String(formData.get("engine") ?? ""),
     status: String(formData.get("status") ?? "planned"),
     description: String(formData.get("description") ?? ""),
+    trailer_url: String(formData.get("trailer_url") ?? "").trim() || null,
+    banner_image_url: String(formData.get("banner_image_url") ?? "").trim() || null,
     platforms: String(formData.get("platforms") ?? "")
       .split(",")
       .map((s) => s.trim())

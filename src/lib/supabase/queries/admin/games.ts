@@ -9,6 +9,8 @@ export interface AdminGameRow {
   engine: string;
   status: string;
   description: string;
+  trailer_url: string | null;
+  banner_image_url: string | null;
   featured: boolean;
   active_development: boolean;
   published: boolean;

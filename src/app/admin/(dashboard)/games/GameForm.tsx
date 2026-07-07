@@ -63,6 +63,28 @@ export function GameForm({ game }: { game?: AdminGameRow }) {
       </div>
 
       <div className={blockClass}>
+        <label className={labelClass} htmlFor="trailer_url">Trailer video URL</label>
+        <input
+          id="trailer_url"
+          name="trailer_url"
+          defaultValue={game?.trailer_url ?? ""}
+          placeholder="/videos/king-summon-trailer.mp4"
+          className={fieldClass}
+        />
+      </div>
+
+      <div className={blockClass}>
+        <label className={labelClass} htmlFor="banner_image_url">Banner / poster image URL</label>
+        <input
+          id="banner_image_url"
+          name="banner_image_url"
+          defaultValue={game?.banner_image_url ?? ""}
+          placeholder="/banners/king-summon.svg"
+          className={fieldClass}
+        />
+      </div>
+
+      <div className={blockClass}>
         <label className={labelClass} htmlFor="platforms">Platforms (comma-separated)</label>
         <input
           id="platforms"

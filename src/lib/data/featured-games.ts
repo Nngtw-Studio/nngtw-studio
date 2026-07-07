@@ -14,8 +14,7 @@ export const fallbackFeaturedGames: FeaturedGame[] = [
     status: "in-development",
     description:
       "An immersive educational journey where mathematics becomes exploration. Navigate abstract worlds built from numbers, patterns, and logic.",
-    // No hero trailer uploaded yet — the media showcase falls back to the banner thumbnail.
-    trailerUrl: null,
+    trailerUrl: "/videos/arithmetic-destination-trailer.mp4",
     bannerImageUrl: "/banners/arithmetic-destination.svg",
     projectLink: "/games/arithmetic-destination",
     followLink: SOCIAL.discord,
@@ -31,8 +30,7 @@ export const fallbackFeaturedGames: FeaturedGame[] = [
     status: "in-development",
     description:
       "Command armies of summoned creatures in tactical battles. Build your kingdom, forge alliances, and master the art of summoning.",
-    // No hero trailer uploaded yet — the media showcase falls back to the banner thumbnail.
-    trailerUrl: null,
+    trailerUrl: "/videos/king-summon-trailer.mp4",
     bannerImageUrl: "/banners/king-summon.svg",
     projectLink: "/games/king-summon",
     followLink: SOCIAL.discord,
