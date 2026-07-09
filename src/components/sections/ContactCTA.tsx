@@ -43,7 +43,7 @@ export function ContactCTA() {
             {[
               { label: 'Email', href: `mailto:${BRAND.email}`, value: BRAND.email },
               { label: 'LinkedIn', href: SOCIAL.linkedin, value: 'Nngtw Studio' },
-              { label: 'GitHub', href: SOCIAL.github, value: 'nngtw-studio' },
+              { label: 'Facebook', href: SOCIAL.facebook, value: 'Nngtw Studio' },
             ].map((link) => (
               <Link
                 key={link.label}

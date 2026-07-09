@@ -14,7 +14,7 @@ const contactLinks = [
   { label: "Email", href: `mailto:${BRAND.email}`, value: BRAND.email },
   { label: "Discord", href: SOCIAL.discord, value: "Join our community" },
   { label: "LinkedIn", href: SOCIAL.linkedin, value: "Nngtw Studio" },
-  { label: "GitHub", href: SOCIAL.github, value: "nngtw-studio" },
+  { label: "Facebook", href: SOCIAL.facebook, value: "Nngtw Studio" },
 ];
 
 export default function ContactPage() {

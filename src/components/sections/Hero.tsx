@@ -13,6 +13,7 @@ import {
   useTransform,
 } from 'framer-motion';
 import { HeroButton } from '@/components/sections/HeroButton';
+import { SOCIAL } from '@/lib/constants';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -255,6 +256,38 @@ export function Hero() {
       >
         <div className="absolute inset-0 bg-brand-black" />
 
+        {/* Atmospheric depth — three layered radial gradients painted directly
+            with no background colour and no filter:blur(). The transparent stops
+            do all the feathering so there is no perceivable element boundary.
+              L1: cream mist — tightest, strongest, directly behind headline
+              L2: amber warmth — wider, very low opacity, warm undertone
+              L3: huge ambient — enormous, barely visible, holds the whole field */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            overflow: 'visible',
+            background: `
+              radial-gradient(ellipse 900px 550px at 50% 30%,
+                rgba(247,242,234,0.08) 0%,
+                transparent 72%
+              ),
+              radial-gradient(ellipse 1300px 900px at 50% 42%,
+                rgba(245,138,31,0.02) 0%,
+                transparent 70%
+              ),
+              radial-gradient(ellipse 1800px 1200px at 50% 50%,
+                rgba(255,255,255,0.01) 0%,
+                transparent 80%
+              )
+            `,
+          }}
+        />
+
         {/* Lighting rig — a warm key light above the headline, a magenta whisper
             low right, and a floor glow beneath the CTAs. Oversized so the
             parallax lean never reveals an edge. */}
@@ -310,14 +343,16 @@ export function Hero() {
           style={{ y: contentY, opacity: contentOpacity }}
           className="relative z-10 mx-auto max-w-[1600px] px-6 text-center md:px-12 lg:px-20"
         >
+
           {/* Main headline — title case, no orange on words, revealed line by line */}
+
           <h1
             style={{ lineHeight: 0.98 }}
-            className="editorial-heading mx-auto max-w-5xl text-[clamp(3.5rem,9vw,8.5rem)] text-brand-white"
+            className="editorial-heading mx-auto max-w-5xl text-[clamp(2.6rem,6.5vw,6rem)] text-brand-white"
           >
             <motion.span {...lineRise(0)} className="block">
-              Buildin
-              <span data-cursor-spawn-anchor className="relative inline-block">
+              buildin
+              <span data-cursor-spawn-anchor className="relative z-10 inline-block">
                 g
               </span>
             </motion.span>
@@ -357,59 +392,104 @@ export function Hero() {
               wrapping only where the viewport forces it */}
           <motion.p
             {...rise(0.7)}
-            className="mx-auto mt-9 font-body text-base leading-relaxed text-brand-white/55 md:text-lg lg:whitespace-nowrap"
+            className="mx-auto mt-5 font-body text-base md:text-xl lg:text-[24px] leading-relaxed text-brand-white/55 lg:whitespace-nowrap"
           >
-            An independent studio crafting original games and immersive
-            experiences for PC, mobile, XR and virtual reality.
+            Crafting games and immersive experiences across mobile, PC, and XR.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
             {...rise(0.9)}
-            className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <HeroButton href="/games" variant="primary">
-              Explore Worlds
+              Experience the Games
             </HeroButton>
             <HeroButton href="/studio" variant="secondary">
-              Enter Studio
+              Discover Why
             </HeroButton>
           </motion.div>
         </motion.div>
 
-        {/* Corner metadata — quiet frame lines that ground the composition */}
-        <motion.div style={{ opacity: cueOpacity }} aria-hidden="true">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.4, duration: 1 }}
-            className="pointer-events-none absolute inset-x-0 bottom-0 hidden items-end justify-between px-6 pb-11 md:flex md:px-12 lg:px-20"
-          >
-            <p className="label-overline text-brand-grey/45">
-              Imagine · Explore · Evolve
-            </p>
-            <p className="label-overline text-brand-grey/45">
-              PC · Mobile · XR · VR
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll cue — a light pulse travelling down a hairline. Hidden on
-            short viewports where it would crowd the CTAs. */}
+        {/* Vertical social icons stack in bottom-left corner */}
         <motion.div
           style={{ opacity: cueOpacity }}
-          className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 [@media(min-height:740px)]:block"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 1 }}
+          className="absolute bottom-11 left-6 z-20 hidden flex-col gap-4.5 md:left-12 lg:left-20 md:flex"
+        >
+          <a
+            href={SOCIAL.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            aria-label="LinkedIn"
+          >
+            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2" fill="currentColor"/>
+            </svg>
+          </a>
+          <a
+            href={SOCIAL.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            aria-label="Facebook"
+          >
+            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+            </svg>
+          </a>
+          <a
+            href={SOCIAL.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            aria-label="Instagram"
+          >
+            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+          <a
+            href={SOCIAL.x}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            aria-label="X (Twitter)"
+          >
+            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+        </motion.div>
+
+        {/* Scroll cue — vertical composition in the bottom-right corner */}
+        <motion.div
+          initial={{ opacity: 1 }}
+          style={{ opacity: cueOpacity }}
+          className="absolute bottom-11 right-6 z-10 hidden md:right-12 lg:right-20 [@media(min-height:620px)]:block"
         >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.55, duration: 1 }}
-            className="flex flex-col items-center gap-3"
+            className="flex items-center gap-2"
           >
-            <span className="font-accent text-[9px] uppercase tracking-[0.4em] text-brand-white/25">
-              Scroll
-            </span>
-            <div className="relative h-10 w-px overflow-hidden">
+            <div className="flex flex-col items-center gap-1 font-accent text-[7px] font-light uppercase tracking-wider text-brand-white/25">
+              <span>S</span>
+              <span>C</span>
+              <span>R</span>
+              <span>O</span>
+              <span>L</span>
+              <span>L</span>
+            </div>
+            <div className="relative h-[150px] w-px overflow-hidden">
               <div className="absolute inset-0 bg-brand-white/10" />
               {/* Reduced motion: the pulse's y animation is stripped, leaving it
                   parked above the clip window — the hairline simply stays still */}

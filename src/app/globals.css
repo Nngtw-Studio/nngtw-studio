@@ -15,6 +15,7 @@
 
   --animate-rippling: rippling var(--duration) ease-out;
   --animate-ken-burns: ken-burns 18s ease-in-out infinite alternate;
+  --animate-edge-shimmer: edge-shimmer 12s linear infinite;
 
   @keyframes rippling {
     0% {
@@ -32,6 +33,15 @@
     }
     100% {
       transform: scale(1.07);
+    }
+  }
+
+  @keyframes edge-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
     }
   }
 }

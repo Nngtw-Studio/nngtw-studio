@@ -77,12 +77,12 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={SOCIAL.github}
+                  href={SOCIAL.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-brand-grey/70 transition-colors duration-300 hover:text-brand-white"
                 >
-                  GitHub
+                  Facebook
                 </a>
               </li>
             </ul>

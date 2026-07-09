@@ -17,8 +17,10 @@ export const COLORS = {
 
 export const SOCIAL = {
   discord: "https://discord.gg/z3fpVJZkD",
-  linkedin: "https://linkedin.com/company/nngtw-studio",
-  github: "https://github.com/nngtw-studio",
+  linkedin: "https://in.linkedin.com/company/nngtw",
+  facebook: "https://www.facebook.com/people/Nngtw-Studio/61573612197564/",
+  instagram: "https://www.instagram.com/nngtwstudio/",
+  x: "https://x.com/nngtw_studio",
 } as const;
 
 export const NAV_LINKS = [
