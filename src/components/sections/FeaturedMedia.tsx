@@ -93,7 +93,7 @@ export function FeaturedMediaFrame({ children }: { children: React.ReactNode }) 
           style={{ rotateX, rotateY, transformPerspective: 1200 }}
           whileHover={{ scale: 1.012 }}
           transition={{ type: 'spring', stiffness: 200, damping: 22 }}
-          className="relative h-95 overflow-hidden rounded-[28px] border border-brand-white/10 bg-brand-black shadow-[0_50px_100px_-30px_rgba(0,0,0,0.7)] sm:h-115 md:h-130 lg:h-150"
+          className="relative aspect-video w-full overflow-hidden rounded-2xl border border-brand-white/10 bg-brand-black shadow-[0_32px_72px_-30px_rgba(0,0,0,0.72)]"
         >
           {/* Parallax buffer — larger than the frame so the mouse-driven shift never reveals an edge */}
           <motion.div
@@ -116,6 +116,7 @@ interface FeaturedMediaLayerProps {
   isActive: boolean;
   shouldLoad: boolean;
   priority?: boolean;
+  onEnded?: () => void;
 }
 
 /**
@@ -129,6 +130,7 @@ export function FeaturedMediaLayer({
   isActive,
   shouldLoad,
   priority,
+  onEnded,
 }: FeaturedMediaLayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const layerRef = useRef<HTMLDivElement>(null);
@@ -170,11 +172,11 @@ export function FeaturedMediaLayer({
           src={project.heroVideo!}
           poster={project.heroThumbnail ?? undefined}
           muted
-          loop
           playsInline
           preload={isActive ? 'auto' : 'none'}
           onLoadedData={() => setLoaded(true)}
           onError={() => setVideoFailed(true)}
+          onEnded={onEnded}
           className="motion-safe:animate-ken-burns h-full w-full object-cover"
         />
       ) : hasThumbnail ? (

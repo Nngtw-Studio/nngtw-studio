@@ -1,8 +1,8 @@
 import { Hero } from "@/components/sections/Hero";
 import { FeaturedGames } from "@/components/sections/FeaturedGames";
 import { AboutStudio } from "@/components/sections/AboutStudio";
+import { TeamSection } from "@/components/sections/TeamSection";
 import { Technology } from "@/components/sections/Technology";
-import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { Community } from "@/components/sections/Community";
 import { LatestNews } from "@/components/sections/LatestNews";
 import { Careers } from "@/components/sections/Careers";
@@ -14,8 +14,8 @@ export default function HomePage() {
       <Hero />
       <FeaturedGames />
       <AboutStudio />
+      <TeamSection />
       <Technology />
-      <StudioPhilosophy />
       <Community />
       <LatestNews />
       <Careers />

@@ -6,14 +6,23 @@ import { getTechnologyCategories } from '@/lib/supabase/queries/technology';
 export async function Technology() {
   const technologyCategories = await getTechnologyCategories();
   return (
-    <section className="relative border-t border-brand-white/5">
-      <div className="section-padding mx-auto max-w-[1600px]">
+    <section
+      id="technology"
+      className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
+    >
+      {/* Ambient treatment — faint brand-orange bloom, mirroring sibling sections */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 -right-40 h-140 w-140 rounded-full bg-brand-orange/4 blur-[140px]"
+      />
+
+      <div className="section-padding relative mx-auto max-w-[1600px]">
       <FadeIn>
         <div className="mb-20 grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <div className="mb-8 flex items-center gap-4">
               <div className="accent-line" />
-              <p className="label-overline text-brand-grey/60">Our Technology</p>
+              <p className="label-overline text-brand-orange">Our Technology</p>
             </div>
             <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
               Built with
@@ -41,10 +50,10 @@ export async function Technology() {
               {/* Category name — left column */}
               <div className="lg:col-span-4">
                 <div className="flex items-center gap-4">
-                  <span className="font-accent text-[10px] tracking-[0.3em] text-brand-grey/30">
+                  <span className="font-accent text-[10px] tracking-[0.3em] text-brand-grey/30 transition-colors duration-500 group-hover:text-brand-orange/70">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="font-display text-lg text-brand-white font-semibold tracking-tight">
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-brand-white/90 transition-colors duration-500 group-hover:text-brand-white">
                     {category.title}
                   </h3>
                 </div>
@@ -60,7 +69,7 @@ export async function Technology() {
                 {category.items.map((item) => (
                   <span
                     key={item}
-                    className="border border-brand-white/8 px-4 py-2 font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/60 transition-all duration-300 group-hover:border-brand-white/15 group-hover:text-brand-grey hover:border-brand-orange/40 hover:text-brand-white"
+                    className="rounded-lg border border-brand-white/8 px-4 py-2 font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/60 transition-all duration-300 group-hover:border-brand-white/15 group-hover:text-brand-grey hover:border-brand-orange/50 hover:bg-brand-orange/5 hover:text-brand-white"
                   >
                     {item}
                   </span>

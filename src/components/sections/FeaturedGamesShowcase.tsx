@@ -5,9 +5,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { FeaturedGame } from '@/types';
 import { gameStatusLabels } from '@/lib/data/content';
-import { SLIDE_DURATION_MS } from '@/lib/data/featured-games';
 import { Button } from '@/components/ui/Button';
 import { FeaturedMediaFrame, FeaturedMediaLayer } from '@/components/sections/FeaturedMedia';
 import { cn } from '@/lib/utils';
@@ -38,6 +38,22 @@ function SlideContent({ game }: { game: FeaturedGame }) {
       </motion.span>
 
       {/* Game title — editorial-heading handles weight + natural case */}
+      {game.logoImageUrl && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.6, ease: EASE_OUT }}
+          className="mb-5 h-16 w-52 sm:h-20 sm:w-64"
+        >
+          <Image
+            src={game.logoImageUrl}
+            alt={`${game.title} logo`}
+            width={640}
+            height={200}
+            className="h-full w-full object-contain object-left"
+          />
+        </motion.div>
+      )}
       <motion.h2
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -82,18 +98,10 @@ function SlideContent({ game }: { game: FeaturedGame }) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.46, duration: 0.5 }}
-        className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+        className="mt-8 flex flex-col sm:flex-row sm:items-center"
       >
         <Button href={game.projectLink ?? `/games/${game.slug}`} variant="primary" size="lg">
           View Project
-        </Button>
-        <Button
-          href={game.followLink ?? '#'}
-          variant="secondary"
-          size="lg"
-          external={game.followLink?.startsWith('http')}
-        >
-          Follow Development
         </Button>
       </motion.div>
     </motion.div>
@@ -102,11 +110,6 @@ function SlideContent({ game }: { game: FeaturedGame }) {
 
 export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const progressRef = useRef<number>(0);
-  const rafRef = useRef<number>(0);
-  const lastTickRef = useRef<number>(0);
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -117,9 +120,6 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
     (index: number) => {
       if (count === 0) return;
       setActiveIndex(((index % count) + count) % count);
-      setProgress(0);
-      progressRef.current = 0;
-      lastTickRef.current = performance.now();
     },
     [count],
   );
@@ -148,50 +148,30 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isVisible, goPrev, goNext]);
 
-  useEffect(() => {
-    if (count <= 1 || isPaused || !isVisible) return;
-    lastTickRef.current = performance.now();
-    const tick = (now: number) => {
-      const delta = now - lastTickRef.current;
-      lastTickRef.current = now;
-      progressRef.current = Math.min(progressRef.current + delta, SLIDE_DURATION_MS);
-      setProgress(progressRef.current / SLIDE_DURATION_MS);
-      if (progressRef.current >= SLIDE_DURATION_MS) {
-        goNext();
-      } else {
-        rafRef.current = requestAnimationFrame(tick);
-      }
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [activeIndex, isPaused, isVisible, count, goNext]);
-
   if (!activeGame) return null;
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-brand-bg"
+      className="relative w-full overflow-hidden bg-[#160d17]"
       aria-label="Featured games showcase"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => {
-        setIsPaused(false);
-        lastTickRef.current = performance.now();
-      }}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => {
-        setIsPaused(false);
-        lastTickRef.current = performance.now();
-      }}
     >
-      <div className="section-padding mx-auto max-w-[1600px]">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-60"
+        aria-hidden="true"
+        style={{
+          background:
+            'radial-gradient(ellipse 55% 70% at 8% 55%, rgba(245,138,31,0.11), transparent 68%), radial-gradient(ellipse 60% 70% at 92% 35%, rgba(223,19,138,0.12), transparent 70%)',
+        }}
+      />
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-5rem)] max-w-[1600px] flex-col justify-center px-6 py-16 md:px-12 md:py-20 lg:px-20 xl:px-28">
         {/* Section label */}
-        <div className="mb-14 flex items-center gap-4 md:mb-20">
+        <div className="mb-10 flex items-center gap-4 md:mb-14">
           <div className="accent-line" />
-          <p className="label-overline text-brand-grey/60">Featured</p>
+          <p className="label-overline text-brand-orange">Featured</p>
         </div>
 
-        <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16 xl:gap-24">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-14 xl:gap-20">
           {/* Left — content */}
           <div className="order-2 lg:order-1">
             <AnimatePresence mode="wait">
@@ -230,6 +210,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
                         isActive={isActive}
                         shouldLoad={shouldLoad}
                         priority={index === 0}
+                        onEnded={isActive ? goNext : undefined}
                       />
                     </motion.div>
                   );
@@ -240,7 +221,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
         </div>
 
         {/* Controls */}
-        <div className="mt-14 md:mt-20">
+        <div className="mt-10 md:mt-14">
           {/* Progress bars */}
           <div className="mb-6 flex gap-1.5">
             {games.map((game, index) => (
@@ -250,17 +231,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
                 className="group relative h-px flex-1 overflow-hidden bg-brand-white/10 transition-colors hover:bg-brand-white/20"
                 aria-label={`Go to ${game.title}`}
               >
-                <span
-                  className="absolute inset-y-0 left-0 bg-brand-white/70 transition-none"
-                  style={{
-                    width:
-                      index < activeIndex
-                        ? '100%'
-                        : index === activeIndex
-                          ? `${progress * 100}%`
-                          : '0%',
-                  }}
-                />
+                <span className={cn('absolute inset-0 origin-left bg-brand-white/70 transition-transform duration-500', index === activeIndex ? 'scale-x-100' : index < activeIndex ? 'scale-x-100' : 'scale-x-0')} />
               </button>
             ))}
           </div>
@@ -299,10 +270,10 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
       </div>
 
       {/* View all link */}
-      <div className="border-b border-brand-white/4 bg-brand-bg py-6 text-center">
+      <div className="border-b border-brand-white/4 bg-[#160d17] py-6 text-center">
         <Link
           href="/games"
-          className="font-accent text-[10px] tracking-[0.3em] uppercase text-brand-grey/50 transition-colors duration-300 hover:text-brand-white"
+          className="font-secondary text-[18px] font-semibold tracking-[0.08em] uppercase text-brand-white/80 transition-colors duration-300 hover:text-brand-orange"
         >
           View All Projects &rarr;
         </Link>

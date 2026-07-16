@@ -2,11 +2,12 @@
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   motion,
   MotionConfig,
   useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -204,20 +205,49 @@ function AmbientField() {
   );
 }
 
-const rise = (delay: number) => ({
+const rise = (delay: number, ready: boolean) => ({
   initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0 },
+  animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 },
   transition: { duration: 1, delay, ease: EASE_OUT },
 });
 
-const lineRise = (i: number) => ({
+const lineRise = (i: number, ready: boolean) => ({
   initial: { opacity: 0, y: '0.55em' },
-  animate: { opacity: 1, y: 0 },
+  animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: '0.55em' },
   transition: { duration: 1.15, delay: 0.25 + i * 0.12, ease: EASE_OUT },
 });
 
+/**
+ * Holds the hero's entrance until the intro splash has fully handed off.
+ * The splash claims `data-intro` on <html> synchronously with its first
+ * paint and fires `intro-complete` when it retires (for any reason), so the
+ * headline never animates behind the black backdrop. On routes or loads
+ * where the splash never claims the screen, the entrance starts immediately.
+ */
+function useIntroGate() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const done = () => setReady(true);
+    window.addEventListener('intro-complete', done);
+    /* Check after the splash's own effects have run (they flush in the same
+       commit, before this frame paints) — if it never claimed the screen,
+       there is nothing to wait for. */
+    const id = requestAnimationFrame(() => {
+      if (document.documentElement.getAttribute('data-intro') !== '1') setReady(true);
+    });
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('intro-complete', done);
+    };
+  }, []);
+
+  return ready;
+}
+
 export function Hero() {
   const reduce = useReducedMotion() ?? false;
+  const ready = useIntroGate();
   const sectionRef = useRef<HTMLElement>(null);
 
   /* Mouse-driven light parallax — the glow layers lean gently toward the cursor */
@@ -236,6 +266,28 @@ export function Hero() {
     offset: ['start start', 'end start'],
   });
   const contentY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 90]);
+
+  const scrollToNextSection = () => {
+    window.dispatchEvent(new CustomEvent('featured-snap'));
+    sectionRef.current?.nextElementSibling?.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+    });
+  };
+
+  const handleScrollCueClick = () => scrollToNextSection();
+
+  /* Once the user has scrolled 40% through the hero, finish the transition
+     for them so the section never gets stuck half-committed. Guarded to
+     fire once per downward pass so it doesn't fight scrolling back up. */
+  const autoScrolledRef = useRef(false);
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    if (progress >= 0.4 && !autoScrolledRef.current) {
+      autoScrolledRef.current = true;
+      scrollToNextSection();
+    } else if (progress < 0.05) {
+      autoScrolledRef.current = false;
+    }
+  });
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
 
@@ -251,87 +303,57 @@ export function Hero() {
     <MotionConfig reducedMotion="user">
       <section
         ref={sectionRef}
+        data-hero
         onMouseMove={onMouseMove}
         className="relative flex min-h-svh items-center justify-center overflow-hidden"
       >
         <div className="absolute inset-0 bg-brand-black" />
 
-        {/* Atmospheric depth — three layered radial gradients painted directly
-            with no background colour and no filter:blur(). The transparent stops
-            do all the feathering so there is no perceivable element boundary.
-              L1: cream mist — tightest, strongest, directly behind headline
-              L2: amber warmth — wider, very low opacity, warm undertone
-              L3: huge ambient — enormous, barely visible, holds the whole field */}
+        {/* Pixel-identical twin of the intro splash's primary wash — the two
+            surfaces share one background, so the splash's end-of-ride
+            crossfade reveals no change at all. */}
         <div
           aria-hidden="true"
+          className="pointer-events-none absolute inset-[-20%] opacity-[0.05]"
           style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            overflow: 'visible',
             background: `
-              radial-gradient(ellipse 900px 550px at 50% 30%,
-                rgba(247,242,234,0.08) 0%,
-                transparent 72%
-              ),
-              radial-gradient(ellipse 1300px 900px at 50% 42%,
-                rgba(245,138,31,0.02) 0%,
-                transparent 70%
-              ),
-              radial-gradient(ellipse 1800px 1200px at 50% 50%,
-                rgba(255,255,255,0.01) 0%,
-                transparent 80%
+              radial-gradient(ellipse 70% 62% at 44% 40%,
+                rgba(245,138,31,0.9) 0%,
+                rgba(245,138,31,0.45) 38%,
+                rgba(245,138,31,0.15) 62%,
+                transparent 82%
               )
             `,
           }}
         />
 
-        {/* Lighting rig — a warm key light above the headline, a magenta whisper
-            low right, and a floor glow beneath the CTAs. Oversized so the
-            parallax lean never reveals an edge. */}
+        {/* Lighting rig — only two lights remain: the primary wash above and
+            this magenta whisper low right. Oversized so the parallax lean
+            never reveals an edge. */}
         <motion.div
           style={{ x: glowX, y: glowY }}
           className="absolute -inset-10"
           aria-hidden="true"
         >
+          {/* Magenta whisper — hidden while the splash owns the screen; the
+              moment its auto-scroll hands off, it slowly breathes in. */}
           <motion.div
-            animate={{ opacity: [0.75, 1, 0.75] }}
-            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 85% 60% at 50% -12%, rgba(245,138,31,0.11), transparent 65%)',
-            }}
-          />
-          <div
-            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: ready ? 1 : 0 }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
             style={{
               background:
                 'radial-gradient(ellipse 50% 38% at 80% 90%, rgba(223,19,138,0.05), transparent 70%)',
             }}
-          />
-          <div
             className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 55% 28% at 50% 106%, rgba(245,138,31,0.07), transparent 70%)',
-            }}
           />
         </motion.div>
 
         <AmbientField />
 
-        {/* Vignette and grain sit above the field so the edges stay quiet and the surface feels filmic */}
-        <div
-          className="absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              'radial-gradient(ellipse 120% 95% at 50% 42%, transparent 58%, rgba(29,16,16,0.85) 100%)',
-          }}
-        />
+        {/* Grain sits above the field so the surface feels filmic. The old
+            edge vignette is gone — the splash has no vignette, and the two
+            surfaces must share one identical background through the handoff. */}
         <div
           className="absolute inset-0 opacity-[0.035]"
           aria-hidden="true"
@@ -350,36 +372,36 @@ export function Hero() {
             style={{ lineHeight: 0.98 }}
             className="editorial-heading mx-auto max-w-5xl text-[clamp(2.6rem,6.5vw,6rem)] text-brand-white"
           >
-            <motion.span {...lineRise(0)} className="block">
+            <motion.span {...lineRise(0, ready)} className="block">
               buildin
               <span data-cursor-spawn-anchor className="relative z-10 inline-block">
                 g
               </span>
             </motion.span>
-            <motion.span {...lineRise(1)} className="block">
+            <motion.span {...lineRise(1, ready)} className="block">
               <span className="relative isolate inline-block px-[0.1em]">
                 <motion.span
                   aria-hidden="true"
                   initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
-                  animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+                  animate={{ clipPath: ready ? 'inset(0% 0% 0% 0%)' : 'inset(0% 100% 0% 0%)' }}
                   transition={{ duration: 0.5, delay: 1.2, ease: [0.65, 0, 0.35, 1] }}
                   className="pointer-events-none absolute inset-0 bg-no-repeat"
                   style={{
                     backgroundImage: "url('/highlights/immersive-highlight.svg')",
                     backgroundSize: 'cover',
                     backgroundPosition: '50% 50%',
-                    transform: 'rotate(-2.5deg) scale(1.1, 0.97)',
+                    transform: 'rotate(-1.5deg) scale(1.22, 0.97)',
                     zIndex: -1,
                   }}
                 />
                 immersive
               </span>
             </motion.span>
-            <motion.span {...lineRise(2)} className="block">
+            <motion.span {...lineRise(2, ready)} className="block">
               worlds
               <motion.span
                 initial={{ color: '#f2efe7' }}
-                animate={{ color: '#df138a' }}
+                animate={{ color: ready ? '#df138a' : '#f2efe7' }}
                 transition={{ duration: 0.35, delay: 1.65 }}
                 className="text-[0.72em] align-baseline"
               >
@@ -391,7 +413,7 @@ export function Hero() {
           {/* Supporting line — one unbroken editorial line on desktop, natural
               wrapping only where the viewport forces it */}
           <motion.p
-            {...rise(0.7)}
+            {...rise(0.7, ready)}
             className="mx-auto mt-5 font-body text-base md:text-xl lg:text-[24px] leading-relaxed text-brand-white/55 lg:whitespace-nowrap"
           >
             Crafting games and immersive experiences across mobile, PC, and XR.
@@ -399,8 +421,8 @@ export function Hero() {
 
           {/* CTAs */}
           <motion.div
-            {...rise(0.9)}
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            {...rise(0.9, ready)}
+            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0"
           >
             <HeroButton href="/games" variant="primary">
               Experience the Games
@@ -415,7 +437,7 @@ export function Hero() {
         <motion.div
           style={{ opacity: cueOpacity }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: ready ? 1 : 0 }}
           transition={{ delay: 1.4, duration: 1 }}
           className="absolute bottom-11 left-6 z-20 hidden flex-col gap-4.5 md:left-12 lg:left-20 md:flex"
         >
@@ -423,10 +445,10 @@ export function Hero() {
             href={SOCIAL.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
             aria-label="LinkedIn"
           >
-            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
               <rect x="2" y="9" width="4" height="12"/>
               <circle cx="4" cy="4" r="2" fill="currentColor"/>
@@ -436,10 +458,10 @@ export function Hero() {
             href={SOCIAL.facebook}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
             aria-label="Facebook"
           >
-            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
             </svg>
           </a>
@@ -447,10 +469,10 @@ export function Hero() {
             href={SOCIAL.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
             aria-label="Instagram"
           >
-            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
               <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
@@ -460,10 +482,10 @@ export function Hero() {
             href={SOCIAL.x}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-grey/45 hover:text-brand-orange transition-colors duration-300"
+            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
             aria-label="X (Twitter)"
           >
-            <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </a>
@@ -475,13 +497,16 @@ export function Hero() {
           style={{ opacity: cueOpacity }}
           className="absolute bottom-11 right-6 z-10 hidden md:right-12 lg:right-20 [@media(min-height:620px)]:block"
         >
-          <motion.div
+          <motion.button
+            type="button"
+            onClick={handleScrollCueClick}
+            aria-label="Scroll to next section"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: ready ? 1 : 0 }}
             transition={{ delay: 1.55, duration: 1 }}
-            className="flex items-center gap-2"
+            className="group flex items-center gap-2"
           >
-            <div className="flex flex-col items-center gap-1 font-accent text-[7px] font-light uppercase tracking-wider text-brand-white/25">
+            <div className="flex h-37.5 flex-col items-center justify-between font-accent text-[10px] font-light uppercase tracking-wider text-brand-white/40 transition-colors duration-300 group-hover:text-brand-white/60">
               <span>S</span>
               <span>C</span>
               <span>R</span>
@@ -490,7 +515,7 @@ export function Hero() {
               <span>L</span>
             </div>
             <div className="relative h-[150px] w-px overflow-hidden">
-              <div className="absolute inset-0 bg-brand-white/10" />
+              <div className="absolute inset-0 bg-brand-white/40 transition-colors duration-300 group-hover:bg-brand-white/60" />
               {/* Reduced motion: the pulse's y animation is stripped, leaving it
                   parked above the clip window — the hairline simply stays still */}
               <motion.div
@@ -505,7 +530,7 @@ export function Hero() {
                 className="absolute h-1/4 w-full bg-linear-to-b from-transparent via-brand-orange/70 to-transparent"
               />
             </div>
-          </motion.div>
+          </motion.button>
         </motion.div>
       </section>
     </MotionConfig>

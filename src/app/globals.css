@@ -16,6 +16,13 @@
   --animate-rippling: rippling var(--duration) ease-out;
   --animate-ken-burns: ken-burns 18s ease-in-out infinite alternate;
   --animate-edge-shimmer: edge-shimmer 12s linear infinite;
+  --animate-icon-spin: icon-spin 0.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  --animate-icon-slide: icon-slide 1s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards;
+  --animate-label-slide: label-slide 1s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards;
+  --animate-icon-exit: icon-exit 0.82s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  --animate-icon-exit-spin: icon-exit-spin 0.82s cubic-bezier(0.65, 0, 0.35, 1)
+    forwards;
+  --animate-jello-vertical: jello-vertical 0.9s both;
 
   @keyframes rippling {
     0% {
@@ -44,10 +51,111 @@
       background-position: 200% 0;
     }
   }
+
+  /* The fly is split across two elements so rotation never bends the travel
+     axis: the inner SVG only spins, the outer wrapper only slides.
+     Phase 1 (0-0.5s): spin in place, still leading the word ("- word").
+     Phase 2 (0.5-1.5s): slide to sit just after the word ("word -"). */
+  @keyframes icon-spin {
+    0% {
+      transform: rotate(30deg);
+    }
+    100% {
+      transform: rotate(90deg);
+    }
+  }
+
+  /* Hover exit: keep flying right off the button (nose at 90deg), then
+     re-enter from near the bottom-left corner back to the idle seat. */
+  /* Fly off right (0-0.4s), a 0.02s blink while hidden, then a matching 0.4s
+     return to the idle seat. The re-entry start sits down-left along the
+     rocket's own 30deg heading, so it arrives nose-first on its idle angle. */
+  @keyframes icon-exit {
+    0% {
+      transform: translateX(var(--icon-fly-distance, 200px));
+      opacity: 1;
+    }
+    48.8% {
+      transform: translateX(calc(var(--icon-fly-distance, 200px) + 160px));
+      opacity: 0;
+    }
+    51.2% {
+      transform: translate(-28px, 48px);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes icon-exit-spin {
+    0%,
+    48.8% {
+      transform: rotate(90deg);
+    }
+    51.2%,
+    100% {
+      transform: rotate(30deg);
+    }
+  }
+
+  @keyframes icon-slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(var(--icon-fly-distance, 200px));
+    }
+  }
+
+  /* The word slides left into the space the icon vacated as the icon flies
+     out to the trailing edge — keeping the pair balanced. */
+  @keyframes label-slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-28px);
+    }
+  }
+
+  /* Uiverse jello-vertical: the secondary CTA's arrow squishes on hover. */
+  @keyframes jello-vertical {
+    0% {
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    40% {
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    50% {
+      transform: scale3d(0.85, 1.15, 1);
+    }
+    65% {
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    75% {
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    100% {
+      transform: scale3d(1, 1, 1);
+    }
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  /* Proximity snap — only sections that declare `snap-start` (e.g. About)
+     act as magnets: a scroll ending near their top settles onto them, but
+     free scrolling elsewhere is never hijacked. */
+  scroll-snap-type: y proximity;
+  /* Always reserve the scrollbar gutter so toggling `body { overflow: hidden }`
+     (e.g. the intro splash / mobile menu) never removes the scrollbar and
+     shifts the whole page ~1px sideways. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -115,7 +223,8 @@ h6 {
   }
 
   .section-padding {
-    @apply px-6 md:px-12 lg:px-20 xl:px-28 py-28 md:py-40;
+    /* Vertical rhythm matched to the Featured showcase (py-16 md:py-20) */
+    @apply px-6 md:px-12 lg:px-20 xl:px-28 py-16 md:py-20;
   }
 
   /* Display headings: luxurious, heavy, title case — never uppercase */
@@ -130,10 +239,10 @@ h6 {
   /* Small editorial labels: Posterama accent, uppercase, wide tracking */
   .label-overline {
     font-family: var(--font-accent), 'Times New Roman', serif;
-    font-size: 0.625rem;
-    letter-spacing: 0.4em;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    font-weight: 400;
+    font-weight: 600;
   }
 
   .accent-line {

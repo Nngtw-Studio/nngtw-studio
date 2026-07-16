@@ -10,7 +10,9 @@ interface PageHeaderProps {
 
 export function PageHeader({ label, title, description }: PageHeaderProps) {
   return (
-    <section className="relative overflow-hidden pt-36 pb-20 md:pt-44 md:pb-28">
+    /* data-hero: the site header treats this as the page's hero — the nav
+       never snap-hides while it's on screen. */
+    <section data-hero className="relative overflow-hidden pt-36 pb-20 md:pt-44 md:pb-28">
       {/* Very subtle warm glow */}
       <div className="pointer-events-none absolute top-0 left-1/2 h-75 w-150 -translate-x-1/2 rounded-full bg-brand-white/1 blur-[140px]" />
       <div className="relative mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28">

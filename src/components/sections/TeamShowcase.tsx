@@ -5,12 +5,17 @@
 import { useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, LayoutGroup, MotionConfig } from 'framer-motion';
+import { motion, MotionConfig } from 'framer-motion';
 import type { TeamMember } from '@/types';
 import { cn } from '@/lib/utils';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const SPRING = { type: 'spring' as const, stiffness: 210, damping: 28, mass: 1 };
+/** Minimum time a grid-hovered card keeps hover before another can take it. */
+const HOVER_HOLD_MS = 1000;
+/** How long an index-rail hover keeps its card expanded (and held) before
+ *  auto-releasing if the pointer never reaches the grid. */
+const LIST_HOVER_MS = 3000;
 
 interface Rect {
   top: number;
@@ -72,9 +77,12 @@ function computeLayout(members: TeamMember[], hoveredId: string | null): Map<str
     return rects;
   }
 
-  /* Rest / founder hover — founder anchors left at 30% (48% when hovered),
-     the rest stack right as featured-top + weighted bottom row. */
-  const leftWidth = hoveredId === anchor.id ? 48 : 30;
+  /* Rest / founder hover — founder anchors left at 35% (50% when hovered),
+     the rest stack right as featured-top + weighted bottom row. The anchor
+     share is tuned for the grid sitting beside the index rail: the rail eats
+     ~20% of the section width, so 30% here rendered visibly narrower than
+     the old full-width layout did. */
+  const leftWidth = hoveredId === anchor.id ? 50 : 35;
   rects.set(anchor.id, { top: 0, left: 0, width: leftWidth, height: 100 });
 
   const rightWidth = 100 - leftWidth;
@@ -98,6 +106,29 @@ function getInitials(name: string): string {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('');
+}
+
+function rankMembers(members: TeamMember[]): TeamMember[] {
+  return [...members].sort((a, b) => b.contributionWeight - a.contributionWeight);
+}
+
+function TeamHeading() {
+  return (
+    <div>
+      <div className="mb-4 flex items-center gap-4">
+        <div className="accent-line" />
+        <p className="label-overline text-brand-orange">The Team</p>
+      </div>
+      <h3 className="editorial-heading text-3xl text-brand-white md:text-4xl">
+        Small team.
+        <br />
+        Big vision.
+      </h3>
+      <p className="mt-5 max-w-xs text-sm leading-7 text-brand-grey/60">
+        The people behind every world we ship.
+      </p>
+    </div>
+  );
 }
 
 function TeamPortrait({
@@ -161,8 +192,8 @@ interface TeamCardProps {
   isAnchor: boolean;
   isHovered: boolean;
   isDimmed: boolean;
-  /** Whether the contribution copy + "View Profile" row is shown — hover-gated
-   *  on the desktop bento grid, always true on the mobile stacked list. */
+  /** Whether the role, contribution copy + "View Profile" row is shown —
+   *  hover-gated on the desktop bento grid, always true on mobile. */
   expanded: boolean;
   onHover: (id: string | null) => void;
   priority?: boolean;
@@ -214,21 +245,23 @@ function TeamCard({
         )}
       />
 
-      {/* Content */}
+      {/* Content — name only at rest; role + contribution reveal on hover */}
       <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-7">
         <motion.div
           animate={{ y: expanded ? -4 : 0 }}
           transition={{ duration: 0.5, ease: EASE_OUT }}
         >
-          <div className="mb-3 flex items-center gap-3">
-            <span
-              className={cn(
-                'h-px bg-brand-orange transition-all duration-500',
-                expanded ? 'w-10 opacity-100' : 'w-6 opacity-60',
-              )}
-            />
-            <p className="label-overline text-brand-orange">{member.role}</p>
-          </div>
+          <motion.div
+            initial={false}
+            animate={{ opacity: expanded ? 1 : 0, height: expanded ? 'auto' : 0 }}
+            transition={{ duration: 0.45, ease: EASE_OUT }}
+            className="overflow-hidden"
+          >
+            <div className="mb-3 flex items-center gap-3">
+              <span className="h-px w-10 bg-brand-orange" />
+              <p className="label-overline text-brand-orange">{member.role}</p>
+            </div>
+          </motion.div>
 
           <h3
             className={cn(
@@ -290,21 +323,54 @@ function TeamCard({
   );
 }
 
-function TeamBentoGrid({ members }: { members: TeamMember[] }) {
+/** Desktop layout — heading + member index in a left rail, bento grid right. */
+function TeamDesktop({ members }: { members: TeamMember[] }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const lastSwitchRef = useRef(0);
+  /* When the current hover engaged — a hovered card holds its expanded state
+     for a minimum of HOVER_HOLD_MS regardless of where the morph slides the
+     cards, which both prevents the reflow ping-pong and gives each profile a
+     beat to actually be read. */
+  const hoverStartRef = useRef(0);
+  /* Hold duration of the CURRENT hover — 1s for grid hovers, 3s for
+     index-rail hovers (rail hovers deserve a longer read since the pointer
+     is nowhere near the card). */
+  const holdMsRef = useRef(HOVER_HOLD_MS);
+  /* Auto-release timer for rail hovers — without it, a rail-engaged card
+     stayed expanded forever until the pointer happened to enter the grid. */
+  const releaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const ranked = useMemo(
-    () => [...members].sort((a, b) => b.contributionWeight - a.contributionWeight),
-    [members],
-  );
+  const ranked = useMemo(() => rankMembers(members), [members]);
   const layout = useMemo(() => computeLayout(ranked, hoveredId), [ranked, hoveredId]);
   const anchorId = ranked[0]?.id;
 
-  /* Hover from real pointer movement only. Two guards keep the morph calm:
+  const clearReleaseTimer = () => {
+    if (releaseTimerRef.current) {
+      clearTimeout(releaseTimerRef.current);
+      releaseTimerRef.current = null;
+    }
+  };
+
+  /* Deliberate hover (index rail, keyboard focus) engages immediately,
+     holds for LIST_HOVER_MS, then auto-releases if the grid pointer never
+     took over. */
+  const engage = (id: string | null) => {
+    clearReleaseTimer();
+    hoverStartRef.current = performance.now();
+    holdMsRef.current = LIST_HOVER_MS;
+    setHoveredId(id);
+    if (id) {
+      releaseTimerRef.current = setTimeout(() => {
+        setHoveredId((current) => (current === id ? null : current));
+      }, LIST_HOVER_MS);
+    }
+  };
+
+  /* Hover from real pointer movement only. Two rules keep the morph calm:
      the hovered card is sticky while the pointer stays inside its rect, and
-     switches are rate-limited so a pointer travelling through the reflow
-     can't ping-pong the layout mid-animation. */
+     once a card engages it HOLDS hover for HOVER_HOLD_MS — during the hold,
+     the layout ignores the pointer entirely, so a reflow sliding cards under
+     a stationary cursor can never ping-pong the grid. After the hold, the
+     card the pointer currently sits on takes over. */
   const onGridMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -313,12 +379,21 @@ function TeamBentoGrid({ members }: { members: TeamMember[] }) {
     const inRect = (r?: Rect) =>
       !!r && x >= r.left && x <= r.left + r.width && y >= r.top && y <= r.top + r.height;
 
-    if (hoveredId && inRect(layout.get(hoveredId))) return;
-    if (performance.now() - lastSwitchRef.current < 350) return;
+    if (hoveredId) {
+      if (inRect(layout.get(hoveredId))) {
+        // Grid pointer reached the card — it owns the hover now, so cancel
+        // any pending rail auto-release.
+        clearReleaseTimer();
+        return;
+      }
+      if (performance.now() - hoverStartRef.current < holdMsRef.current) return; // hold
+    }
 
     const next = ranked.find((m) => inRect(layout.get(m.id)));
     if ((next?.id ?? null) !== hoveredId) {
-      lastSwitchRef.current = performance.now();
+      clearReleaseTimer();
+      hoverStartRef.current = performance.now();
+      holdMsRef.current = HOVER_HOLD_MS;
       setHoveredId(next?.id ?? null);
     }
   };
@@ -333,11 +408,53 @@ function TeamBentoGrid({ members }: { members: TeamMember[] }) {
     // very first render already resolves true, unlike the deferred-effect
     // pattern this hook uses elsewhere).
     <MotionConfig reducedMotion="user">
-      <LayoutGroup>
+      <div className="hidden gap-12 lg:flex lg:items-stretch xl:gap-16">
+        {/* Left rail — heading + member index */}
+        <aside className="flex w-60 shrink-0 flex-col xl:w-72">
+          <TeamHeading />
+
+          <nav aria-label="Team members" className="mt-10 flex flex-col border-t border-brand-white/10">
+            {ranked.map((member) => {
+              const active = hoveredId === member.id;
+              return (
+                <button
+                  key={member.id}
+                  type="button"
+                  onMouseEnter={() => engage(member.id)}
+                  onFocus={() => engage(member.id)}
+                  className={cn(
+                    'cursor-target group/index flex flex-col border-b border-brand-white/10 py-4 text-left transition-colors duration-300 focus-visible:outline-none',
+                    active ? 'text-brand-orange' : 'text-brand-white/75 hover:text-brand-white',
+                  )}
+                >
+                  <span className="flex items-center gap-3">
+                    <span
+                      className={cn(
+                        'h-px bg-brand-orange transition-all duration-300',
+                        active ? 'w-6 opacity-100' : 'w-0 opacity-0',
+                      )}
+                    />
+                    <span className="font-display text-lg font-semibold tracking-tight">
+                      {member.name}
+                    </span>
+                  </span>
+                  <span className="mt-1 font-accent text-[10px] tracking-[0.25em] text-brand-grey/50 uppercase">
+                    {member.role}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Bento grid */}
         <div
           onMouseMove={onGridMouseMove}
-          onMouseLeave={() => setHoveredId(null)}
-          className="relative hidden h-140 w-full lg:block xl:h-180"
+          onMouseLeave={() => {
+            clearReleaseTimer();
+            setHoveredId(null);
+          }}
+          className="relative h-140 min-w-0 flex-1 xl:h-180"
         >
           {ranked.map((member, index) => {
             const rect = layout.get(member.id);
@@ -345,15 +462,19 @@ function TeamBentoGrid({ members }: { members: TeamMember[] }) {
             return (
               <motion.div
                 key={member.id}
-                layout
-                transition={SPRING}
-                style={{
-                  position: 'absolute',
+                /* Animate the real box (top/left/width/height) instead of a
+                   `layout` transform morph — layout animations scale the whole
+                   subtree while interpolating, which visibly stretched the
+                   portraits whenever a card changed aspect ratio on hover. */
+                initial={false}
+                animate={{
                   top: `${rect.top}%`,
                   left: `${rect.left}%`,
                   width: `${rect.width}%`,
                   height: `${rect.height}%`,
                 }}
+                transition={SPRING}
+                style={{ position: 'absolute' }}
                 className="p-1.5 xl:p-2"
               >
                 <TeamCard
@@ -369,32 +490,34 @@ function TeamBentoGrid({ members }: { members: TeamMember[] }) {
             );
           })}
         </div>
-      </LayoutGroup>
+      </div>
     </MotionConfig>
   );
 }
 
 function TeamMobileList({ members }: { members: TeamMember[] }) {
-  const ranked = useMemo(
-    () => [...members].sort((a, b) => b.contributionWeight - a.contributionWeight),
-    [members],
-  );
+  const ranked = useMemo(() => rankMembers(members), [members]);
 
   return (
-    <div className="flex flex-col gap-4 lg:hidden">
-      {ranked.map((member, index) => (
-        <div key={member.id} className="h-85 w-full sm:h-100">
-          <TeamCard
-            member={member}
-            isAnchor={index === 0}
-            isHovered={false}
-            isDimmed={false}
-            expanded
-            onHover={() => {}}
-            priority={index === 0}
-          />
-        </div>
-      ))}
+    <div className="lg:hidden">
+      <div className="mb-12">
+        <TeamHeading />
+      </div>
+      <div className="flex flex-col gap-4">
+        {ranked.map((member, index) => (
+          <div key={member.id} className="h-85 w-full sm:h-100">
+            <TeamCard
+              member={member}
+              isAnchor={index === 0}
+              isHovered={false}
+              isDimmed={false}
+              expanded
+              onHover={() => {}}
+              priority={index === 0}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -404,7 +527,7 @@ export function TeamShowcase({ members }: { members: TeamMember[] }) {
 
   return (
     <>
-      <TeamBentoGrid members={members} />
+      <TeamDesktop members={members} />
       <TeamMobileList members={members} />
     </>
   );

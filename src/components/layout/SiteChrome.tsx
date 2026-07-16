@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { AdaptiveCursor } from '@/components/effects/AdaptiveCursor';
+import { IntroSplash } from '@/components/layout/IntroSplash';
 
 /**
  * Public-site chrome (custom cursor, header, footer) wraps every marketing
@@ -25,6 +26,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <Header />
       <main>{children}</main>
       <Footer />
+      <IntroSplash />
     </>
   );
 }

@@ -20,7 +20,7 @@ export async function LatestNews() {
           <div>
             <div className="mb-8 flex items-center gap-4">
               <div className="accent-line" />
-              <p className="label-overline text-brand-grey/60">Latest News</p>
+              <p className="label-overline text-brand-orange">Latest News</p>
             </div>
             <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
               Development

@@ -51,12 +51,96 @@ function IdleIcon({ children }: { children: React.ReactNode }) {
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    let hideTimer: ReturnType<typeof setTimeout> | undefined;
+    let snapSettleTimer: ReturnType<typeof setTimeout> | undefined;
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
+    const heroVisibleRef = { current: true };
+    /* True while the snap's smooth scroll is in flight — its own scroll
+       events must not re-show the nav the snap just hid. */
+    let snapping = false;
+
+    const scheduleHide = () => {
+      if (heroVisibleRef.current) return;
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => setNavVisible(false), 5000);
+    };
+
+    /* CSS proximity snap gives no event — when scrolling settles with a
+       `.snap-start` section pinned to the viewport top, treat it as a snap
+       landing and hide the nav, matching the hero → featured behavior. */
+    const onSettled = () => {
+      /* Snap-hide never applies while a page's hero is on screen — the nav
+         stays up until the visitor has actually left the hero. */
+      if (heroVisibleRef.current) return;
+      for (const el of document.querySelectorAll('.snap-start')) {
+        if (Math.abs(el.getBoundingClientRect().top) < 4) {
+          if (hideTimer) clearTimeout(hideTimer);
+          setNavVisible(false);
+          return;
+        }
+      }
+    };
+
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50);
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = setTimeout(onSettled, 150);
+      if (snapping) {
+        /* Still auto-scrolling; release the guard once it settles */
+        if (snapSettleTimer) clearTimeout(snapSettleTimer);
+        snapSettleTimer = setTimeout(() => {
+          snapping = false;
+        }, 200);
+        return;
+      }
+      setNavVisible(true);
+      if (heroVisibleRef.current) return;
+      scheduleHide();
+    };
+
+    const onFeaturedSnap = () => {
+      if (hideTimer) clearTimeout(hideTimer);
+      heroVisibleRef.current = false;
+      snapping = true;
+      setNavVisible(false);
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('featured-snap', onFeaturedSnap);
+
+    const hero = document.querySelector<HTMLElement>('[data-hero]');
+    const heroObserver = hero
+      ? new IntersectionObserver(
+          ([entry]) => {
+            heroVisibleRef.current = entry.isIntersecting;
+            if (entry.isIntersecting) {
+              if (hideTimer) clearTimeout(hideTimer);
+              setNavVisible(true);
+            } else {
+              scheduleHide();
+            }
+          },
+          { threshold: 0.2 },
+        )
+      : null;
+    heroObserver?.observe(hero!);
+    if (!hero) {
+      heroVisibleRef.current = false;
+      scheduleHide();
+    }
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('featured-snap', onFeaturedSnap);
+      heroObserver?.disconnect();
+      if (hideTimer) clearTimeout(hideTimer);
+      if (snapSettleTimer) clearTimeout(snapSettleTimer);
+      if (settleTimer) clearTimeout(settleTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -70,7 +154,8 @@ export function Header() {
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-700',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+          !navVisible && !mobileOpen && '-translate-y-full opacity-0',
           scrolled
             ? 'bg-brand-black/85 backdrop-blur-xl border-b border-brand-white/[0.04]'
             : 'bg-transparent',
@@ -85,10 +170,11 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-intro-nav={link.href}
                   className="group flex items-center rounded-full px-3.5 py-2.5 text-brand-grey transition-colors duration-300 hover:text-brand-white hover:bg-brand-white/5"
                 >
                   <IdleIcon>
-                    <Icon className="h-4.5 w-4.5 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(245,138,31,0.35)]" />
+                    <Icon className="h-6 w-6 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110" />
                   </IdleIcon>
                   <span className="max-w-0 overflow-hidden font-accent text-[10px] tracking-[0.25em] whitespace-nowrap uppercase opacity-0 transition-all duration-500 ease-out group-hover:ml-2 group-hover:max-w-25 group-hover:opacity-100">
                     {link.label}
@@ -103,17 +189,11 @@ export function Header() {
             href="/"
             className="group absolute top-1/2 left-1/2 shrink-0 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 hover:opacity-70"
           >
-            {/* Web logo — desktop */}
             <img
-              src={BRAND_ASSETS.webLogo}
-              alt="Nngtw Studio"
-              className="hidden h-7 w-auto sm:block"
-            />
-            {/* Compact logo — mobile */}
-            <img
+              data-intro-target="brand-icon"
               src={BRAND_ASSETS.compactLogo}
               alt="Nngtw Studio"
-              className="h-8 w-auto sm:hidden"
+              className="h-8 w-auto"
             />
           </Link>
 
@@ -125,10 +205,11 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-intro-nav={link.href}
                   className="group flex items-center rounded-full px-3.5 py-2.5 text-brand-grey transition-colors duration-300 hover:text-brand-white hover:bg-brand-white/5"
                 >
                   <IdleIcon>
-                    <Icon className="h-4.5 w-4.5 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(245,138,31,0.35)]" />
+                    <Icon className="h-6 w-6 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110" />
                   </IdleIcon>
                   <span className="max-w-0 overflow-hidden font-accent text-[10px] tracking-[0.25em] whitespace-nowrap uppercase opacity-0 transition-all duration-500 ease-out group-hover:ml-2 group-hover:max-w-25 group-hover:opacity-100">
                     {link.label}

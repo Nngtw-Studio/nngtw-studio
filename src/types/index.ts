@@ -23,6 +23,7 @@ export interface Game {
   featuredOrder?: number;
   trailerUrl?: string | null;
   bannerImageUrl?: string | null;
+  logoImageUrl?: string | null;
   projectLink?: string;
   followLink?: string;
   gallery?: string[];
@@ -44,6 +45,7 @@ export type FeaturedGame = Pick<
   | "description"
   | "trailerUrl"
   | "bannerImageUrl"
+  | "logoImageUrl"
   | "projectLink"
   | "followLink"
   | "featuredOrder"
