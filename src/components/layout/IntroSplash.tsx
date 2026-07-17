@@ -190,7 +190,13 @@ export function IntroSplash() {
        hands off to the hero, so take over restoration and start at the top. */
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
+    /* Hiding the scrollbar shrinks the viewport width by its own size — and
+       restoring it at handoff snaps everything (including the shared
+       background) sideways by that amount. Reserve the space with padding
+       so the viewport width never changes while the splash is up. */
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.documentElement.setAttribute('data-intro', '1');
     /* Chrome can apply the restored position asynchronously after load —
        pin the top until the splash owns the screen for real. */
@@ -200,6 +206,7 @@ export function IntroSplash() {
       window.removeEventListener('scroll', pin);
       if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
       document.documentElement.removeAttribute('data-intro');
       /* Whatever retired the splash (ride finished, asset failure, route
          change), tell listeners — the hero holds its entrance for this. */
