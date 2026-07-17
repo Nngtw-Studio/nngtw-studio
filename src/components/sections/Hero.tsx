@@ -18,10 +18,6 @@ import { SOCIAL } from '@/lib/constants';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-/* Film grain — inline SVG noise, tiled. Deliberately static: animated grain
-   costs paint time and reads as compression artefacts, not cinema. */
-const GRAIN_URL = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
-
 function AmbientField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduceMotion = useReducedMotion();
@@ -49,7 +45,7 @@ function AmbientField() {
          so the field reads as a volume rather than a flat scatter. */
       depth: number;
       phase: number;
-      accent: boolean;
+      tint: 'white' | 'pink' | 'orange';
     }
 
     let particles: Particle[] = [];
@@ -59,21 +55,25 @@ function AmbientField() {
     const parTarget = { x: 0, y: 0 };
 
     const initParticles = () => {
-      /* Fewer, subtler particles — ambient not aggressive */
-      const count = Math.floor((width * height) / 26000);
+      /* Present but not aggressive — a visible starfield, not a snowstorm */
+      const count = Math.floor((width * height) / 18750);
       particles = Array.from({ length: count }, () => {
         const depth = 0.35 + Math.random() * 0.65;
+        /* Mostly off-white with a clear scatter of brand pink and orange */
+        const roll = Math.random();
+        const tint = roll < 0.1 ? 'pink' : roll < 0.2 ? 'orange' : 'white';
         return {
           x: Math.random() * width,
           y: Math.random() * height,
           vx: (Math.random() - 0.5) * 0.22 * depth,
           vy: (Math.random() - 0.5) * 0.22 * depth,
-          size: (Math.random() * 1.1 + 0.4) * depth + 0.2,
-          baseOpacity: (Math.random() * 0.16 + 0.05) * depth,
+          /* Coloured tints get a touch more size — pink/orange are far darker
+             than off-white on black and vanish at hairline widths */
+          size: (Math.random() * 1.6 + 0.8) * depth + 0.4 + (tint === 'white' ? 0 : 0.4),
+          baseOpacity: (Math.random() * 0.34 + 0.2) * depth,
           depth,
           phase: Math.random() * Math.PI * 2,
-          /* One in ~14 particles carries a whisper of brand-secondary — a hint of colour, never a wash of it */
-          accent: Math.random() < 0.07,
+          tint,
         };
       });
     };
@@ -81,9 +81,14 @@ function AmbientField() {
     const drawParticle = (p: Particle, opacity: number, ox = 0, oy = 0) => {
       ctx.beginPath();
       ctx.arc(p.x + ox, p.y + oy, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = p.accent
-        ? `rgba(223, 19, 138, ${opacity * 0.8})`
-        : `rgba(242, 239, 231, ${opacity})`;
+      /* Coloured tints run at full particle opacity — pink and orange are
+         intrinsically darker than off-white, so this still reads as glints */
+      ctx.fillStyle =
+        p.tint === 'pink'
+          ? `rgba(223, 19, 138, ${opacity})`
+          : p.tint === 'orange'
+            ? `rgba(245, 138, 31, ${opacity})`
+            : `rgba(242, 239, 231, ${opacity})`;
       ctx.fill();
     };
 
@@ -250,6 +255,18 @@ export function Hero() {
   const ready = useIntroGate();
   const sectionRef = useRef<HTMLElement>(null);
 
+  /* The nav glow blooms ahead of the rest of the entrance — the splash cues
+     it as its backdrop starts dissolving, so the orange band rises underneath
+     while the splash's travelling copy of the same light fades out above.
+     `ready` is the fallback for loads where the splash never runs. */
+  const [glowHandoff, setGlowHandoff] = useState(false);
+  useEffect(() => {
+    const on = () => setGlowHandoff(true);
+    window.addEventListener('intro-glow-handoff', on);
+    return () => window.removeEventListener('intro-glow-handoff', on);
+  }, []);
+  const navGlowOn = glowHandoff || ready;
+
   /* Mouse-driven light parallax — the glow layers lean gently toward the cursor */
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -289,7 +306,12 @@ export function Hero() {
     }
   });
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  /* Keep the side controls on one opacity driver. Previously their scroll
+     opacity was combined with a separate Framer `animate` opacity, so the
+     entrance animation could write the value back after scrolling had hidden
+     them. They now fade continuously with the hero and are fully gone when
+     the hero has ended. */
+  const cueOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   const onMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (reduce) return;
@@ -309,56 +331,80 @@ export function Hero() {
       >
         <div className="absolute inset-0 bg-brand-black" />
 
-        {/* Pixel-identical twin of the intro splash's primary wash — the two
-            surfaces share one background, so the splash's end-of-ride
-            crossfade reveals no change at all. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-[-20%] opacity-[0.05]"
-          style={{
-            background: `
-              radial-gradient(ellipse 70% 62% at 44% 40%,
-                rgba(245,138,31,0.9) 0%,
-                rgba(245,138,31,0.45) 38%,
-                rgba(245,138,31,0.15) 62%,
-                transparent 82%
-              )
-            `,
-          }}
-        />
-
-        {/* Lighting rig — only two lights remain: the primary wash above and
-            this magenta whisper low right. Oversized so the parallax lean
-            never reveals an edge. */}
+        {/* Lighting rig — two corner whispers, orange low right and pink low
+            left. Oversized so the parallax lean never reveals an edge. */}
         <motion.div
           style={{ x: glowX, y: glowY }}
           className="absolute -inset-10"
           aria-hidden="true"
         >
-          {/* Magenta whisper — hidden while the splash owns the screen; the
-              moment its auto-scroll hands off, it slowly breathes in. */}
+          {/* Orange whisper — hidden while the splash owns the screen; the
+              moment its auto-scroll hands off, it slowly breathes in, then
+              idles like the pink one. Runs dimmer (3.5%) and on a longer,
+              offset cycle so the two lights never pulse in sync. */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: ready ? 1 : 0 }}
             transition={{ duration: 2.5, ease: 'easeInOut' }}
-            style={{
-              background:
-                'radial-gradient(ellipse 50% 38% at 80% 90%, rgba(223,19,138,0.05), transparent 70%)',
-            }}
             className="absolute inset-0"
-          />
+          >
+            <motion.div
+              animate={
+                reduce
+                  ? undefined
+                  : { opacity: [1, 0.75, 1], x: [0, -12, 0], y: [0, -8, 0] }
+              }
+              transition={{ duration: 17, delay: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                background:
+                  'radial-gradient(ellipse 50% 38% at 80% 90%, rgba(245,138,31,0.035), transparent 70%)',
+              }}
+              className="absolute inset-0"
+            />
+          </motion.div>
+          {/* Pink whisper — the low-left counterweight behind the social rail.
+              Same breathe-in, then a barely-there idle: a slow pulse and drift
+              so the light feels alive without ever drawing the eye. */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: ready ? 1 : 0 }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+            className="absolute inset-0"
+          >
+            <motion.div
+              animate={
+                reduce
+                  ? undefined
+                  : { opacity: [1, 0.7, 1], x: [0, 14, 0], y: [0, -10, 0] }
+              }
+              transition={{ duration: 14, delay: 3, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                background:
+                  'radial-gradient(ellipse 45% 40% at 10% 72%, rgba(223,19,138,0.05), transparent 70%)',
+              }}
+              className="absolute inset-0"
+            />
+          </motion.div>
         </motion.div>
 
-        <AmbientField />
-
-        {/* Grain sits above the field so the surface feels filmic. The old
-            edge vignette is gone — the splash has no vignette, and the two
-            surfaces must share one identical background through the handoff. */}
-        <div
-          className="absolute inset-0 opacity-[0.035]"
+        {/* Nav glow — the orange band the splash's travelling light hands off
+            to, identical gradient to its final frame. Deliberately outside the
+            parallax rig: it illuminates the fixed header, so it must not lean
+            with the cursor. Its quick bloom runs under the splash's dissolving
+            backdrop, crossfading with the splash's copy — a seamless relay. */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: navGlowOn ? 1 : 0 }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+          style={{
+            background:
+              'radial-gradient(ellipse 70% 26% at 50% 4%, rgba(245,138,31,0.05), rgba(245,138,31,0.02) 45%, transparent 82%)',
+          }}
+          className="absolute inset-0"
           aria-hidden="true"
-          style={{ backgroundImage: GRAIN_URL, backgroundSize: '160px 160px' }}
         />
+
+        <AmbientField />
 
         {/* Content */}
         <motion.div
@@ -422,7 +468,7 @@ export function Hero() {
           {/* CTAs */}
           <motion.div
             {...rise(0.9, ready)}
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0"
+            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0 sm:-space-x-2"
           >
             <HeroButton href="/games" variant="primary">
               Experience the Games
@@ -436,64 +482,57 @@ export function Hero() {
         {/* Vertical social icons stack in bottom-left corner */}
         <motion.div
           style={{ opacity: cueOpacity }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: ready ? 1 : 0 }}
-          transition={{ delay: 1.4, duration: 1 }}
-          className="absolute bottom-11 left-6 z-20 hidden flex-col gap-4.5 md:left-12 lg:left-20 md:flex"
+          className="absolute bottom-14 left-8 z-20 hidden flex-col gap-7 md:bottom-16 md:left-12 lg:left-20 md:flex"
         >
           <a
             href={SOCIAL.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
+            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
             aria-label="LinkedIn"
           >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-              <rect x="2" y="9" width="4" height="12"/>
-              <circle cx="4" cy="4" r="2" fill="currentColor"/>
+            <svg className="h-3 w-3" viewBox="0 0 25 24" fill="currentColor">
+              <path d="m5.706 7.798v16.202h-5.395v-16.202zm.343-5.002c.001.029.002.063.002.098 0 .749-.318 1.423-.826 1.895l-.002.001c-.545.498-1.274.803-2.075.803-.049 0-.099-.001-.148-.003h.007-.033c-.041.002-.089.003-.137.003-.784 0-1.496-.306-2.025-.804l.001.001c-.504-.488-.816-1.17-.816-1.925 0-.024 0-.048.001-.073v.004c-.001-.021-.001-.045-.001-.069 0-.762.324-1.448.841-1.929l.002-.001c.544-.495 1.271-.799 2.068-.799.046 0 .091.001.137.003h-.006c.043-.002.092-.003.143-.003.785 0 1.5.303 2.034.798l-.002-.002c.515.497.835 1.193.835 1.964v.042-.002zm19.062 11.92v9.284h-5.378v-8.665c.005-.079.007-.171.007-.263 0-.896-.249-1.733-.682-2.447l.012.021c-.427-.596-1.117-.979-1.896-.979-.06 0-.12.002-.18.007h.008c-.027-.001-.058-.002-.089-.002-.62 0-1.19.213-1.641.57l.006-.004c-.453.367-.808.836-1.032 1.375l-.008.023c-.116.355-.182.763-.182 1.187 0 .048.001.096.003.144v-.007 9.042h-5.378q.033-6.523.033-10.578t-.016-4.839l-.016-.785h5.378v2.354h-.033c.214-.345.435-.644.678-.924l-.008.009c.281-.309.583-.588.908-.838l.016-.012c.404-.311.878-.555 1.392-.704l.03-.007c.538-.161 1.157-.254 1.797-.254h.079-.004c.071-.003.154-.005.237-.005 1.681 0 3.195.714 4.256 1.856l.003.004q1.702 1.856 1.702 5.436z"/>
             </svg>
           </a>
           <a
             href={SOCIAL.facebook}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
+            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
             aria-label="Facebook"
           >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+            <svg className="h-3 w-3" viewBox="0 0 25.26 47.17" fill="currentColor">
+              <path d="M23.61 26.53 24.92 18h-8.19v-5.54c0-2.34 1.14-4.62 4.81-4.62h3.72V.58A45.17 45.17 0 0 0 18.65 0C11.91 0 7.5 4.09 7.5 11.49V18H0v8.54h7.5v20.63h9.23V26.53Z"/>
             </svg>
           </a>
           <a
             href={SOCIAL.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
+            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
             aria-label="Instagram"
           >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            <svg className="h-3 w-3" viewBox="0 0 256 256" fill="currentColor">
+              <circle cx="128" cy="128" r="32"/>
+              <path d="M172,28H84A56.06353,56.06353,0,0,0,28,84v88a56.06353,56.06353,0,0,0,56,56h88a56.06353,56.06353,0,0,0,56-56V84A56.06353,56.06353,0,0,0,172,28ZM128,176a48,48,0,1,1,48-48A48.05436,48.05436,0,0,1,128,176Zm52-88a12,12,0,1,1,12-12A12,12,0,0,1,180,88Z"/>
             </svg>
           </a>
           <a
-            href={SOCIAL.x}
+            href={SOCIAL.discord}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-brand-white/40 hover:text-brand-white/60 transition-colors duration-300"
-            aria-label="X (Twitter)"
+            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
+            aria-label="Discord"
           >
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            <svg className="h-3 w-3" viewBox="0 0 33.867 33.867" fill="currentColor">
+              <path d="M11.343 5.177c-1.076 0-4.32 1.316-4.902 1.579-.582.263-1.228 1.084-1.961 2.439-.734 1.355-1.323 2.939-2.28 5.269-.956 2.33-1.179 6.822-1.147 8.193.032 1.371.189 2.442 1.594 3.253 1.404.81 2.646 1.658 3.953 2.168 1.308.51 2.2.877 2.806.367.606-.51 1.005-1.403 1.005-1.403s.574-.797-.51-1.275c-1.084-.479-1.626-.814-1.579-1.308.048-.494.127-.765.398-.701.271.064.91 1.211 3.365 1.737s4.848.447 4.848.447 2.394.08 4.849-.447c2.455-.526 3.093-1.673 3.364-1.737.271-.064.35.207.398.7.048.495-.494.83-1.578 1.309-1.084.478-.51 1.275-.51 1.275s.399.892 1.005 1.403c.605.51 1.498.143 2.805-.367 1.307-.51 2.55-1.357 3.954-2.168 1.405-.811 1.562-1.882 1.594-3.253.032-1.37-.191-5.863-1.148-8.193-.956-2.33-1.546-3.914-2.28-5.269-.732-1.355-1.379-2.176-1.96-2.44-.582-.262-3.827-1.578-4.903-1.578-1.076 0-1.394.75-1.394.75l-.375.829s-2.52-.479-3.804-.48c-1.284 0-3.837.48-3.837.48l-.375-.83s-.318-.749-1.395-.749zm.117 9.948h.04c1.569 0 2.84 1.373 2.84 3.066 0 1.694-1.271 3.066-2.84 3.066s-2.84-1.372-2.84-3.066c-.001-1.677 1.247-3.043 2.8-3.066zm10.907 0h.04c1.553.023 2.8 1.39 2.8 3.066 0 1.694-1.271 3.066-2.84 3.066-1.57 0-2.84-1.372-2.84-3.066 0-1.693 1.27-3.066 2.84-3.066z"/>
             </svg>
           </a>
         </motion.div>
 
         {/* Scroll cue — vertical composition in the bottom-right corner */}
         <motion.div
-          initial={{ opacity: 1 }}
           style={{ opacity: cueOpacity }}
           className="absolute bottom-11 right-6 z-10 hidden md:right-12 lg:right-20 [@media(min-height:620px)]:block"
         >
@@ -501,9 +540,6 @@ export function Hero() {
             type="button"
             onClick={handleScrollCueClick}
             aria-label="Scroll to next section"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: ready ? 1 : 0 }}
-            transition={{ delay: 1.55, duration: 1 }}
             className="group flex items-center gap-2"
           >
             <div className="flex h-37.5 flex-col items-center justify-between font-accent text-[10px] font-light uppercase tracking-wider text-brand-white/40 transition-colors duration-300 group-hover:text-brand-white/60">
@@ -514,7 +550,7 @@ export function Hero() {
               <span>L</span>
               <span>L</span>
             </div>
-            <div className="relative h-[150px] w-px overflow-hidden">
+            <div className="relative h-37.5 w-px overflow-hidden">
               <div className="absolute inset-0 bg-brand-white/40 transition-colors duration-300 group-hover:bg-brand-white/60" />
               {/* Reduced motion: the pulse's y animation is stripped, leaving it
                   parked above the clip window — the hairline simply stays still */}

@@ -1,7 +1,7 @@
 /** @format */
 
-import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
+import { CtaButton } from '@/components/ui/CtaButton';
 
 /** Editorial pillars distilled from the studio's positioning */
 const PILLARS = [
@@ -81,15 +81,9 @@ export function AboutStudio() {
               </p>
             </div>
 
-            <Link
-              href="/studio"
-              className="group mt-12 inline-flex items-center gap-4 border border-brand-white/15 px-8 py-4 label-overline text-brand-white transition-colors duration-300 hover:border-brand-orange/60 hover:text-brand-orange"
-            >
+            <CtaButton href="/studio" variant="secondary" className="mt-12">
               Meet the Studio
-              <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                →
-              </span>
-            </Link>
+            </CtaButton>
           </FadeIn>
         </div>
 

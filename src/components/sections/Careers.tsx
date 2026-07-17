@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { Button } from '@/components/ui/Button';
+import { CtaButton } from '@/components/ui/CtaButton';
 import { careerStatusLabels } from '@/lib/data/content';
 import { getActiveCareers } from '@/lib/supabase/queries/careers';
 import { cn } from '@/lib/utils';
@@ -81,9 +81,9 @@ export async function Careers() {
         </StaggerContainer>
 
         <FadeIn className="mt-14 text-center">
-          <Button href="/careers" variant="secondary">
+          <CtaButton href="/careers" variant="secondary">
             View All Opportunities
-          </Button>
+          </CtaButton>
         </FadeIn>
       </div>
     </section>

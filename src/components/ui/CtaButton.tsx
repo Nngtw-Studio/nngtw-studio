@@ -21,7 +21,7 @@ interface CtaButtonProps {
 const variants: Record<CtaButtonVariant, string> = {
   primary: 'border-0 bg-brand-orange-dark text-brand-white focus-visible:ring-brand-orange/60',
   secondary:
-    'border border-brand-white/25 bg-transparent text-brand-white hover:border-brand-white/60 focus-visible:ring-brand-white/40',
+    'border border-brand-secondary bg-transparent text-brand-secondary shadow-[0_0_6px_rgba(223,19,138,0.1)] hover:shadow-[0_0_10px_rgba(223,19,138,0.25)] focus-visible:ring-brand-secondary/50',
   discord: 'border-0 bg-[#5865F2] text-white hover:bg-[#6B77F5] focus-visible:ring-[#5865F2]/70',
 };
 

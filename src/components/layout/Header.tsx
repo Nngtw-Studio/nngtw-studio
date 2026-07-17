@@ -8,6 +8,7 @@ import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 import { NAV_LINKS, SOCIAL, BRAND } from '@/lib/constants';
 import { BRAND_ASSETS } from '@/lib/brand';
 import { NAV_ICONS } from '@/components/layout/NavIcons';
+import { RouteProgress } from '@/components/layout/RouteProgress';
 import { cn } from '@/lib/utils';
 
 /**
@@ -174,7 +175,7 @@ export function Header() {
                   className="group flex items-center rounded-full px-3.5 py-2.5 text-brand-grey transition-colors duration-300 hover:text-brand-white hover:bg-brand-white/5"
                 >
                   <IdleIcon>
-                    <Icon className="h-6 w-6 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110" />
+                    <Icon className="h-5 w-5 shrink-0 opacity-60 transition-[transform,opacity] duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 group-hover:opacity-100" />
                   </IdleIcon>
                   <span className="max-w-0 overflow-hidden font-accent text-[10px] tracking-[0.25em] whitespace-nowrap uppercase opacity-0 transition-all duration-500 ease-out group-hover:ml-2 group-hover:max-w-25 group-hover:opacity-100">
                     {link.label}
@@ -209,7 +210,7 @@ export function Header() {
                   className="group flex items-center rounded-full px-3.5 py-2.5 text-brand-grey transition-colors duration-300 hover:text-brand-white hover:bg-brand-white/5"
                 >
                   <IdleIcon>
-                    <Icon className="h-6 w-6 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110" />
+                    <Icon className="h-5 w-5 shrink-0 opacity-60 transition-[transform,opacity] duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 group-hover:opacity-100" />
                   </IdleIcon>
                   <span className="max-w-0 overflow-hidden font-accent text-[10px] tracking-[0.25em] whitespace-nowrap uppercase opacity-0 transition-all duration-500 ease-out group-hover:ml-2 group-hover:max-w-25 group-hover:opacity-100">
                     {link.label}
@@ -248,6 +249,9 @@ export function Header() {
             />
           </button>
         </div>
+
+        {/* Loading bar riding the header's hairline border */}
+        <RouteProgress />
       </header>
 
       {/* Mobile menu */}

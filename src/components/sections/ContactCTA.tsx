@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FadeIn } from '@/components/motion/FadeIn';
-import { Button } from '@/components/ui/Button';
+import { CtaButton } from '@/components/ui/CtaButton';
 import { BRAND, SOCIAL } from '@/lib/constants';
 
 export function ContactCTA() {
@@ -27,13 +27,13 @@ export function ContactCTA() {
             </div>
 
             <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Button href="/contact" variant="primary" size="lg">
+              <div className="flex flex-col gap-4 sm:flex-row sm:gap-2">
+                <CtaButton href="/contact" variant="primary">
                   Contact Us
-                </Button>
-                <Button href={SOCIAL.discord} variant="secondary" size="lg" external>
+                </CtaButton>
+                <CtaButton href={SOCIAL.discord} variant="secondary" external>
                   Join Discord
-                </Button>
+                </CtaButton>
               </div>
             </div>
           </div>

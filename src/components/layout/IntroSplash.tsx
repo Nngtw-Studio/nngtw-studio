@@ -23,9 +23,6 @@ const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const easeSlice = { ease: cubicBezier(...EASE_OUT) };
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-/** Compact-logo cream — what the fist recolors to as it settles into the header. */
-const CREAM = '#f3efe6';
-
 interface LogoPart {
   /** Standalone <svg> markup for one group of the primary logo */
   markup: string;
@@ -34,6 +31,10 @@ interface LogoPart {
   top: number;
   width: number;
   height: number;
+  /** The anti-clip guard pad as fractions of this part's own box — the drawn
+      artwork is inset by this much inside the part's element. */
+  padX: number;
+  padY: number;
 }
 
 interface LogoParts {
@@ -42,6 +43,9 @@ interface LogoParts {
   studio: LogoPart;
   nngtw: LogoPart;
   tagline: LogoPart;
+  /** Center of the pink stripe as % of the fist part's box — the reveal
+      circle closes exactly here. */
+  pinkAnchor: { x: number; y: number };
 }
 
 interface Flight {
@@ -100,23 +104,92 @@ async function loadLogoParts(url: string): Promise<LogoParts | null> {
       top: (y / vbH) * 100,
       width: (w / vbW) * 100,
       height: (h / vbH) * 100,
+      padX: pad / w,
+      padY: pad / h,
     };
   };
+
+  const fist = part(0);
+
+  /* Locate the pink brow line inside the rendered fist group by its computed
+     fill (magenta: strong red + blue, weak green). The artwork has TWO pink
+     shapes — the brow line and the tiny knuckle dot — so take the largest
+     match, not a union, or the anchor lands between them. Its center, as
+     percentages of the fist part's viewBox, is the reveal circle's anchor. */
+  const fistBox = probeGroups[0].getBBox();
+  const pad = 1;
+  let pinkAnchor = { x: 64, y: 22 }; // fallback if the stripe isn't found
+  let stripe: DOMRect | null = null;
+  for (const el of Array.from(
+    probeGroups[0].querySelectorAll<SVGGraphicsElement>('path, polygon, rect, ellipse, circle'),
+  )) {
+    const m = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(getComputedStyle(el).fill);
+    if (!m) continue;
+    const [r, g, b] = [Number(m[1]), Number(m[2]), Number(m[3])];
+    if (!(r > 170 && g < 110 && b > 80 && b > g)) continue;
+    const box = el.getBBox();
+    if (!stripe || box.width * box.height > stripe.width * stripe.height) stripe = box;
+  }
+  if (stripe) {
+    pinkAnchor = {
+      x: ((stripe.x + stripe.width / 2 - (fistBox.x - pad)) / (fistBox.width + pad * 2)) * 100,
+      y: ((stripe.y + stripe.height / 2 - (fistBox.y - pad)) / (fistBox.height + pad * 2)) * 100,
+    };
+  }
 
   /* Source order: 0 fist, 1 STUDIO, 2 Nngtw, 3 tagline */
   const parts: LogoParts = {
     aspect: vbH / vbW,
-    fist: part(0),
+    fist,
     studio: part(1),
     nngtw: part(2),
     tagline: part(3),
+    pinkAnchor,
   };
   probe.remove();
   return parts;
 }
 
+interface Rect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Fetches an SVG asset and returns its drawn content's bounding box as
+ * fractions of the viewBox. An `<img>` renders the whole viewBox, so any
+ * padding around the artwork inset the visible shape within the img rect —
+ * the flight must aim at the artwork, not the box, or the landed splash icon
+ * and the header logo won't coincide.
+ */
+async function loadContentBox(url: string): Promise<Rect | null> {
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const doc = new DOMParser().parseFromString(await res.text(), 'image/svg+xml');
+  const src = doc.documentElement;
+  if (src.nodeName !== 'svg') return null;
+  const viewBox = src.getAttribute('viewBox');
+  if (!viewBox) return null;
+  const [vbX, vbY, vbW, vbH] = viewBox.split(/\s+/).map(Number);
+
+  const probe = document.importNode(src, true) as unknown as SVGSVGElement;
+  probe.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+  document.body.appendChild(probe);
+  const box = probe.getBBox();
+  probe.remove();
+  if (!box.width || !box.height) return null;
+  return {
+    left: (box.x - vbX) / vbW,
+    top: (box.y - vbY) / vbH,
+    width: box.width / vbW,
+    height: box.height / vbH,
+  };
+}
+
 /** Center-to-center translation + size ratio from one rect to another. */
-function flightBetween(from: DOMRect, to: DOMRect): Flight {
+function flightBetween(from: Rect, to: Rect): Flight {
   return {
     x: to.left + to.width / 2 - (from.left + from.width / 2),
     y: to.top + to.height / 2 - (from.top + from.height / 2),
@@ -131,9 +204,10 @@ function flightBetween(from: DOMRect, to: DOMRect): Flight {
  * point; past 60% (or on click/keypress) the remainder auto-plays at the full
  * ride's 2s pace — tagline, STUDIO, then Nngtw dissolve in sequence while the
  * whole lockup (fist still orange) shrinks toward the header slot and
- * the nav icons split to their real header positions; near the end the fist
- * recolors to cream and the backdrop scrolls away to reveal the hero. The
- * real header elements stay hidden until the flyers land exactly on them.
+ * the nav icons split to their real header positions; mid-flight a circular
+ * wipe continuously removes the orange icon, revealing the compact header
+ * logo riding beneath it, and the backdrop dissolves into the hero. The real
+ * header elements stay hidden until the flyers land exactly on them.
  */
 export function IntroSplash() {
   const pathname = usePathname();
@@ -152,6 +226,7 @@ export function IntroSplash() {
   const fistRef = useRef<HTMLDivElement>(null);
   const navRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const doneRef = useRef(false);
+  const glowHandoffRef = useRef(false);
 
   /* The single source of truth: 0 = splash at rest, 1 = handed off to header.
      Any input plays it to 1 as one deterministic 2s tween — no scrubbing, no
@@ -163,6 +238,26 @@ export function IntroSplash() {
        behind sessionStorage; the brand moment is part of the reload. */
     setShouldShow(pathname === '/');
   }, [pathname]);
+
+  /* Drawn-content box of the compact header logo — where its artwork actually
+     sits inside the img rect. Nullable until loaded; measurement waits on it. */
+  const [compactBox, setCompactBox] = useState<Rect | null>(null);
+
+  useEffect(() => {
+    if (!shouldShow) return;
+    let cancelled = false;
+    loadContentBox(BRAND_ASSETS.compactLogo)
+      .then((b) => {
+        /* Fall back to the full box — worst case is the old behavior */
+        if (!cancelled) setCompactBox(b ?? { left: 0, top: 0, width: 1, height: 1 });
+      })
+      .catch(() => {
+        if (!cancelled) setCompactBox({ left: 0, top: 0, width: 1, height: 1 });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [shouldShow]);
 
   useEffect(() => {
     if (!shouldShow) return;
@@ -190,13 +285,13 @@ export function IntroSplash() {
        hands off to the hero, so take over restoration and start at the top. */
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
-    /* Hiding the scrollbar shrinks the viewport width by its own size — and
-       restoring it at handoff snaps everything (including the shared
-       background) sideways by that amount. Reserve the space with padding
-       so the viewport width never changes while the splash is up. */
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    /* `html { scrollbar-gutter: stable }` already reserves the scrollbar gutter
+       permanently, so `overflow: hidden` here removes no width — do NOT also
+       pad the body. Doing both double-compensates: the page (and the shared
+       particle background) sits ~15px off while the splash is up and snaps
+       back sideways at handoff, the glitch the gutter reservation exists to
+       prevent. */
     document.body.style.overflow = 'hidden';
-    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.documentElement.setAttribute('data-intro', '1');
     /* Chrome can apply the restored position asynchronously after load —
        pin the top until the splash owns the screen for real. */
@@ -206,7 +301,6 @@ export function IntroSplash() {
       window.removeEventListener('scroll', pin);
       if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
       document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
       document.documentElement.removeAttribute('data-intro');
       /* Whatever retired the splash (ride finished, asset failure, route
          change), tell listeners — the hero holds its entrance for this. */
@@ -217,7 +311,7 @@ export function IntroSplash() {
   /* Measure flight targets once the logo is on screen. Re-measured on resize
      so the fist always lands exactly on the header slot. */
   useEffect(() => {
-    if (!shouldShow || !parts) return;
+    if (!shouldShow || !parts || !compactBox) return;
 
     const measure = () => {
       const fistEl = fistRef.current;
@@ -235,10 +329,24 @@ export function IntroSplash() {
             ? flightBetween(el.getBoundingClientRect(), target.getBoundingClientRect())
             : null;
       }
-      setFlights({
-        fist: flightBetween(fistEl.getBoundingClientRect(), logoTarget.getBoundingClientRect()),
-        nav,
-      });
+      const targetRect = logoTarget.getBoundingClientRect();
+      /* Align artwork to artwork, not box to box: deflate the fist element by
+         its guard pad and aim it at the compact logo's drawn-content rect, so
+         the two shapes coincide even though their viewBox paddings differ. */
+      const fr = fistEl.getBoundingClientRect();
+      const fistArt: Rect = {
+        left: fr.left + fr.width * parts.fist.padX,
+        top: fr.top + fr.height * parts.fist.padY,
+        width: fr.width * (1 - 2 * parts.fist.padX),
+        height: fr.height * (1 - 2 * parts.fist.padY),
+      };
+      const targetArt: Rect = {
+        left: targetRect.left + targetRect.width * compactBox.left,
+        top: targetRect.top + targetRect.height * compactBox.top,
+        width: targetRect.width * compactBox.width,
+        height: targetRect.height * compactBox.height,
+      };
+      setFlights({ fist: flightBetween(fistArt, targetArt), nav });
     };
 
     /* Wait a frame so the entrance animation has painted before measuring */
@@ -248,7 +356,7 @@ export function IntroSplash() {
       cancelAnimationFrame(id);
       window.removeEventListener('resize', measure);
     };
-  }, [shouldShow, parts]);
+  }, [shouldShow, parts, compactBox]);
 
   /* Input — scroll scrubs the timeline (both directions) up to the commit
      point; passing it, a click, or a keypress commits the ride, auto-playing
@@ -261,10 +369,29 @@ export function IntroSplash() {
     const commit = () => {
       if (committed || doneRef.current) return;
       committed = true;
+      if (reduce) {
+        animate(progress, 1, { duration: 0.2, ease: 'linear' });
+        return;
+      }
       /* Linear master clock — each element eases within its own slice below,
-         so the exit has the same staggered ease-out feel as the reveal. */
-      animate(progress, 1, {
-        duration: reduce ? 0.2 : 2 * (1 - progress.get()),
+         so the exit has the same staggered ease-out feel as the reveal. The
+         clock runs at two speeds: the flight leg (→0.82) keeps the ride's
+         2s pace, then the reveal leg (0.82→1) is stretched so the egg wipe
+         alone (0.82→0.98, 0.16 units) plays over a full 2s. */
+      const REVEAL_DUR = 2.25; // 0.18 units at 2s per 0.16 wipe units
+      const p0 = progress.get();
+      if (p0 >= 0.82) {
+        /* Committed mid-reveal (deep scrub) — finish at the reveal pace */
+        animate(progress, 1, {
+          duration: REVEAL_DUR * ((1 - p0) / 0.18),
+          ease: 'linear',
+        });
+        return;
+      }
+      const flightDur = 2 * (0.82 - p0);
+      animate(progress, [p0, 0.82, 1], {
+        duration: flightDur + REVEAL_DUR,
+        times: [0, flightDur / (flightDur + REVEAL_DUR), 1],
         ease: 'linear',
       });
     };
@@ -319,8 +446,16 @@ export function IntroSplash() {
     };
   }, [shouldShow, flights, progress, reduce]);
 
-  /* Retire the splash when the ride settles */
+  /* Retire the splash when the ride settles. Just before that, as the
+     backdrop starts dissolving, cue the hero to bloom its own nav glow —
+     the splash's copy fades over the same window, so the light crossfades
+     between the two layers instead of dropping out at unmount. Fires past
+     the commit point, so it can never run on a still-reversible scrub. */
   useMotionValueEvent(progress, 'change', (v) => {
+    if (v >= 0.85 && !glowHandoffRef.current) {
+      glowHandoffRef.current = true;
+      window.dispatchEvent(new Event('intro-glow-handoff'));
+    }
     if (v > 0.995 && !doneRef.current) {
       doneRef.current = true;
       setShouldShow(false);
@@ -334,22 +469,68 @@ export function IntroSplash() {
   const studioOpacity = useTransform(progress, [0.16, 0.34], [1, 0], easeSlice);
   const nngtwOpacity = useTransform(progress, [0.32, 0.52], [1, 0], easeSlice);
 
-  /* The lockup starts shrinking on the very first scroll tick */
-  const fistX = useTransform(progress, [0.02, 0.96], [0, flights?.fist.x ?? 0], easeSlice);
-  const fistY = useTransform(progress, [0.02, 0.96], [0, flights?.fist.y ?? 0], easeSlice);
-  const fistScale = useTransform(progress, [0.02, 0.96], [1, flights?.fist.scale ?? 0.2], easeSlice);
+  /* The lockup shrinks and flies to the header slot, fully landed at 32px by
+     0.82 — the wipe then runs in place, so the icon reaches its final size
+     before the reveal ever begins. */
+  const fistX = useTransform(progress, [0.02, 0.82], [0, flights?.fist.x ?? 0], easeSlice);
+  const fistY = useTransform(progress, [0.02, 0.82], [0, flights?.fist.y ?? 0], easeSlice);
+  const fistScale = useTransform(progress, [0.02, 0.82], [1, flights?.fist.scale ?? 0.2], easeSlice);
 
   /* Icons answer the very first scroll tick, splitting toward the header */
-  const iconProgress = useTransform(progress, [0.02, 0.96], [0, 1], easeSlice);
-  /* Colour handoff — the orange fist rides on top of an identical cream one
-     and simply fades away mid-flight, so the recolor is one smooth
-     progress-driven dissolve instead of a triggered CSS transition. */
-  const fistOrangeOpacity = useTransform(progress, [0.55, 0.9], [1, 0], easeSlice);
+  const iconProgress = useTransform(progress, [0.02, 0.82], [0, 1], easeSlice);
+  const wipeEase = cubicBezier(0.25, 1, 0.3, 1);
+  /* The cream twin stays fully hidden through the entire flight — otherwise
+     any spot where its silhouette overhangs the orange fist bleeds out as a
+     white sliver. It fades in only once the icon has landed at 32px (0.80 →
+     0.82), fully covered by the orange, an instant before the wipe uncovers
+     it. */
+  const creamOpacity = useTransform(progress, [0.8, 0.82], [0, 1]);
+  /* Reveal with a hesitate profile (ref: out:circle:hesitate): a fast plunge
+     across the first 40% of the wipe window, a beat of hesitation as the
+     ease bottoms out, then the close re-accelerates and eases home. The
+     hesitate frame is not an arbitrary radius — it parks on the thumb "egg"
+     oval around the pink stripe (~13x17 of the logo's units, so an ellipse,
+     not a circle; all three stops use ellipse() so the string interpolates).
+     Radii are % of the fist box per axis: 17% ≈ half the egg's width, 25% ≈
+     half its height. Runs in place after landing (0.82 → 0.98), anchored at
+     the pink stripe's center, so it closes through the stripe and vanishes
+     there, revealing the compact-logo cream twin beneath. */
+  const anchor = parts
+    ? `${parts.pinkAnchor.x.toFixed(2)}% ${parts.pinkAnchor.y.toFixed(2)}%`
+    : '64% 22%';
+  const fistOrangeClip = useTransform(
+    progress,
+    [0.82, 0.884, 0.98],
+    [
+      `ellipse(125% 125% at ${anchor})`,
+      `ellipse(17% 25% at ${anchor})`,
+      `ellipse(0% 0% at ${anchor})`,
+    ],
+    { ease: [wipeEase, wipeEase] },
+  );
   /* The backdrop stays opaque for the whole ride, then dissolves at the very
      end. Both it and the hero paint the same brand black, so the crossfade is
      imperceptible — no sliding seam, and the hero's own entrance only starts
      once the splash announces it's done. */
   const backdropOpacity = useTransform(progress, [0.85, 1], [1, 0], easeSlice);
+  /* The ambient light tells the same story as the logo: at rest a large pink
+     wash hangs just above the lockup; across the flight slice it rides up,
+     tightens, and warms from brand pink to brand orange, settling as a soft
+     band behind the header exactly as the fist lands there. Same 5% ceiling
+     and stop structure at both ends, so only position, size and hue move. */
+  const glowBackground = useTransform(
+    progress,
+    [0.02, 0.82],
+    [
+      'radial-gradient(ellipse 92% 78% at 48% 36%, rgba(223,19,138,0.05), rgba(223,19,138,0.02) 45%, transparent 82%)',
+      'radial-gradient(ellipse 70% 26% at 50% 4%, rgba(245,138,31,0.05), rgba(245,138,31,0.02) 45%, transparent 82%)',
+    ],
+    easeSlice,
+  );
+  /* Only at the very end does the splash's copy of the light yield — the hero
+     blooms its identical nav glow underneath (cued by `intro-glow-handoff` at
+     0.85) while this one fades, so the illumination never drops out. */
+  const glowRideOpacity = useTransform(progress, [0.88, 1], [1, 0], easeSlice);
 
 
   if (!shouldShow) return null;
@@ -370,37 +551,32 @@ export function IntroSplash() {
         html[data-intro="1"] [data-intro-nav] svg { opacity: 0 !important; }
         /* Header auto-hide must not move the flight targets while measuring */
         html[data-intro="1"] header { transform: none !important; }
-        .intro-fist-cream svg > g > g:first-child path { fill: ${CREAM}; }
-        .intro-fist-cream svg > g > g:last-child path { opacity: 0; }
       `}</style>
 
-      {/* Backdrop — dissolves into the identically-black hero at the end */}
+      {/* Backdrop — dissolves into the identically-black hero at the end. The
+          hero's particle field and its glows live on the hero side; the splash
+          carries the travelling glow below, which hands the lighting to the
+          hero's nav glow so it all reads as one continuous scene. */}
       <motion.div style={{ opacity: backdropOpacity }} className="absolute inset-0 bg-brand-black" />
 
-      {/* Very subtle primary wash — a screen-filling warm glow breathing in
-          across the reveal: it starts the moment the logo appears and reaches
-          full strength once the nav icons have settled. It then stays put —
-          the hero paints the identical wash beneath, so the backdrop
-          crossfade at the end changes nothing about the background. */}
-      {parts && (
+      {/* The travelling ambient light — pink above the logo at rest, riding
+          the same slice as the lockup's flight up into an orange band behind
+          the header. Outer layer: yields to the hero's twin glow at the very
+          end. Inner layer: blooms in shortly after first paint, reaching full
+          intensity as the nav icons settle — alive, never switched on. */}
+      <motion.div
+        style={{ opacity: glowRideOpacity }}
+        className="absolute inset-0"
+        aria-hidden="true"
+      >
         <motion.div
-          aria-hidden="true"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.05 }}
-          transition={{ duration: reduce ? 0.2 : 3, ease: 'easeInOut' }}
-          className="pointer-events-none absolute inset-[-20%]"
-          style={{
-            background: `
-              radial-gradient(ellipse 70% 62% at 44% 40%,
-                rgba(245,138,31,0.9) 0%,
-                rgba(245,138,31,0.45) 38%,
-                rgba(245,138,31,0.15) 62%,
-                transparent 82%
-              )
-            `,
-          }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: reduce ? 0 : 0.15, duration: reduce ? 0.2 : 2.4, ease: 'easeInOut' }}
+          className="absolute inset-0"
+          style={{ background: glowBackground }}
         />
-      )}
+      </motion.div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-between px-6 py-12 md:py-16">
         <div className="flex flex-1 items-center justify-center">
@@ -430,14 +606,39 @@ export function IntroSplash() {
                   transition={{ duration: reduce ? 0.2 : 0.9, ease: EASE_OUT }}
                   className="relative h-full w-full"
                 >
-                  {/* Cream twin underneath… */}
-                  <div
-                    className="intro-fist-cream absolute inset-0"
-                    dangerouslySetInnerHTML={{ __html: parts.fist.markup }}
-                  />
-                  {/* …and the orange original on top, dissolving mid-flight */}
+                  {/* Cream twin beneath — the actual compact-logo asset the
+                      header uses, sized so its artwork coincides exactly with
+                      the orange fist's artwork (compensating both viewBox
+                      paddings). Kept fully hidden through the flight (any
+                      silhouette overhang would bleed a white sliver) and faded
+                      in only once landed at 32px, still fully covered by the
+                      orange, an instant before the wipe uncovers it. It rides
+                      the lockup, so the landing hands off to the real header
+                      img with zero visual change. */}
+                  {compactBox &&
+                    (() => {
+                      const w = ((1 - 2 * parts.fist.padX) / compactBox.width) * 100;
+                      const h = ((1 - 2 * parts.fist.padY) / compactBox.height) * 100;
+                      return (
+                        <motion.img
+                          aria-hidden="true"
+                          src={BRAND_ASSETS.compactLogo}
+                          alt=""
+                          className="absolute"
+                          style={{
+                            opacity: creamOpacity,
+                            left: `${(parts.fist.padX * 100 - compactBox.left * w).toFixed(4)}%`,
+                            top: `${(parts.fist.padY * 100 - compactBox.top * h).toFixed(4)}%`,
+                            width: `${w.toFixed(4)}%`,
+                            height: `${h.toFixed(4)}%`,
+                          }}
+                        />
+                      );
+                    })()}
+                  {/* The orange original on top — continuously wiped away by
+                      the shrinking circle, revealing the cream twin */}
                   <motion.div
-                    style={{ opacity: fistOrangeOpacity }}
+                    style={{ clipPath: fistOrangeClip }}
                     className="absolute inset-0"
                     dangerouslySetInnerHTML={{ __html: parts.fist.markup }}
                   />
@@ -547,7 +748,7 @@ function NavFlyer({
         className="group flex items-center rounded-full px-3.5 py-2.5 text-brand-grey transition-colors duration-300 hover:bg-brand-white/5 hover:text-brand-white"
       >
         <span ref={measureRef} className="flex items-center">
-          <Icon className="h-6 w-6 shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110" />
+          <Icon className="h-5 w-5 shrink-0 opacity-60 transition-[transform,opacity] duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 group-hover:opacity-100" />
         </span>
         <span className="max-w-0 overflow-hidden font-accent text-[10px] tracking-[0.25em] whitespace-nowrap uppercase opacity-0 transition-all duration-500 ease-out group-hover:ml-2 group-hover:max-w-25 group-hover:opacity-100">
           {link.label}
