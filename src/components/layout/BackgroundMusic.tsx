@@ -17,10 +17,18 @@ export function BackgroundMusic() {
   const [playing, setPlaying] = useState(false);
   const [ready, setReady] = useState(false);
 
+  // Ambient background level — full volume is jarring for a looping track.
+  const VOLUME = 0.35;
+
   // Only mount the control once we know the track URL is resolvable.
   useEffect(() => {
     setReady(Boolean(TRACK_URL));
   }, []);
+
+  // Keep the element at the ambient volume whenever it (re)mounts.
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = VOLUME;
+  }, [ready]);
 
   // Attempt to resume if the listener had it on last time.
   useEffect(() => {
