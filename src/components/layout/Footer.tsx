@@ -143,32 +143,6 @@ export function Footer() {
             Imagine. Explore. Evolve.
           </p>
         </div>
-
-        {/* Music credits — required by the track's CC-BY 4.0 license */}
-        <div className="mt-6 border-t border-brand-white/4 pt-6">
-          <p className="text-[11px] leading-relaxed text-brand-grey/30">
-            Music:{" "}
-            <span className="text-brand-grey/50">&ldquo;Snowfall&rdquo;</span> by
-            Scott Buckley — released under{" "}
-            <a
-              href="https://creativecommons.org/licenses/by/4.0/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline transition-colors duration-300 hover:text-brand-grey/60"
-            >
-              CC-BY 4.0
-            </a>
-            .{" "}
-            <a
-              href="https://www.scottbuckley.com.au"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline transition-colors duration-300 hover:text-brand-grey/60"
-            >
-              www.scottbuckley.com.au
-            </a>
-          </p>
-        </div>
       </div>
     </footer>
   );

@@ -6,7 +6,6 @@ import { Footer } from '@/components/layout/Footer';
 import { AdaptiveCursor } from '@/components/effects/AdaptiveCursor';
 import { IntroSplash } from '@/components/layout/IntroSplash';
 import { IntroProvider } from '@/components/layout/IntroContext';
-import { BackgroundMusic } from '@/components/layout/BackgroundMusic';
 
 /**
  * Public-site chrome (custom cursor, header, footer) wraps every marketing
@@ -29,7 +28,6 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <main>{children}</main>
       <Footer />
       <IntroSplash />
-      <BackgroundMusic />
     </IntroProvider>
   );
 }

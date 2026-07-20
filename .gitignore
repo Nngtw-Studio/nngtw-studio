@@ -21,3 +21,6 @@ investigation-*.png
 logo-investigation-report.json
 intro-logo-dev.*
 out.txt
+
+.vercel
+.env*
