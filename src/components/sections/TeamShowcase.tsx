@@ -112,20 +112,24 @@ function rankMembers(members: TeamMember[]): TeamMember[] {
   return [...members].sort((a, b) => b.contributionWeight - a.contributionWeight);
 }
 
-function TeamHeading() {
+interface TeamHeadingCopy {
+  eyebrow: string;
+  title: React.ReactNode;
+  subtitle: string;
+}
+
+function TeamHeading({ eyebrow, title, subtitle }: TeamHeadingCopy) {
   return (
     <div>
       <div className="mb-4 flex items-center gap-4">
         <div className="accent-line" />
-        <p className="label-overline text-brand-orange">The Team</p>
+        <p className="label-overline text-brand-orange">{eyebrow}</p>
       </div>
       <h3 className="editorial-heading text-3xl text-brand-white md:text-4xl">
-        Small team.
-        <br />
-        Big vision.
+        {title}
       </h3>
       <p className="mt-5 max-w-xs text-sm leading-7 text-brand-grey/60">
-        The people behind every world we ship.
+        {subtitle}
       </p>
     </div>
   );
@@ -324,7 +328,7 @@ function TeamCard({
 }
 
 /** Desktop layout — heading + member index in a left rail, bento grid right. */
-function TeamDesktop({ members }: { members: TeamMember[] }) {
+function TeamDesktop({ members, heading }: { members: TeamMember[]; heading: TeamHeadingCopy }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   /* When the current hover engaged — a hovered card holds its expanded state
      for a minimum of HOVER_HOLD_MS regardless of where the morph slides the
@@ -411,7 +415,7 @@ function TeamDesktop({ members }: { members: TeamMember[] }) {
       <div className="hidden gap-12 lg:flex lg:items-stretch xl:gap-16">
         {/* Left rail — heading + member index */}
         <aside className="flex w-60 shrink-0 flex-col xl:w-72">
-          <TeamHeading />
+          <TeamHeading {...heading} />
 
           <nav aria-label="Team members" className="mt-10 flex flex-col border-t border-brand-white/10">
             {ranked.map((member) => {
@@ -495,13 +499,13 @@ function TeamDesktop({ members }: { members: TeamMember[] }) {
   );
 }
 
-function TeamMobileList({ members }: { members: TeamMember[] }) {
+function TeamMobileList({ members, heading }: { members: TeamMember[]; heading: TeamHeadingCopy }) {
   const ranked = useMemo(() => rankMembers(members), [members]);
 
   return (
     <div className="lg:hidden">
       <div className="mb-12">
-        <TeamHeading />
+        <TeamHeading {...heading} />
       </div>
       <div className="flex flex-col gap-4">
         {ranked.map((member, index) => (
@@ -522,13 +526,34 @@ function TeamMobileList({ members }: { members: TeamMember[] }) {
   );
 }
 
-export function TeamShowcase({ members }: { members: TeamMember[] }) {
+interface TeamShowcaseProps {
+  members: TeamMember[];
+  /** Optional heading copy overrides — defaults keep the home-page voice. */
+  eyebrow?: string;
+  title?: React.ReactNode;
+  subtitle?: string;
+}
+
+export function TeamShowcase({
+  members,
+  eyebrow = 'The Team',
+  title = (
+    <>
+      Small team.
+      <br />
+      Big vision.
+    </>
+  ),
+  subtitle = 'The people behind every world we ship.',
+}: TeamShowcaseProps) {
   if (members.length === 0) return null;
+
+  const heading: TeamHeadingCopy = { eyebrow, title, subtitle };
 
   return (
     <>
-      <TeamDesktop members={members} />
-      <TeamMobileList members={members} />
+      <TeamDesktop members={members} heading={heading} />
+      <TeamMobileList members={members} heading={heading} />
     </>
   );
 }

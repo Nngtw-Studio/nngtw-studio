@@ -82,11 +82,11 @@ export default async function CareerDetailPage({ params }: Props) {
 
           <div className="mt-12 flex flex-col gap-4 sm:flex-row">
             {career.status === "open" || career.status === "internship" ? (
-              <Button href="/contact" variant="primary">
+              <Button href="/connect" variant="primary">
                 Apply Now
               </Button>
             ) : (
-              <Button href="/contact" variant="secondary">
+              <Button href="/connect" variant="secondary">
                 Express Interest
               </Button>
             )}

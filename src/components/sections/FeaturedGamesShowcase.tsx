@@ -2,24 +2,30 @@
 
 import Link from 'next/link';
 import type { FeaturedGame } from '@/types';
-import { FadeIn } from '@/components/motion/FadeIn';
-import { GameShowcaseCard } from '@/components/sections/GameShowcaseCard';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
+import { FeaturedGameTile } from '@/components/sections/FeaturedGameTile';
 
 interface FeaturedGamesShowcaseProps {
   games: FeaturedGame[];
 }
 
+/**
+ * Single-screen showcase: a compact editorial header row plus a grid of
+ * key-art tiles. Adding more featured games tightens the grid rather than
+ * lengthening the page — the section never exceeds one viewport by design.
+ * Deliberately its own layout, distinct from the Games page's full
+ * alternating showcase (GameShowcaseCard) — the two never share a section.
+ */
 export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
   if (!games.length) return null;
 
   return (
     <section
       id="featured-games"
-      className="relative overflow-hidden border-t border-brand-white/5 bg-brand-black"
+      className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
       aria-label="Featured games"
     >
-      {/* Ambient lighting rig — echoes the hero and sibling sections so the
-          showcase reads as part of the same world, not a bolted-on carousel. */}
+      {/* Ambient lighting rig — echoes the hero so the section reads as part of the same world */}
       <div
         className="pointer-events-none absolute inset-0 opacity-70"
         aria-hidden="true"
@@ -29,45 +35,45 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
         }}
       />
 
-      <div className="section-padding relative mx-auto max-w-[1600px]">
-        {/* Section header */}
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-10">
-          <FadeIn className="lg:col-span-7">
-            <div className="mb-8 flex items-center gap-4">
-              <div className="accent-line" />
-              <p className="label-overline text-brand-orange">Featured</p>
+      <div className="relative mx-auto flex min-h-svh max-w-[1600px] flex-col justify-center px-6 py-16 md:px-12 md:py-20 lg:px-20 xl:px-28">
+        {/* Header row — label + heading left, support copy + view-all right */}
+        <FadeIn>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="mb-6 flex items-center gap-4">
+                <div className="accent-line" />
+                <p className="label-overline text-brand-orange">Featured</p>
+              </div>
+              <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl">
+                Games we&rsquo;re bringing to life.
+              </h2>
             </div>
-            <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
-              Games we&rsquo;re
-              <br />
-              bringing to life.
-            </h2>
-          </FadeIn>
-          <FadeIn delay={0.1} className="lg:col-span-4 lg:col-start-9 lg:pb-2">
-            <p className="text-base leading-8 text-brand-grey">
-              Original titles in active development, each built with the same obsession for
-              craft, feel, and long-term community.
-            </p>
-          </FadeIn>
-        </div>
-
-        {/* Showcase rows */}
-        <div className="mt-20 flex flex-col gap-28 md:mt-28 md:gap-36">
-          {games.map((game, index) => (
-            <GameShowcaseCard key={game.id} game={game} index={index} />
-          ))}
-        </div>
-
-        {/* View all link */}
-        <FadeIn className="mt-20 flex justify-center md:mt-28">
-          <Link
-            href="/games"
-            className="cursor-target group inline-flex items-center gap-4 border border-brand-white/15 px-8 py-4 label-overline text-brand-white transition-colors duration-300 hover:border-brand-orange/60 hover:text-brand-orange"
-          >
-            View All Projects
-            <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-          </Link>
+            <div className="flex flex-col items-start gap-5 lg:items-end">
+              <p className="max-w-sm text-sm leading-7 text-brand-grey lg:text-right">
+                Original titles in active development, built with the same obsession for
+                craft, feel, and community.
+              </p>
+              <Link
+                href="/games"
+                className="cursor-target group inline-flex items-center gap-3 label-overline text-brand-white/70 transition-colors duration-300 hover:text-brand-orange"
+              >
+                View All Projects
+                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  →
+                </span>
+              </Link>
+            </div>
+          </div>
         </FadeIn>
+
+        {/* Card grid — grows sideways, never downward */}
+        <StaggerContainer className="mt-12 grid gap-6 md:mt-16 md:grid-cols-2 md:gap-8">
+          {games.map((game, index) => (
+            <StaggerItem key={game.id}>
+              <FeaturedGameTile game={game} index={index} />
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       </div>
     </section>
   );

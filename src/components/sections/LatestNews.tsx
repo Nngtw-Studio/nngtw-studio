@@ -12,7 +12,7 @@ export async function LatestNews() {
   const [featured, ...rest] = articles;
 
   return (
-    <section className="relative border-t border-brand-white/5">
+    <section className="relative snap-start border-t border-brand-white/5">
       <div className="section-padding mx-auto max-w-[1600px]">
       {/* Header */}
       <FadeIn>

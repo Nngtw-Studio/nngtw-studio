@@ -112,5 +112,5 @@ export const NAV_ICONS: Record<string, (props: IconProps) => React.ReactElement>
   '/technology': TechnologyIcon,
   '/news': NewsIcon,
   '/careers': CareersIcon,
-  '/contact': ContactIcon,
+  '/connect': ContactIcon,
 };

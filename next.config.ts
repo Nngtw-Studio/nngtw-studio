@@ -15,6 +15,9 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
 const nextConfig: NextConfig = {
   distDir: '.next',
   outputFileTracingRoot: __dirname,
+  redirects: async () => [
+    { source: '/contact', destination: '/connect', permanent: true },
+  ],
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: supabaseHostname

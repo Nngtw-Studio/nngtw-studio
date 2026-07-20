@@ -5,7 +5,7 @@ import { allGames, newsArticles, careers } from "@/lib/data/content";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = BRAND.url;
 
-  const staticPages = ["", "/games", "/studio", "/technology", "/news", "/careers", "/contact"].map(
+  const staticPages = ["", "/games", "/studio", "/technology", "/news", "/careers", "/connect"].map(
     (path) => ({
       url: `${baseUrl}${path}`,
       lastModified: new Date(),

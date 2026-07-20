@@ -144,7 +144,7 @@ export default function RootLayout({
       lang="en"
       className={`${chillax.variable} ${cabinetGrotesk.variable} ${posterama2001.variable} ${posteramaText.variable}`}
     >
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <SiteChrome>{children}</SiteChrome>
       </body>
     </html>

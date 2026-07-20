@@ -29,7 +29,7 @@ export const NAV_LINKS = [
   { href: "/technology", label: "Technology" },
   { href: "/news", label: "News" },
   { href: "/careers", label: "Careers" },
-  { href: "/contact", label: "Contact" },
+  { href: "/connect", label: "Connect" },
 ] as const;
 
 /** Future products — not exposed in navigation until populated */

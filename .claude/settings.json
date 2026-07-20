@@ -7,7 +7,12 @@
       "Read(//c/Users/reaga/AppData/Local/Temp/claude/e--Nngtw-Studio-Official-Webpage-July2026-site-june26-preview-nngtwS/3b64beb9-a3d0-4497-a469-2cfd6cf8ff4b/scratchpad/**)",
       "Bash(npm init *)",
       "Bash(npm install *)",
-      "Bash(node debug-repro.mjs)"
+      "Bash(node debug-repro.mjs)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 4 http://localhost:3097/)",
+      "Bash(node __verify_replace.mjs)",
+      "Bash(node __verify_level.mjs)",
+      "Bash(node __verify_persistent.mjs)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 3 http://localhost:3097/)"
     ]
   }
 }

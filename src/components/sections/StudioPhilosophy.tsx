@@ -6,7 +6,7 @@ import { getPhilosophyValues } from '@/lib/supabase/queries/philosophy';
 export async function StudioPhilosophy() {
   const philosophyValues = await getPhilosophyValues();
   return (
-    <section className="relative overflow-hidden border-t border-brand-white/5 bg-brand-black">
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
       <div className="section-padding mx-auto max-w-[1600px]">
 
         {/* Header */}

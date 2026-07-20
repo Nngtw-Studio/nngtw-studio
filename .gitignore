@@ -13,3 +13,11 @@ build/
 .vercel/
 
 *.log
+
+# Local debug / investigation artifacts
+*.tsbuildinfo
+__shot-*.mjs
+investigation-*.png
+logo-investigation-report.json
+intro-logo-dev.*
+out.txt

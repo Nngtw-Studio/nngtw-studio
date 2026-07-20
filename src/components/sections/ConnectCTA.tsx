@@ -5,9 +5,9 @@ import { FadeIn } from '@/components/motion/FadeIn';
 import { CtaButton } from '@/components/ui/CtaButton';
 import { BRAND, SOCIAL } from '@/lib/constants';
 
-export function ContactCTA() {
+export function ConnectCTA() {
   return (
-    <section className="relative overflow-hidden border-t border-brand-white/5">
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/5">
       <div className="absolute inset-0 bg-linear-to-b from-brand-black to-brand-bg" />
       <div className="section-padding relative mx-auto max-w-[1600px]">
         <FadeIn>
@@ -28,8 +28,8 @@ export function ContactCTA() {
 
             <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-2">
-                <CtaButton href="/contact" variant="primary">
-                  Contact Us
+                <CtaButton href="/connect" variant="primary">
+                  Connect
                 </CtaButton>
                 <CtaButton href={SOCIAL.discord} variant="secondary" external>
                   Join Discord
