@@ -101,6 +101,34 @@ export function HeaderLogo() {
     { ease: [wipeEase, wipeEase] },
   );
 
+  /* Intro entrance wipe — driven exactly like the hover `clip` above: a
+     linearly-animated MotionValue mapped through the SAME [0, 0.4, 1] →
+     ellipse hesitate transform with per-segment `wipeEase`, so the entrance
+     reads as the identical gesture (same thumb-egg hesitate) as hover, just
+     played once on mount rather than on pointer. At rest (not active) it sits
+     at 1 → fully revealed, so it never clips the resting logo. */
+  const entrance = useMotionValue(active ? 0 : 1);
+  const entranceClip = useTransform(
+    entrance,
+    [0, 0.4, 1],
+    [
+      `ellipse(0% 0% at ${anchor})`,
+      `ellipse(17% 26% at ${anchor})`,
+      `ellipse(220% 220% at ${anchor})`,
+    ],
+    { ease: [wipeEase, wipeEase] },
+  );
+
+  useEffect(() => {
+    if (!active) return;
+    entrance.set(0);
+    const controls = animate(entrance, 1, {
+      duration: reduce ? 0.2 : 2.5,
+      ease: 'linear',
+    });
+    return () => controls.stop();
+  }, [active, reduce, entrance]);
+
   const drive = (target: number) => {
     driveRef.current?.stop();
     if (reduce) {
@@ -268,23 +296,12 @@ export function HeaderLogo() {
         }
       >
         {/* Entrance reveal — plays once, only when the intro is the reason this
-            element exists in its large flight state; skipped at rest. Same
-            ellipse wipe (anchor, hesitate ellipse, easing) as the hover
-            reveal below — no scale, no opacity pop. */}
+            element exists in its large flight state; skipped at rest. Driven
+            by the `entrance` MotionValue through the SAME ellipse hesitate
+            transform the hover wipe uses, so it reads as the identical
+            gesture — no scale, no opacity pop. */}
         <motion.span
-          initial={active ? { clipPath: `ellipse(0% 0% at ${anchor})` } : false}
-          animate={{
-            clipPath: [
-              `ellipse(0% 0% at ${anchor})`,
-              `ellipse(17% 26% at ${anchor})`,
-              `ellipse(220% 220% at ${anchor})`,
-            ],
-          }}
-          transition={{
-            duration: reduce ? 0.2 : 2.5,
-            times: [0, 0.4, 1],
-            ease: [wipeEase, wipeEase],
-          }}
+          style={{ clipPath: active ? entranceClip : undefined }}
           className="relative block h-full w-full"
         >
           {/* THE one persistent subtree — same DOM nodes in splash, flight,

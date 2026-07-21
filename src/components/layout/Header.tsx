@@ -69,7 +69,7 @@ function IdleIcon({ children }: { children: React.ReactNode }) {
    the last two overlapping for a cinematic finish — rather than a flat
    stagger: each still plays the same ~1s wipe. */
 const NAV_REVEAL_DELAYS = [3.2, 3.575, 3.8875, 4.1375, 4.3125, 4.4375];
-const NAV_REVEAL_DURATION = 0.25;
+const NAV_REVEAL_DURATION = 0.5;
 
 function NavLink({ link, index }: { link: { href: string; label: string }; index: number }) {
   const { active, progress, flights, reduce } = useIntro();

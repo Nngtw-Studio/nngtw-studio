@@ -24,9 +24,9 @@
     forwards;
   --animate-jello-vertical: jello-vertical 0.9s both;
   --animate-nav-circle-in: circle-in-center 1s cubic-bezier(0.25, 1, 0.3, 1)
-    both;
+    0.1s both;
   --animate-nav-circle-out: circle-out-center 1s cubic-bezier(0.25, 1, 0.3, 1)
-    both;
+    0.1s both;
 
   @keyframes circle-in-center {
     from {
