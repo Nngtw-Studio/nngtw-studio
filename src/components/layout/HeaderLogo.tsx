@@ -119,15 +119,24 @@ export function HeaderLogo() {
     { ease: [wipeEase, wipeEase] },
   );
 
+  /* Latches false→true once the flight rects exist; stays true across later
+     re-measures (resize) so the reveal isn't restarted. */
+  const hasFlights = !!flights;
   useEffect(() => {
-    if (!active) return;
+    /* Hold the reveal until the flight rects are measured. Before that the
+       element sits at its small placeholder size, and starting the wipe there
+       would show the logo begin small and then jump/scale up to the splash
+       size the instant the measurement lands. Waiting for `flights` means the
+       first visible frame is already at the full splash size — the wipe just
+       uncovers it in place: no movement, no scaling, only hide→reveal. */
+    if (!active || !hasFlights) return;
     entrance.set(0);
     const controls = animate(entrance, 1, {
       duration: reduce ? 0.2 : 2.5,
       ease: 'linear',
     });
     return () => controls.stop();
-  }, [active, reduce, entrance]);
+  }, [active, hasFlights, reduce, entrance]);
 
   const drive = (target: number) => {
     driveRef.current?.stop();

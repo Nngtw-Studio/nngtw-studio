@@ -121,7 +121,14 @@ export function IntroSplash() {
       </motion.div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-between px-6 py-12 md:py-16">
-        <div data-intro-lockup-container className="flex flex-1 items-center justify-center">
+        {/* Phones nudge the lockup 20px above dead-center (desktop stays
+            centered). The offset is a transform, not padding, so the
+            container's getBoundingClientRect still reflects it and the
+            fist's flight `from` (splashFistRectFrom) stays in sync. */}
+        <div
+          data-intro-lockup-container
+          className="flex flex-1 items-center justify-center -translate-y-5 md:translate-y-0"
+        >
           {parts && (
             <motion.div
               data-intro-lockup
@@ -185,10 +192,12 @@ export function IntroSplash() {
             box, pill padding, pb-2, outer py-12/md:py-16) the real header
             nav row has, so each real header nav icon's flight starts from
             the exact same geometry it lands at. Never painted: no icon, no
-            Link, no label — `Header.tsx`'s real `<Link>`s are what fly. */}
+            Link, no label — `Header.tsx`'s real `<Link>`s are what fly.
+            Must share the header nav's `md` (768px) visibility breakpoint:
+            if this row is display:none while the header icons render, their
+            flight measures a zero rect and they never fly down to the row. */}
         <div
-          aria-hidden="true"
-          className="pointer-events-none invisible hidden items-center gap-19.5 pb-2 lg:flex"
+          className="pointer-events-none invisible flex items-center gap-19.5 pb-2"
         >
           {NAV_LINKS.map((link) => (
             <span key={link.href} className="flex items-center rounded-full px-1.5 py-1.5">

@@ -71,7 +71,7 @@ function IdleIcon({ children }: { children: React.ReactNode }) {
 const NAV_REVEAL_DELAYS = [3.2, 3.575, 3.8875, 4.1375, 4.3125, 4.4375];
 const NAV_REVEAL_DURATION = 0.5;
 
-function NavLink({ link, index }: { link: { href: string; label: string }; index: number }) {
+function NavLink({ link, index, fastReveal = false }: { link: { href: string; label: string }; index: number; fastReveal?: boolean }) {
   const { active, progress, flights, reduce } = useIntro();
   const Icon = NAV_ICONS[link.href];
   const flight = flights?.nav[link.href];
@@ -102,11 +102,23 @@ function NavLink({ link, index }: { link: { href: string; label: string }; index
        shifts its neighbors. The actual pill is centered inside it via
        absolute positioning + translate(-50%,-50%), so when the label grows
        on hover it lengthens equally left and right instead of only pushing
-       rightward into the next icon. */
-    <motion.span style={{ x, y }} className="relative flex h-8 w-8 items-center justify-center">
+       rightward into the next icon.
+
+       This OUTER span is the intro flight's measurement anchor
+       (`data-intro-nav`) and is deliberately NEVER transformed: the flight
+       translate lives on the inner `motion.span` instead. That keeps the
+       anchor's rect equal to the icon's true header rest position at all
+       times, so IntroContext can safely re-measure it on any resize —
+       including the resize a mobile browser fires mid-scroll when the URL
+       bar hides. Were the transform on this box, a re-measure would read
+       its own mid-flight position back as "rest" and collapse the flight. */
+    <motion.span
+      data-intro-nav={link.href}
+      className="relative flex h-8 w-8 items-center justify-center"
+    >
+     <motion.span style={{ x, y }} className="absolute inset-0 flex items-center justify-center">
       <Link
         href={link.href}
-        data-intro-nav={link.href}
         aria-current={isActive ? 'page' : undefined}
         className={cn(
           'group absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center rounded-full px-1.5 py-1.5 whitespace-nowrap text-brand-grey transition-colors duration-300 hover:text-brand-white hover:bg-brand-white/5',
@@ -115,11 +127,19 @@ function NavLink({ link, index }: { link: { href: string; label: string }; index
         <IdleIcon>
           <motion.span
             className="relative inline-flex"
-            initial={active ? { clipPath: 'circle(0% at 50% 50%)' } : false}
+            initial={{ clipPath: 'circle(0% at 50% 50%)' }}
             animate={{ clipPath: 'circle(125% at 50% 50%)' }}
+            exit={{ 
+              clipPath: 'circle(0% at 50% 50%)',
+              transition: {
+                delay: reduce ? 0 : [0, 0.375, 0.6875, 0.9375, 1.1125, 1.2375][index] || 0,
+                duration: reduce ? 0.2 : 0.4,
+                ease: [0.25, 1, 0.3, 1]
+              }
+            }}
             transition={{
-              delay: reduce ? 0 : NAV_REVEAL_DELAYS[index],
-              duration: reduce ? 0.2 : NAV_REVEAL_DURATION,
+              delay: reduce ? 0 : (fastReveal ? [0.25, 0.2, 0.15, 0.1, 0.05, 0][index] : (active ? NAV_REVEAL_DELAYS[index] : [1.2375, 1.1125, 0.9375, 0.6875, 0.375, 0][index])) || 0,
+              duration: reduce ? 0.2 : (fastReveal ? 0.4 : (active ? NAV_REVEAL_DURATION : 0.4)),
               ease: [0.25, 1, 0.3, 1],
             }}
           >
@@ -146,8 +166,25 @@ function NavLink({ link, index }: { link: { href: string; label: string }; index
           {link.label}
         </span>
       </Link>
+     </motion.span>
     </motion.span>
   );
+}
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const media = window.matchMedia(query);
+    setMatches(media.matches);
+    const listener = (e: MediaQueryListEvent) => setMatches(e.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, [query]);
+
+  return { matches, mounted };
 }
 
 export function Header() {
@@ -156,6 +193,34 @@ export function Header() {
   const [navVisible, setNavVisible] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const { matches: isMd, mounted } = useMediaQuery('(min-width: 768px)');
+  const isDesktop = !mounted || isMd;
+
+  const [layoutPhase, setLayoutPhase] = useState<'desktop' | 'mobile' | 'to-desktop' | 'to-mobile'>(isDesktop ? 'desktop' : 'mobile');
+  const layoutPhaseRef = useRef(layoutPhase);
+  layoutPhaseRef.current = layoutPhase;
+
+  const prevIsDesktop = useRef(isDesktop);
+  
+  const isInitialRender = useRef(true);
+  useEffect(() => {
+    isInitialRender.current = false;
+  }, []);
+
+  useEffect(() => {
+    if (isDesktop !== prevIsDesktop.current) {
+      if (isDesktop) {
+        if (layoutPhaseRef.current === 'mobile' && !introActive) setLayoutPhase('to-desktop');
+        else setLayoutPhase('desktop');
+      } else {
+        if (layoutPhaseRef.current === 'desktop') setLayoutPhase('to-mobile');
+        else setLayoutPhase('mobile');
+      }
+      prevIsDesktop.current = isDesktop;
+    }
+  }, [isDesktop, introActive]);
+
+  const padDesktop = layoutPhase === 'desktop' || layoutPhase === 'to-mobile';
 
   useEffect(() => {
     setNavVisible(true);
@@ -287,56 +352,73 @@ export function Header() {
       >
         <div
           data-intro-anchor="logo-row"
-          className="relative mx-auto flex h-20 max-w-[1600px] items-center justify-between px-6 md:px-12 lg:px-20"
+          className={cn("relative mx-auto flex h-20 max-w-[1600px] items-center justify-between", padDesktop ? "px-12 lg:px-20" : "px-6")}
         >
           {/* Left nav icons */}
-          <nav className="hidden items-center gap-19.5 lg:flex">
-            {NAV_LINKS.slice(0, 3).map((link, i) => (
-              <NavLink key={link.href} link={link} index={i} />
-            ))}
+          <nav className="flex items-center gap-19.5">
+            <AnimatePresence>
+              {layoutPhase === 'desktop' &&
+                NAV_LINKS.slice(0, 3).map((link, i) => (
+                  <NavLink key={link.href} link={link} index={i} fastReveal={!isInitialRender.current} />
+                ))}
+            </AnimatePresence>
           </nav>
 
           {/* Logo — centered; hover paints the orange fist in with the intro wipe */}
           <HeaderLogo />
 
           {/* Right nav icons */}
-          <nav className="hidden items-center gap-19.5 lg:flex">
-            {NAV_LINKS.slice(3, 6).map((link, i) => (
-              <NavLink key={link.href} link={link} index={3 + i} />
-            ))}
+          <nav className="flex items-center gap-19.5">
+            <AnimatePresence onExitComplete={() => {
+              if (layoutPhaseRef.current === 'to-mobile') setLayoutPhase('mobile');
+            }}>
+              {layoutPhase === 'desktop' &&
+                NAV_LINKS.slice(3, 6).map((link, i) => (
+                  <NavLink key={link.href} link={link} index={3 + i} fastReveal={!isInitialRender.current} />
+                ))}
+            </AnimatePresence>
           </nav>
 
           {/* Mobile menu button — hidden while the intro owns the screen, so
               there's nothing to appear clickable behind it. */}
-          {!introActive && (
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
-              aria-label="Toggle menu"
-            >
-              <motion.span
-                animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="block h-px w-5 bg-brand-white"
-              />
-              <motion.span
-                animate={
-                  mobileOpen
-                    ? { opacity: 0, scaleX: 0 }
-                    : { opacity: 1, scaleX: 1 }
-                }
-                transition={{ duration: 0.2 }}
-                className="block h-px w-5 bg-brand-white"
-              />
-              <motion.span
-                animate={
-                  mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
-                }
-                transition={{ duration: 0.3 }}
-                className="block h-px w-5 bg-brand-white"
-              />
-            </button>
-          )}
+          <AnimatePresence onExitComplete={() => {
+            if (layoutPhaseRef.current === 'to-desktop') setLayoutPhase('desktop');
+          }}>
+            {!introActive && layoutPhase === 'mobile' && (
+              <motion.button
+                key="mobile-toggle"
+                initial={{ clipPath: 'inset(0 100% 0 100%)' }}
+                animate={{ clipPath: ['inset(0 100% 0 100%)', 'inset(0 10% 0 10%)', 'inset(0 10% 0 10%)', 'inset(0 0 0 0)'] }}
+                exit={{ clipPath: ['inset(0 0 0 0)', 'inset(0 10% 0 10%)', 'inset(0 10% 0 10%)', 'inset(0 100% 0 100%)'] }}
+                transition={{ duration: 0.8, ease: "easeInOut", times: [0, 0.3, 0.7, 1], delay: 0.1 }}
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="absolute right-6 top-1/2 z-50 flex h-10 w-10 -translate-y-1/2 flex-col items-center justify-center gap-1.5"
+                aria-label="Toggle menu"
+              >
+                <motion.span
+                  animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="block h-px w-5 bg-brand-white"
+                />
+                <motion.span
+                  animate={
+                    mobileOpen
+                      ? { opacity: 0, scaleX: 0 }
+                      : { opacity: 1, scaleX: 1 }
+                  }
+                  transition={{ duration: 0.2 }}
+                  className="block h-px w-5 bg-brand-white"
+                />
+                <motion.span
+                  animate={
+                    mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
+                  }
+                  transition={{ duration: 0.3 }}
+                  className="block h-px w-5 bg-brand-white"
+                />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Loading bar riding the header's hairline border */}
@@ -351,7 +433,7 @@ export function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 flex flex-col bg-brand-black lg:hidden"
+            className="fixed inset-0 z-40 flex flex-col bg-brand-black md:hidden"
           >
             {/* Subtle ambient glow */}
             <div className="absolute inset-0 bg-gradient-to-br from-brand-white/[0.01] to-transparent" />

@@ -4,6 +4,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import {
+  AnimatePresence,
   motion,
   MotionConfig,
   useMotionValue,
@@ -18,6 +19,7 @@ import { AmbientField } from '@/components/effects/AmbientField';
 import { SOCIAL } from '@/lib/constants';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const CLIP_EASE: [number, number, number, number] = [0.25, 1, 0.3, 1];
 
 const rise = (delay: number, ready: boolean) => ({
   initial: { opacity: 0, y: 28 },
@@ -30,6 +32,42 @@ const lineRise = (i: number, ready: boolean) => ({
   animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: '0.55em' },
   transition: { duration: 1.15, delay: 0.25 + i * 0.12, ease: EASE_OUT },
 });
+
+const ACCEL_STAGGER = [0, 0.375, 0.6875, 0.9375, 1.1125, 1.2375];
+
+const clipReveal = (i: number, total: number, ready: boolean, reduce: boolean, isDesktop: boolean, introComplete: boolean) => {
+  const enterOrder = isDesktop ? (total - 1 - i) : i; // Desktop: bottom to top. Mobile: left to right.
+  const exitOrder = isDesktop ? i : (total - 1 - i);  // Desktop: top to bottom. Mobile: right to left.
+  const baseDelay = introComplete ? 0 : 1.1;
+
+  const enterStagger = (ACCEL_STAGGER[enterOrder] ?? enterOrder * 0.15) * 0.4;
+  const exitStagger = (ACCEL_STAGGER[exitOrder] ?? exitOrder * 0.15) * 0.4;
+
+  return {
+    initial: { clipPath: 'circle(0% at 50% 50%)' },
+    animate: ready ? { clipPath: 'circle(125% at 50% 50%)' } : { clipPath: 'circle(0% at 50% 50%)' },
+    exit: { 
+      clipPath: 'circle(0% at 50% 50%)',
+      transition: {
+        delay: reduce ? 0 : exitStagger,
+        duration: reduce ? 0.2 : 0.4,
+        ease: CLIP_EASE,
+      }
+    },
+    transition: {
+      delay: reduce ? 0 : baseDelay + enterStagger,
+      duration: reduce ? 0.2 : 0.5,
+      ease: CLIP_EASE,
+    },
+  };
+};
+
+const HERO_SOCIALS = [
+  { href: SOCIAL.linkedin, label: 'LinkedIn', icon: <svg className="h-[18px] w-[18px]" viewBox="0 0 25 24" fill="currentColor"><path d="m5.706 7.798v16.202h-5.395v-16.202zm.343-5.002c.001.029.002.063.002.098 0 .749-.318 1.423-.826 1.895l-.002.001c-.545.498-1.274.803-2.075.803-.049 0-.099-.001-.148-.003h.007-.033c-.041.002-.089.003-.137.003-.784 0-1.496-.306-2.025-.804l.001.001c-.504-.488-.816-1.17-.816-1.925 0-.024 0-.048.001-.073v.004c-.001-.021-.001-.045-.001-.069 0-.762.324-1.448.841-1.929l.002-.001c.544-.495 1.271-.799 2.068-.799.046 0 .091.001.137.003h-.006c.043-.002.092-.003.143-.003.785 0 1.5.303 2.034.798l-.002-.002c.515.497.835 1.193.835 1.964v.042-.002zm19.062 11.92v9.284h-5.378v-8.665c.005-.079.007-.171.007-.263 0-.896-.249-1.733-.682-2.447l.012.021c-.427-.596-1.117-.979-1.896-.979-.06 0-.12.002-.18.007h.008c-.027-.001-.058-.002-.089-.002-.62 0-1.19.213-1.641.57l.006-.004c-.453.367-.808.836-1.032 1.375l-.008.023c-.116.355-.182.763-.182 1.187 0 .048.001.096.003.144v-.007 9.042h-5.378q.033-6.523.033-10.578t-.016-4.839l-.016-.785h5.378v2.354h-.033c.214-.345.435-.644.678-.924l-.008.009c.281-.309.583-.588.908-.838l.016-.012c.404-.311.878-.555 1.392-.704l.03-.007c.538-.161 1.157-.254 1.797-.254h.079-.004c.071-.003.154-.005.237-.005 1.681 0 3.195.714 4.256 1.856l.003.004q1.702 1.856 1.702 5.436z"/></svg> },
+  { href: SOCIAL.facebook, label: 'Facebook', icon: <svg className="h-[18px] w-[18px]" viewBox="0 0 25.26 47.17" fill="currentColor"><path d="M23.61 26.53 24.92 18h-8.19v-5.54c0-2.34 1.14-4.62 4.81-4.62h3.72V.58A45.17 45.17 0 0 0 18.65 0C11.91 0 7.5 4.09 7.5 11.49V18H0v8.54h7.5v20.63h9.23V26.53Z"/></svg> },
+  { href: SOCIAL.instagram, label: 'Instagram', icon: <svg className="h-[18px] w-[18px]" viewBox="0 0 256 256" fill="currentColor"><circle cx="128" cy="128" r="32"/><path d="M172,28H84A56.06353,56.06353,0,0,0,28,84v88a56.06353,56.06353,0,0,0,56,56h88a56.06353,56.06353,0,0,0,56-56V84A56.06353,56.06353,0,0,0,172,28ZM128,176a48,48,0,1,1,48-48A48.05436,48.05436,0,0,1,128,176Zm52-88a12,12,0,1,1,12-12A12,12,0,0,1,180,88Z"/></svg> },
+  { href: SOCIAL.discord, label: 'Discord', icon: <svg className="h-[18px] w-[18px]" viewBox="0 0 33.867 33.867" fill="currentColor"><path d="M11.343 5.177c-1.076 0-4.32 1.316-4.902 1.579-.582.263-1.228 1.084-1.961 2.439-.734 1.355-1.323 2.939-2.28 5.269-.956 2.33-1.179 6.822-1.147 8.193.032 1.371.189 2.442 1.594 3.253 1.404.81 2.646 1.658 3.953 2.168 1.308.51 2.2.877 2.806.367.606-.51 1.005-1.403 1.005-1.403s.574-.797-.51-1.275c-1.084-.479-1.626-.814-1.579-1.308.048-.494.127-.765.398-.701.271.064.91 1.211 3.365 1.737s4.848.447 4.848.447 2.394.08 4.849-.447c2.455-.526 3.093-1.673 3.364-1.737.271-.064.35.207.398.7.048.495-.494.83-1.578 1.309-1.084.478-.51 1.275-.51 1.275s.399.892 1.005 1.403c.605.51 1.498.143 2.805-.367 1.307-.51 2.55-1.357 3.954-2.168 1.405-.811 1.562-1.882 1.594-3.253.032-1.37-.191-5.863-1.148-8.193-.956-2.33-1.546-3.914-2.28-5.269-.732-1.355-1.379-2.176-1.96-2.44-.582-.262-3.827-1.578-4.903-1.578-1.076 0-1.394.75-1.394.75l-.375.829s-2.52-.479-3.804-.48c-1.284 0-3.837.48-3.837.48l-.375-.83s-.318-.749-1.395-.749zm.117 9.948h.04c1.569 0 2.84 1.373 2.84 3.066 0 1.694-1.271 3.066-2.84 3.066s-2.84-1.372-2.84-3.066c-.001-1.677 1.247-3.043 2.8-3.066zm10.907 0h.04c1.553.023 2.8 1.39 2.8 3.066 0 1.694-1.271 3.066-2.84 3.066-1.57 0-2.84-1.372-2.84-3.066 0-1.693 1.27-3.066 2.84-3.066z"/></svg> }
+];
 
 /**
  * Holds the hero's entrance until the intro splash's logo has landed at its
@@ -63,9 +101,46 @@ function useIntroGate() {
   return ready;
 }
 
+function useIntroComplete() {
+  const [complete, setComplete] = useState(false);
+
+  useEffect(() => {
+    const done = () => setComplete(true);
+    window.addEventListener('intro-complete', done);
+    const id = requestAnimationFrame(() => {
+      if (document.documentElement.getAttribute('data-intro') !== '1') setComplete(true);
+    });
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('intro-complete', done);
+    };
+  }, []);
+
+  return complete;
+}
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const media = window.matchMedia(query);
+    setMatches(media.matches);
+    const listener = (e: MediaQueryListEvent) => setMatches(e.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, [query]);
+
+  return { matches, mounted };
+}
+
 export function Hero() {
   const reduce = useReducedMotion() ?? false;
   const ready = useIntroGate();
+  const introComplete = useIntroComplete();
+  const { matches: isMd, mounted } = useMediaQuery('(min-width: 768px)');
+  const isDesktop = mounted && isMd;
   const sectionRef = useRef<HTMLElement>(null);
 
   /* The nav glow now blooms on the same `intro-hero-ready` trigger as the
@@ -105,7 +180,7 @@ export function Hero() {
      fire once per downward pass so it doesn't fight scrolling back up. */
   const autoScrolledRef = useRef(false);
   useMotionValueEvent(scrollYProgress, 'change', (progress) => {
-    if (progress >= 0.4 && !autoScrolledRef.current) {
+    if (progress >= 0.4 && introComplete && !autoScrolledRef.current) {
       autoScrolledRef.current = true;
       scrollToNextSection();
     } else if (progress < 0.05) {
@@ -276,7 +351,7 @@ export function Hero() {
               wrapping only where the viewport forces it */}
           <motion.p
             {...rise(0.7, ready)}
-            className="mx-auto mt-5 font-body text-base md:text-xl lg:text-[24px] leading-relaxed text-brand-white/55 lg:whitespace-nowrap"
+            className="mx-auto mt-5 font-body text-[clamp(1rem,2vw+0.25rem,1.5rem)] leading-relaxed text-brand-white/55 lg:whitespace-nowrap"
           >
             Crafting games and immersive experiences across mobile, PC, and XR.
           </motion.p>
@@ -284,73 +359,70 @@ export function Hero() {
           {/* CTAs */}
           <motion.div
             {...rise(0.9, ready)}
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0 sm:-space-x-2"
+            className="mt-10 flex flex-col items-center justify-center gap-4 md:flex-row md:gap-0 md:-space-x-2"
           >
-            <HeroButton href="/games" variant="primary">
+            <HeroButton href="/games" variant="primary" reveal={ready} revealDelay={0.9} revealOrigin="15% 50%">
               Experience the Games
             </HeroButton>
-            <HeroButton href="/studio" variant="secondary">
+            <HeroButton href="/studio" variant="secondary" reveal={ready} revealDelay={1.05} revealOrigin="77% 50%">
               Discover Why
             </HeroButton>
           </motion.div>
         </motion.div>
 
-        {/* Vertical social icons stack in bottom-left corner */}
-        <motion.div
-          style={{ opacity: cueOpacity }}
-          className="absolute bottom-14 left-8 z-20 hidden flex-col gap-7 md:bottom-16 md:left-12 lg:left-20 md:flex"
-        >
-          <a
-            href={SOCIAL.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
-            aria-label="LinkedIn"
+        {/* Social icons orchestrated between horizontal/vertical on resize */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isDesktop ? 'desktop' : 'mobile'}
+            style={{ opacity: cueOpacity }}
+            className={`absolute z-20 flex ${
+              isDesktop
+                ? 'flex-col gap-7 bottom-16 left-12 lg:left-20 translate-x-0'
+                : 'flex-row gap-6 bottom-14 left-1/2 -translate-x-1/2'
+            }`}
           >
-            <svg className="h-[18px] w-[18px]" viewBox="0 0 25 24" fill="currentColor">
-              <path d="m5.706 7.798v16.202h-5.395v-16.202zm.343-5.002c.001.029.002.063.002.098 0 .749-.318 1.423-.826 1.895l-.002.001c-.545.498-1.274.803-2.075.803-.049 0-.099-.001-.148-.003h.007-.033c-.041.002-.089.003-.137.003-.784 0-1.496-.306-2.025-.804l.001.001c-.504-.488-.816-1.17-.816-1.925 0-.024 0-.048.001-.073v.004c-.001-.021-.001-.045-.001-.069 0-.762.324-1.448.841-1.929l.002-.001c.544-.495 1.271-.799 2.068-.799.046 0 .091.001.137.003h-.006c.043-.002.092-.003.143-.003.785 0 1.5.303 2.034.798l-.002-.002c.515.497.835 1.193.835 1.964v.042-.002zm19.062 11.92v9.284h-5.378v-8.665c.005-.079.007-.171.007-.263 0-.896-.249-1.733-.682-2.447l.012.021c-.427-.596-1.117-.979-1.896-.979-.06 0-.12.002-.18.007h.008c-.027-.001-.058-.002-.089-.002-.62 0-1.19.213-1.641.57l.006-.004c-.453.367-.808.836-1.032 1.375l-.008.023c-.116.355-.182.763-.182 1.187 0 .048.001.096.003.144v-.007 9.042h-5.378q.033-6.523.033-10.578t-.016-4.839l-.016-.785h5.378v2.354h-.033c.214-.345.435-.644.678-.924l-.008.009c.281-.309.583-.588.908-.838l.016-.012c.404-.311.878-.555 1.392-.704l.03-.007c.538-.161 1.157-.254 1.797-.254h.079-.004c.071-.003.154-.005.237-.005 1.681 0 3.195.714 4.256 1.856l.003.004q1.702 1.856 1.702 5.436z"/>
-            </svg>
-          </a>
-          <a
-            href={SOCIAL.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
-            aria-label="Facebook"
-          >
-            <svg className="h-[18px] w-[18px]" viewBox="0 0 25.26 47.17" fill="currentColor">
-              <path d="M23.61 26.53 24.92 18h-8.19v-5.54c0-2.34 1.14-4.62 4.81-4.62h3.72V.58A45.17 45.17 0 0 0 18.65 0C11.91 0 7.5 4.09 7.5 11.49V18H0v8.54h7.5v20.63h9.23V26.53Z"/>
-            </svg>
-          </a>
-          <a
-            href={SOCIAL.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
-            aria-label="Instagram"
-          >
-            <svg className="h-[18px] w-[18px]" viewBox="0 0 256 256" fill="currentColor">
-              <circle cx="128" cy="128" r="32"/>
-              <path d="M172,28H84A56.06353,56.06353,0,0,0,28,84v88a56.06353,56.06353,0,0,0,56,56h88a56.06353,56.06353,0,0,0,56-56V84A56.06353,56.06353,0,0,0,172,28ZM128,176a48,48,0,1,1,48-48A48.05436,48.05436,0,0,1,128,176Zm52-88a12,12,0,1,1,12-12A12,12,0,0,1,180,88Z"/>
-            </svg>
-          </a>
-          <a
-            href={SOCIAL.discord}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
-            aria-label="Discord"
-          >
-            <svg className="h-[18px] w-[18px]" viewBox="0 0 33.867 33.867" fill="currentColor">
-              <path d="M11.343 5.177c-1.076 0-4.32 1.316-4.902 1.579-.582.263-1.228 1.084-1.961 2.439-.734 1.355-1.323 2.939-2.28 5.269-.956 2.33-1.179 6.822-1.147 8.193.032 1.371.189 2.442 1.594 3.253 1.404.81 2.646 1.658 3.953 2.168 1.308.51 2.2.877 2.806.367.606-.51 1.005-1.403 1.005-1.403s.574-.797-.51-1.275c-1.084-.479-1.626-.814-1.579-1.308.048-.494.127-.765.398-.701.271.064.91 1.211 3.365 1.737s4.848.447 4.848.447 2.394.08 4.849-.447c2.455-.526 3.093-1.673 3.364-1.737.271-.064.35.207.398.7.048.495-.494.83-1.578 1.309-1.084.478-.51 1.275-.51 1.275s.399.892 1.005 1.403c.605.51 1.498.143 2.805-.367 1.307-.51 2.55-1.357 3.954-2.168 1.405-.811 1.562-1.882 1.594-3.253.032-1.37-.191-5.863-1.148-8.193-.956-2.33-1.546-3.914-2.28-5.269-.732-1.355-1.379-2.176-1.96-2.44-.582-.262-3.827-1.578-4.903-1.578-1.076 0-1.394.75-1.394.75l-.375.829s-2.52-.479-3.804-.48c-1.284 0-3.837.48-3.837.48l-.375-.83s-.318-.749-1.395-.749zm.117 9.948h.04c1.569 0 2.84 1.373 2.84 3.066 0 1.694-1.271 3.066-2.84 3.066s-2.84-1.372-2.84-3.066c-.001-1.677 1.247-3.043 2.8-3.066zm10.907 0h.04c1.553.023 2.8 1.39 2.8 3.066 0 1.694-1.271 3.066-2.84 3.066-1.57 0-2.84-1.372-2.84-3.066 0-1.693 1.27-3.066 2.84-3.066z"/>
-            </svg>
-          </a>
-        </motion.div>
+            {HERO_SOCIALS.map((social, i) => (
+              <motion.a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="-m-2.5 inline-flex items-center justify-center p-2.5 text-brand-white/40 transition-colors duration-300 hover:text-brand-white/60"
+                aria-label={social.label}
+                {...clipReveal(i, HERO_SOCIALS.length, ready, reduce, isDesktop, introComplete)}
+              >
+                {social.icon}
+              </motion.a>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Scroll cue — vertical composition in the bottom-right corner */}
         <motion.div
           style={{ opacity: cueOpacity }}
-          className="absolute bottom-11 right-6 z-10 hidden md:right-12 lg:right-20 [@media(min-height:620px)]:block"
+          initial={false}
+          animate={isDesktop ? "visible" : "hidden"}
+          variants={{
+            visible: {
+              clipPath: [
+                "inset(100% 0 100% 0)", 
+                "inset(10% 0 10% 0)", 
+                "inset(10% 0 10% 0)", 
+                "inset(0% 0 0% 0)"
+              ],
+              transition: { times: [0, 0.3, 0.7, 1], duration: 0.8, ease: "easeInOut" }
+            },
+            hidden: {
+              clipPath: [
+                "inset(0% 0 0% 0)", 
+                "inset(10% 0 10% 0)", 
+                "inset(10% 0 10% 0)", 
+                "inset(100% 0 100% 0)"
+              ],
+              transition: { times: [0, 0.3, 0.7, 1], duration: 0.8, ease: "easeInOut" }
+            }
+          }}
+          className="absolute bottom-11 right-6 z-10 md:right-12 lg:right-20 [@media(max-height:619px)]:hidden"
         >
           <motion.button
             type="button"

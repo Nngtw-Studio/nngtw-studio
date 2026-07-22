@@ -279,16 +279,11 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
      before the overlay mounts and covers it. */
   const [active, setActive] = useState<boolean>(() => pathname === '/');
   const [flights, setFlights] = useState<Flights | null>(null);
+  const [logoRevealDone, setLogoRevealDone] = useState(false);
 
   const navSlotRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const doneRef = useRef(false);
   const glowHandoffRef = useRef(false);
-  /* The nav flight (unlike the fist) IS still self-referential to re-measure
-     mid-flight — each nav Link's own rect reflects its own live translate.
-     So its flight vectors are locked in on the FIRST successful measurement
-     and reused verbatim on every later resize/zoom recompute; only the
-     fist's from/to (both container-anchored, always safe) actually refresh. */
-  const navRef = useRef<Record<string, Flight | null> | null>(null);
 
   /* The single source of truth: 0 = intro at rest, 1 = handed off to the
      header. Any input plays it to 1 as one deterministic 2s tween — no
@@ -299,6 +294,20 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
      reveal (not scroll-scrubbed), so an early scroll can't cut it short or
      desync it: it just keeps fading in underneath the ride regardless. */
   const idleReveal = useMotionValue(0);
+
+  useEffect(() => {
+    if (!active) {
+      setLogoRevealDone(true);
+      return;
+    }
+
+    setLogoRevealDone(false);
+    const id = window.setTimeout(() => {
+      setLogoRevealDone(true);
+    }, reduce ? 250 : 3200);
+
+    return () => window.clearTimeout(id);
+  }, [active, reduce]);
 
   useEffect(() => {
     if (!active) return;
@@ -388,19 +397,21 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
       const logoRow = document.querySelector('[data-intro-anchor="logo-row"]');
       if (!lockupContainer || !logoRow) return;
 
-      if (!navRef.current) {
-        const nav: Record<string, Flight | null> = {};
-        for (const link of NAV_LINKS) {
-          const el = navSlotRefs.current[link.href];
-          const target = document
-            .querySelector(`[data-intro-nav="${link.href}"]`)
-            ?.querySelector('svg');
-          nav[link.href] =
-            el && target && target.getClientRects().length
-              ? flightBetween(el.getBoundingClientRect(), target.getBoundingClientRect())
-              : null;
-        }
-        navRef.current = nav;
+      /* Safe to re-measure on every resize now: `[data-intro-nav]` is the
+         icon's UNTRANSFORMED outer anchor (the flight translate lives on an
+         inner span — see Header.tsx), so its rect is always the true header
+         rest position, never a mid-flight reading of its own output. Both
+         the fist and the nav therefore stay in sync with a live-reflowing
+         page (viewport resize/zoom, or the resize a mobile browser fires
+         mid-scroll as the URL bar hides). */
+      const nav: Record<string, Flight | null> = {};
+      for (const link of NAV_LINKS) {
+        const el = navSlotRefs.current[link.href];
+        const target = document.querySelector(`[data-intro-nav="${link.href}"]`);
+        nav[link.href] =
+          el && target && target.getClientRects().length
+            ? flightBetween(el.getBoundingClientRect(), target.getBoundingClientRect())
+            : null;
       }
 
       const from = splashFistRectFrom(lockupContainer, parts);
@@ -408,7 +419,7 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
       setFlights({
         fist: flightBetween(from, to),
         fistBox: { from, to },
-        nav: navRef.current,
+        nav,
       });
     };
 
@@ -426,9 +437,10 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
   /* Input — scroll scrubs the timeline (both directions) up to the commit
      point; passing it, a click, or a keypress commits the ride, auto-playing
      the remainder at the full ride's 2s pace. Armed only once the flight
-     targets are measured, so an eager scroll can't start a broken ride. */
+     targets are measured and the splash logo's own reveal has finished, so
+     an eager scroll can't interrupt the brand reveal or start a broken ride. */
   useEffect(() => {
-    if (!active || !flights) return;
+    if (!active || !flights || !logoRevealDone) return;
 
     let committed = false;
     const commit = () => {
@@ -464,10 +476,13 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
     /* Commit once the flying icon bar has climbed past 60% of the screen
        height from the bottom — before that the scrub is reversible. */
     const barCrossed = () => {
-      const el = document.querySelector('[data-intro-nav]');
+      /* Measure the icon SVG, not the `[data-intro-nav]` anchor: the anchor
+         is untransformed (it never moves), while the svg rides the flight
+         translate, so only it reflects how far the icon has climbed. */
+      const el = document.querySelector('[data-intro-nav] svg');
       const r = el?.getBoundingClientRect();
-      /* Below lg the bar is display:none (zero rect) — fall back to a fixed
-         progress threshold so a touch scrub can't instantly commit. */
+      /* Below md the nav row is display:none (zero rect) — fall back to a
+         fixed progress threshold so a touch scrub can't instantly commit. */
       if (!r || (r.width === 0 && r.height === 0)) return progress.get() >= 0.6;
       return window.innerHeight - (r.top + r.height / 2) >= window.innerHeight * 0.6;
     };
@@ -509,7 +524,7 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener('keydown', commit);
       window.removeEventListener('click', commit);
     };
-  }, [active, flights, progress, reduce]);
+  }, [active, flights, logoRevealDone, progress, reduce]);
 
   /* Cue the Main Hero the moment the logo visibly lands at its final 32px
      size — the same 0.82 landing point HeaderLogo's own left/top/width/height

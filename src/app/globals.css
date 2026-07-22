@@ -27,6 +27,23 @@
     0.1s both;
   --animate-nav-circle-out: circle-out-center 1s cubic-bezier(0.25, 1, 0.3, 1)
     0.1s both;
+  --animate-cta-reveal: circle-in-hesitate 2s cubic-bezier(0.25, 1, 0.3, 1)
+    both;
+  /* Content entrances that play AFTER the background reveal. `backwards` fill
+     keeps each piece hidden through its delay, then it settles back to its
+     natural resting style — so the button's own hover animations (icon slide,
+     jello arrow) are never pinned by a finished entrance. */
+  --animate-cta-icon: cta-icon-fly 0.5s cubic-bezier(0.65, 0, 0.35, 1)
+    backwards;
+  --animate-cta-text: cta-text-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  --animate-cta-arrow: cta-arrow-in 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)
+    backwards;
+  /* Secondary CTA pink fill: reveals WITH the hesitate (in step with the
+     stroke), holds, then retracts WITHOUT hesitate — leaving just the stroke
+     for the text + arrow to land inside. Per-keyframe easing does the two
+     different feels; `both` parks it hidden at the end. Total 3.1s = 2s
+     reveal + ~0.3s hold + 0.8s hide. */
+  --animate-cta-fill: cta-fill-reveal-hide 3.1s both;
 
   @keyframes circle-in-center {
     from {
@@ -43,6 +60,94 @@
     }
     to {
       clip-path: circle(0%);
+    }
+  }
+
+  /* Reveal that peeks a tiny ~8.9px aperture, hesitates near the origin,
+     then bursts open — a circle-in with a hold, mirroring the community
+     "out:circle:hesitate" easing (radius plateau in the first 40% of the
+     timeline). The origin is per-element via `--cta-origin` (defaults to
+     center) so each hero CTA can open from its own point. */
+  @keyframes circle-in-hesitate {
+    0% {
+      clip-path: circle(0px at var(--cta-origin, 50% 50%));
+    }
+    40% {
+      clip-path: circle(8.9px at var(--cta-origin, 50% 50%));
+    }
+    100% {
+      clip-path: circle(125% at var(--cta-origin, 50% 50%));
+    }
+  }
+
+  /* Primary CTA icon flies into its seat from the lower-left — the SAME
+     down-left → idle path the hover-exit re-entry uses (icon-exit 51.2→100%:
+     translate(-28px,48px) → translate(0,0)), so the rocket arrives nose-first
+     on its idle heading. Rotation stays OFF the wrapper (the svg holds its own
+     30deg angle) so the travel axis is never bent. */
+  @keyframes cta-icon-fly {
+    0% {
+      opacity: 0;
+      transform: translate(-28px, 48px) scale(0.85);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  /* CTA label rises and fades in. */
+  @keyframes cta-text-in {
+    0% {
+      opacity: 0;
+      transform: translateY(9px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Secondary CTA pink fill over 3.1s: hesitate-in (0→64.5% = 2s, peek at
+     26%), hold (64.5→74.2% ≈ 0.3s), then a smooth no-hesitate shrink out
+     (74.2→100% = 0.8s). Origin shared with the stroke via --cta-origin. */
+  @keyframes cta-fill-reveal-hide {
+    0% {
+      clip-path: circle(0px at var(--cta-origin, 50% 50%));
+      animation-timing-function: cubic-bezier(0.25, 1, 0.3, 1);
+    }
+    26% {
+      clip-path: circle(8.9px at var(--cta-origin, 50% 50%));
+      animation-timing-function: cubic-bezier(0.25, 1, 0.3, 1);
+    }
+    64.5% {
+      clip-path: circle(125% at var(--cta-origin, 50% 50%));
+    }
+    74.2% {
+      clip-path: circle(125% at var(--cta-origin, 50% 50%));
+      animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35);
+    }
+    100% {
+      clip-path: circle(0% at var(--cta-origin, 50% 50%));
+    }
+  }
+
+  /* Secondary CTA arrow draws in from the left with a springy settle. */
+  @keyframes cta-arrow-in {
+    0% {
+      opacity: 0;
+      transform: translateX(-12px) scaleX(0.3);
+    }
+    55% {
+      opacity: 1;
+      transform: translateX(4px) scaleX(1.1);
+    }
+    75% {
+      transform: translateX(-2px) scaleX(0.97);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scaleX(1);
     }
   }
 
