@@ -138,8 +138,8 @@ function NavLink({ link, index, fastReveal = false }: { link: { href: string; la
               }
             }}
             transition={{
-              delay: reduce ? 0 : (fastReveal ? [0.25, 0.2, 0.15, 0.1, 0.05, 0][index] : (active ? NAV_REVEAL_DELAYS[index] : [1.2375, 1.1125, 0.9375, 0.6875, 0.375, 0][index])) || 0,
-              duration: reduce ? 0.2 : (fastReveal ? 0.4 : (active ? NAV_REVEAL_DURATION : 0.4)),
+              delay: reduce ? 0 : (fastReveal ? [0.5, 0.4, 0.3, 0.2, 0.1, 0][index] : (active ? NAV_REVEAL_DELAYS[index] : [1.2375, 1.1125, 0.9375, 0.6875, 0.375, 0][index])) || 0,
+              duration: reduce ? 0.2 : 2.5,
               ease: [0.25, 1, 0.3, 1],
             }}
           >
@@ -188,7 +188,7 @@ function useMediaQuery(query: string) {
 }
 
 export function Header() {
-  const { active: introActive } = useIntro();
+  const { active: introActive, remeasure } = useIntro();
   const [scrolled, setScrolled] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -200,12 +200,12 @@ export function Header() {
   const layoutPhaseRef = useRef(layoutPhase);
   layoutPhaseRef.current = layoutPhase;
 
-  const prevIsDesktop = useRef(isDesktop);
-  
   const isInitialRender = useRef(true);
   useEffect(() => {
     isInitialRender.current = false;
   }, []);
+
+  const prevIsDesktop = useRef(isDesktop);
 
   useEffect(() => {
     if (isDesktop !== prevIsDesktop.current) {
@@ -219,6 +219,14 @@ export function Header() {
       prevIsDesktop.current = isDesktop;
     }
   }, [isDesktop, introActive]);
+
+  useEffect(() => {
+    if (introActive) {
+      // The nav links mount or unmount when layoutPhase changes.
+      // Wait a frame for React to paint them, then re-measure their rects.
+      requestAnimationFrame(remeasure);
+    }
+  }, [layoutPhase, introActive, remeasure]);
 
   const padDesktop = layoutPhase === 'desktop' || layoutPhase === 'to-mobile';
 

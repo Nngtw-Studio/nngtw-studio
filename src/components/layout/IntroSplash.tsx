@@ -120,14 +120,14 @@ export function IntroSplash() {
         <AmbientField />
       </motion.div>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-between px-6 py-12 md:py-16">
+      <div className="absolute inset-0 flex flex-col items-center justify-between px-6 py-16">
         {/* Phones nudge the lockup 20px above dead-center (desktop stays
             centered). The offset is a transform, not padding, so the
             container's getBoundingClientRect still reflects it and the
             fist's flight `from` (splashFistRectFrom) stays in sync. */}
         <div
           data-intro-lockup-container
-          className="flex flex-1 items-center justify-center -translate-y-5 md:translate-y-0"
+          className="flex flex-1 items-center justify-center -translate-y-5 md:translate-y-0 transition-transform duration-500 ease-out"
         >
           {parts && (
             <motion.div

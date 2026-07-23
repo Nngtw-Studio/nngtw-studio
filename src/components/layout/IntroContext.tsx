@@ -250,6 +250,7 @@ interface IntroContextValue {
       is still idle (untouched by scroll) — the overlay's own particle layer
       fades in against this, independent of `progress`. */
   idleReveal: MotionValue<number>;
+  remeasure: () => void;
 }
 
 const IntroContext = createContext<IntroContextValue | null>(null);
@@ -284,6 +285,7 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
   const navSlotRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const doneRef = useRef(false);
   const glowHandoffRef = useRef(false);
+  const remeasureRef = useRef<() => void>(() => {});
 
   /* The single source of truth: 0 = intro at rest, 1 = handed off to the
      header. Any input plays it to 1 as one deterministic 2s tween — no
@@ -423,6 +425,8 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
       });
     };
 
+    remeasureRef.current = measure;
+
     /* Wait a frame so the entrance animation has painted before the first
        measurement, then keep re-measuring on every resize/zoom for the rest
        of the intro — safe now that neither anchor is ever transformed. */
@@ -556,6 +560,7 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
         flights,
         navSlotRefs,
         idleReveal,
+        remeasure: () => remeasureRef.current(),
       }}
     >
       {children}
