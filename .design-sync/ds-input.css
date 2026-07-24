@@ -1,0 +1,12 @@
+/* Tailwind input for the design-sync bundle. Imports the app's real globals
+   (tokens via @theme, @utility helpers, base rules) and restricts content
+   scanning to the scoped components + authored previews, so the compiled
+   stylesheet carries exactly the utilities those render with. */
+@import '../src/app/globals.css';
+
+@source '../src/components/ui/**/*.tsx';
+@source '../src/components/effects/**/*.tsx';
+@source '../src/components/motion/**/*.tsx';
+@source '../src/registry/**/*.{ts,tsx}';
+@source './entry.tsx';
+@source './previews/**/*.tsx';

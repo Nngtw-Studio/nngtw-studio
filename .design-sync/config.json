@@ -1,0 +1,53 @@
+{
+  "projectId": "af6f0843-4f7f-416e-b0e2-89b0e77854bb",
+  "pkg": "nngtw-studio",
+  "globalName": "NngtwStudio",
+  "shape": "package",
+  "srcDir": "src",
+  "entry": "./.design-sync/entry.tsx",
+  "tsconfig": ".design-sync/tsconfig.build.json",
+  "buildCmd": "node .design-sync/build-css.mjs",
+  "cssEntry": ".design-sync/.cache/ds-tailwind.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "CtaButton": { "cardMode": "column" }
+  },
+  "componentSrcMap": {
+    "Button": "src/components/ui/Button.tsx",
+    "CtaButton": "src/components/ui/CtaButton.tsx",
+    "Dino404": "src/components/ui/Dino404.tsx",
+    "Glitch404": "src/components/ui/Glitch404.tsx",
+    "RippleLayer": "src/components/ui/RippleLayer.tsx",
+    "AdaptiveCursor": "src/components/effects/AdaptiveCursor.tsx",
+    "AmbientField": "src/components/effects/AmbientField.tsx",
+    "FadeIn": "src/components/motion/FadeIn.tsx",
+    "StaggerContainer": "src/components/motion/FadeIn.tsx",
+    "StaggerItem": "src/components/motion/FadeIn.tsx",
+    "MagneticButton": "src/components/motion/FadeIn.tsx",
+    "TextReveal": "src/components/motion/FadeIn.tsx",
+    "ParallaxSection": "src/components/motion/FadeIn.tsx",
+    "GsapReveal": "src/components/motion/GsapReveal.tsx",
+    "GsapParallax": "src/components/motion/GsapReveal.tsx",
+    "SmoothCursor": "src/registry/magicui/smooth-cursor.tsx",
+    "TargetCursor": "src/registry/reactbits/TargetCursor.tsx"
+  },
+  "dtsPropsFor": {
+    "Button": "  children?: React.ReactNode;\n  className?: string;\n  /** Visual treatment. @default 'primary' */\n  variant?: 'primary' | 'secondary' | 'ghost' | 'discord';\n  /** Padding + label scale. @default 'md' */\n  size?: 'sm' | 'md' | 'lg';\n  /** Destination URL (required). */\n  href: string;\n  /** Render as a raw <a target=\"_blank\"> instead of a client-side link. */\n  external?: boolean;\n  onClick?: React.MouseEventHandler<HTMLAnchorElement>;",
+    "CtaButton": "  children: React.ReactNode;\n  className?: string;\n  /** Destination URL (required). */\n  href: string;\n  /** @default 'primary' */\n  variant?: 'primary' | 'secondary' | 'discord';\n  /** Render as a raw <a target=\"_blank\"> instead of a client-side link. */\n  external?: boolean;",
+    "Dino404": "  /** When true the eye group is hidden (mascot appears to blink). */\n  blinking?: boolean;\n  className?: string;\n  style?: React.CSSProperties;",
+    "Glitch404": "  className?: string;",
+    "RippleLayer": "  /** Active ripples to render (from the useRipple hook). */\n  ripples: { x: number; y: number; size: number; key: number }[];\n  /** Ripple fill color. @default '#df138a' */\n  color?: string;\n  /** CSS animation duration. @default '600ms' */\n  duration?: string;",
+    "AdaptiveCursor": "  /** No props. Mount once near the app root; renders the full cursor system. */\n  className?: never;",
+    "AmbientField": "  /** No props. Renders a full-size <canvas>; place inside a positioned parent. */\n  className?: never;",
+    "FadeIn": "  children?: React.ReactNode;\n  className?: string;\n  /** Seconds to wait before animating in. @default 0 */\n  delay?: number;\n  /** Entrance direction. @default 'up' */\n  direction?: 'up' | 'down' | 'left' | 'right' | 'none';\n  /** Animation duration in seconds. @default 0.6 */\n  duration?: number;",
+    "StaggerContainer": "  children: React.ReactNode;\n  className?: string;\n  /** Seconds between each child's entrance. @default 0.1 */\n  stagger?: number;",
+    "StaggerItem": "  children: React.ReactNode;\n  className?: string;",
+    "MagneticButton": "  children: React.ReactNode;\n  className?: string;",
+    "TextReveal": "  /** Text revealed with a rising mask on scroll-in. */\n  text: string;\n  className?: string;",
+    "ParallaxSection": "  children: React.ReactNode;\n  className?: string;\n  /** Parallax travel in px across the viewport. @default 50 */\n  offset?: number;",
+    "GsapReveal": "  children: React.ReactNode;\n  className?: string;\n  /** Seconds to delay the reveal. @default 0 */\n  delay?: number;",
+    "GsapParallax": "  children: React.ReactNode;\n  className?: string;\n  /** Parallax speed factor. @default 0.3 */\n  speed?: number;",
+    "SmoothCursor": "  /** Custom cursor node. @default a built-in arrow SVG */\n  cursor?: React.ReactNode;\n  /** framer-motion spring config for the cursor follow. */\n  springConfig?: { damping: number; stiffness: number; mass: number; restDelta: number };",
+    "TargetCursor": "  /** CSS selector for hover targets. @default '.cursor-target' */\n  targetSelector?: string;\n  /** Seconds per full idle spin. @default 2 */\n  spinDuration?: number;\n  /** Hide the native OS cursor. @default true */\n  hideDefaultCursor?: boolean;\n  /** Seconds for the lock-on corner transition. @default 0.2 */\n  hoverDuration?: number;\n  /** Enable parallax easing on the corners. @default true */\n  parallaxOn?: boolean;\n  /** Corner + dot color at rest. @default '#ffffff' */\n  cursorColor?: string;\n  /** Corner + dot color while locked onto a target. */\n  cursorColorOnTarget?: string;\n  /** Per-target color override; wins over cursorColorOnTarget. */\n  getTargetColor?: (target: Element) => string | undefined;\n  /** Where the cursor first appears before any mouse move. @default viewport center */\n  initialPosition?: { x: number; y: number };"
+  }
+}
