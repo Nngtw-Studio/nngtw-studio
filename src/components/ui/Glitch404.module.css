@@ -1,0 +1,63 @@
+.glitchWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.error {
+  animation: noise 2s linear infinite;
+}
+
+.error::before,
+.error::after {
+  content: '404';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  /* Match the text alignment/style of the original so it overlays perfectly */
+  text-align: center;
+}
+
+.error::before {
+  color: red;
+  animation: noise-2 .2s linear infinite;
+}
+
+.error::after {
+  color: blue;
+  animation: noise-1 .2s linear infinite;
+}
+
+@keyframes noise-1 {
+  0%, 20%, 40%, 60%, 70%, 90% {opacity: 0;}
+  10% {opacity: .1;}
+  50% {opacity: .5; left: -0.08em;}
+  80% {opacity: .3;}
+  100% {opacity: .6; left: 0.03em;}
+}
+
+@keyframes noise-2 {
+  0%, 20%, 40%, 60%, 70%, 90% {opacity: 0;}
+  10% {opacity: .1;}
+  50% {opacity: .5; left: 0.08em;}
+  80% {opacity: .3;}
+  100% {opacity: .6; left: -0.03em;}
+}
+
+@keyframes noise {
+  0%, 3%, 5%, 42%, 44%, 100% {opacity: 1; transform: scaleY(1);}  
+  4.3% {opacity: 1; transform: scaleY(1.7);}
+  43% {opacity: 1; transform: scaleX(1.5);}
+}
+
+.info {
+  animation: noise-3 1s linear infinite;
+}
+
+@keyframes noise-3 {
+  0%,3%,5%,42%,44%,100% {opacity: 1; transform: scaleY(1);}
+  4.3% {opacity: 1; transform: scaleY(4);}
+  43% {opacity: 1; transform: scaleX(10) rotate(60deg);}
+}
