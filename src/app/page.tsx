@@ -1,5 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { FeaturedGames } from "@/components/sections/FeaturedGames";
+import { WhatWeBuild } from "@/components/sections/WhatWeBuild";
 import { AboutStudio } from "@/components/sections/AboutStudio";
 import { Technology } from "@/components/sections/Technology";
 import { Community } from "@/components/sections/Community";
@@ -12,6 +13,7 @@ export default function HomePage() {
     <>
       <Hero />
       <FeaturedGames />
+      <WhatWeBuild />
       <AboutStudio />
       <Technology />
       <Community />

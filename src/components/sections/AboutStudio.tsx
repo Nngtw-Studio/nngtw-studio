@@ -3,28 +3,12 @@
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
 import { CtaButton } from '@/components/ui/CtaButton';
 
-/** Editorial pillars distilled from the studio's positioning */
-const PILLARS = [
-  {
-    label: 'We make',
-    title: 'Original games',
-    body: 'Worlds for PC and mobile, built to be returned to.',
-  },
-  {
-    label: 'We work',
-    title: 'Player-first',
-    body: 'Fair monetization. Design that respects the player.',
-  },
-  {
-    label: 'We believe',
-    title: 'Craft over scale',
-    body: 'Quality is independent of budget.',
-  },
-  {
-    label: 'Next',
-    title: 'XR and beyond',
-    body: 'Immersive tech — XR, VR, mixed reality.',
-  },
+/** Studio statements — what defines Nngtw, one line each */
+const STATEMENTS = [
+  'We build original worlds — not reskins.',
+  'Fair monetization. Always. No dark patterns.',
+  'Quality is independent of budget.',
+  'We develop in public — players shape the build.',
 ];
 
 export function AboutStudio() {
@@ -40,75 +24,48 @@ export function AboutStudio() {
       />
 
       <div className="section-padding relative mx-auto max-w-[1600px]">
-        {/* Studio intro — asymmetric 2-column */}
-        <div className="grid gap-16 lg:grid-cols-12 lg:gap-16">
+        <div className="grid gap-16 lg:grid-cols-12 lg:gap-20">
           <FadeIn className="lg:col-span-5">
-            <div className="mb-8 flex items-center gap-4">
+            <div className="mb-6 flex items-center gap-4">
               <div className="accent-line" />
-              <p className="label-overline text-brand-orange">About Nngtw Studio</p>
+              <p className="label-overline text-brand-orange">The Studio</p>
             </div>
             <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
-              An independent
+              Independent.
               <br />
-              studio crafting
+              Obsessive.
               <br />
-              immersive
-              <br />
-              experiences.
+              Small on purpose.
             </h2>
 
             {/* Grounding line under the heading */}
-            <p className="mt-10 max-w-sm border-l border-brand-orange/40 pl-6 font-accent text-[11px] leading-6 tracking-[0.25em] text-brand-grey/60 uppercase">
+            <p className="mt-9 max-w-sm border-l border-brand-orange/40 pl-6 font-accent text-[11px] leading-6 tracking-[0.25em] text-brand-grey/60 uppercase">
               Imagine · Explore · Evolve
             </p>
-          </FadeIn>
 
-          <FadeIn delay={0.15} className="lg:col-span-6 lg:col-start-7 lg:pt-4">
-            {/* Lede — bigger, brighter, sets the voice */}
-            <p className="font-display text-xl leading-relaxed font-medium tracking-tight text-brand-white/90 md:text-2xl md:leading-relaxed">
-              Original games for PC and mobile — built by a small, growing
-              team.
-            </p>
-
-            <div className="mt-8 space-y-6 text-base leading-8 text-brand-grey">
-              <p>
-                Player-first experiences, fair monetization, and worlds worth
-                returning to. We compete on craft, not scale.
-              </p>
-              <p>
-                Next up: interactive apps and immersive tech — XR, VR, and
-                mixed reality.
-              </p>
-            </div>
-
-            <CtaButton href="/studio" variant="secondary" className="mt-12">
+            <CtaButton href="/studio" variant="secondary" className="mt-10">
               Meet the Studio
             </CtaButton>
           </FadeIn>
-        </div>
 
-        {/* Pillars — the studio, at a glance */}
-        <StaggerContainer className="mt-24 grid border-y border-brand-white/5 sm:grid-cols-2 lg:grid-cols-4">
-          {PILLARS.map((pillar, index) => (
-            <StaggerItem key={pillar.title}>
-              <div
-                className={`group h-full px-2 py-10 transition-colors duration-500 hover:bg-brand-white/1.5 sm:px-6 lg:py-12 ${
-                  index > 0 ? 'border-t border-brand-white/5 sm:border-t-0 lg:border-l' : ''
-                } ${index >= 2 ? 'lg:border-t-0' : ''} ${
-                  index === 2 ? 'sm:border-l lg:border-t-0' : ''
-                }`}
-              >
-                <p className="font-accent text-[10px] tracking-[0.25em] text-brand-grey/40 uppercase transition-colors duration-500 group-hover:text-brand-orange/70">
-                  {pillar.label}
-                </p>
-                <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-brand-white">
-                  {pillar.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-brand-grey/70">{pillar.body}</p>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+          {/* Statement rows — the studio, at a glance */}
+          <StaggerContainer className="lg:col-span-6 lg:col-start-7 lg:pt-1">
+            <div className="border-t border-brand-white/8">
+              {STATEMENTS.map((statement, index) => (
+                <StaggerItem key={statement}>
+                  <div className="group flex gap-7 border-b border-brand-white/8 py-8 transition-[background-color,padding-left] duration-300 hover:bg-brand-white/2.5 hover:pl-5">
+                    <span className="shrink-0 pt-1 font-accent text-[10px] tracking-[0.24em] text-brand-orange/75">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <p className="font-display text-xl leading-snug font-medium tracking-tight text-brand-white/90 md:text-2xl">
+                      {statement}
+                    </p>
+                  </div>
+                </StaggerItem>
+              ))}
+            </div>
+          </StaggerContainer>
+        </div>
       </div>
     </section>
   );
