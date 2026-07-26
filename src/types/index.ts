@@ -146,29 +146,6 @@ export interface CareerApplication {
   createdAt: string;
 }
 
-export interface SiteSettings {
-  discordUrl: string;
-  heroHeadline: string;
-  heroSubtitle: string;
-  seoTitle: string;
-  seoDescription: string;
-}
-
-/** Admin dashboard section keys */
-export type AdminSection =
-  | "games"
-  | "news"
-  | "careers"
-  | "applications"
-  | "homepage"
-  | "team"
-  | "technology"
-  | "media"
-  | "contact-messages"
-  | "settings"
-  | "discord"
-  | "navigation";
-
 export interface FutureProduct {
   id: string;
   category: "games" | "applications" | "digital-assets" | "developer-tools" | "merchandise";

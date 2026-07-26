@@ -71,9 +71,11 @@
   @keyframes circle-in-hesitate {
     0% {
       clip-path: circle(0px at var(--cta-origin, 50% 50%));
+      animation-timing-function: cubic-bezier(0.25, 1, 0.3, 1);
     }
     40% {
       clip-path: circle(8.9px at var(--cta-origin, 50% 50%));
+      animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     }
     100% {
       clip-path: circle(125% at var(--cta-origin, 50% 50%));
@@ -118,7 +120,7 @@
     }
     26% {
       clip-path: circle(8.9px at var(--cta-origin, 50% 50%));
-      animation-timing-function: cubic-bezier(0.25, 1, 0.3, 1);
+      animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     }
     64.5% {
       clip-path: circle(125% at var(--cta-origin, 50% 50%));

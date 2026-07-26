@@ -1,6 +1,5 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { AdaptiveCursor } from '@/components/effects/AdaptiveCursor';
@@ -15,12 +14,6 @@ import { IntroProvider } from '@/components/layout/IntroContext';
  * dashboard layout's own <main>.
  */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  if (pathname?.startsWith('/admin')) {
-    return <>{children}</>;
-  }
-
   return (
     <IntroProvider>
       <AdaptiveCursor />
