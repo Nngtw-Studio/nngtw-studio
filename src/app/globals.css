@@ -35,15 +35,15 @@
      jello arrow) are never pinned by a finished entrance. */
   --animate-cta-icon: cta-icon-fly 0.5s cubic-bezier(0.65, 0, 0.35, 1)
     backwards;
-  --animate-cta-text: cta-text-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  --animate-cta-text: cta-text-in 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
   --animate-cta-arrow: cta-arrow-in 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)
     backwards;
   /* Secondary CTA pink fill: reveals WITH the hesitate (in step with the
-     stroke), holds, then retracts WITHOUT hesitate — leaving just the stroke
+     stroke), then retracts WITHOUT hesitate — leaving just the stroke
      for the text + arrow to land inside. Per-keyframe easing does the two
-     different feels; `both` parks it hidden at the end. Total 3.1s = 2s
-     reveal + ~0.3s hold + 0.8s hide. */
-  --animate-cta-fill: cta-fill-reveal-hide 3.1s both;
+     different feels; `both` parks it hidden at the end. Total 2.8s = 2s
+     reveal + 0.8s hide. */
+  --animate-cta-fill: cta-fill-reveal-hide 2.8s both;
 
   @keyframes circle-in-center {
     from {
@@ -102,30 +102,29 @@
   @keyframes cta-text-in {
     0% {
       opacity: 0;
-      transform: translateY(9px);
+      transform: translateY(120%) scale(0.7, 2.3);
+      transform-origin: 50% 0%;
     }
     100% {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1, 1);
+      transform-origin: 50% 0%;
     }
   }
 
-  /* Secondary CTA pink fill over 3.1s: hesitate-in (0→64.5% = 2s, peek at
-     26%), hold (64.5→74.2% ≈ 0.3s), then a smooth no-hesitate shrink out
-     (74.2→100% = 0.8s). Origin shared with the stroke via --cta-origin. */
+  /* Secondary CTA pink fill over 2.8s: hesitate-in (0→71.4% = 2s, peek at
+     28.6%), then a smooth no-hesitate shrink out (71.4→100% = 0.8s).
+     Origin shared with the stroke via --cta-origin. */
   @keyframes cta-fill-reveal-hide {
     0% {
       clip-path: circle(0px at var(--cta-origin, 50% 50%));
       animation-timing-function: cubic-bezier(0.25, 1, 0.3, 1);
     }
-    26% {
+    28.6% {
       clip-path: circle(8.9px at var(--cta-origin, 50% 50%));
       animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     }
-    64.5% {
-      clip-path: circle(125% at var(--cta-origin, 50% 50%));
-    }
-    74.2% {
+    71.4% {
       clip-path: circle(125% at var(--cta-origin, 50% 50%));
       animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35);
     }

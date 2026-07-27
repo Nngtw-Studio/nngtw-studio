@@ -54,11 +54,15 @@ function getSpawnAnchorPosition(): { x: number; y: number } | undefined {
  * in the homepage headline) instead of screen-center.
  */
 export function AdaptiveCursor() {
+  const [mounted, setMounted] = useState(false);
   const [showTargetCursor, setShowTargetCursor] = useState(false);
-  const [spawnAnchorPos] = useState(getSpawnAnchorPosition);
+  const [spawnAnchorPos, setSpawnAnchorPos] = useState<{ x: number; y: number } | undefined>(undefined);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+    setSpawnAnchorPos(getSpawnAnchorPosition());
+
     const armIdleTimer = () => {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       idleTimerRef.current = setTimeout(() => setShowTargetCursor(true), IDLE_TIMEOUT_MS);
@@ -86,6 +90,8 @@ export function AdaptiveCursor() {
     };
   }, []);
 
+  if (!mounted) return null;
+
   return (
     <>
       <div style={{ opacity: showTargetCursor ? 0 : 1, transition: 'opacity 0.15s ease-out' }}>
@@ -104,3 +110,4 @@ export function AdaptiveCursor() {
     </>
   );
 }
+

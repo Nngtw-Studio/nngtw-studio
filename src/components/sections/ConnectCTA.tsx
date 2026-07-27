@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FadeIn } from '@/components/motion/FadeIn';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { BRAND, SOCIAL } from '@/lib/constants';
 
 export function ConnectCTA() {
@@ -28,12 +28,12 @@ export function ConnectCTA() {
 
             <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-2">
-                <CtaButton href="/connect" variant="primary">
+                <Button href="/connect" variant="primary">
                   Connect
-                </CtaButton>
-                <CtaButton href={SOCIAL.discord} variant="secondary" external>
+                </Button>
+                <Button href={SOCIAL.discord} variant="secondary" external>
                   Join Discord
-                </CtaButton>
+                </Button>
               </div>
             </div>
           </div>

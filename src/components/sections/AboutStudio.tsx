@@ -1,7 +1,7 @@
 /** @format */
 
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 
 /** Studio statements — what defines Nngtw, one line each */
 const STATEMENTS = [
@@ -43,9 +43,9 @@ export function AboutStudio() {
               Imagine · Explore · Evolve
             </p>
 
-            <CtaButton href="/studio" variant="secondary" className="mt-10">
+            <Button href="/studio" variant="secondary" className="mt-10">
               Meet the Studio
-            </CtaButton>
+            </Button>
           </FadeIn>
 
           {/* Statement rows — the studio, at a glance */}

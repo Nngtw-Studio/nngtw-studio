@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CtaButton } from "@/components/ui/CtaButton";
+import { Button } from "@/components/ui/Button";
 import { Dino404 } from "@/components/ui/Dino404";
 import styles from "@/components/ui/Glitch404.module.css";
 
@@ -144,12 +144,12 @@ export default function NotFound() {
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 md:flex-row md:gap-0 md:-space-x-2">
-          <CtaButton href="/" variant="primary">
+          <Button href="/" variant="primary">
             Return Home
-          </CtaButton>
-          <CtaButton href="/games" variant="secondary">
+          </Button>
+          <Button href="/games" variant="secondary">
             Explore Our Games
-          </CtaButton>
+          </Button>
         </div>
       </div>
     </section>

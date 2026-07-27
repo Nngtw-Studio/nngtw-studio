@@ -121,12 +121,14 @@ export function StudioHero({ teamCount }: StudioHeroProps) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: EASE_OUT }}
-              className="lg:col-span-4 lg:col-start-9 lg:self-end"
+              className="lg:col-span-4 lg:col-start-9 lg:self-end flex flex-col gap-4"
             >
-              <p className="max-w-70 text-lg leading-9 text-brand-white/80">
+              <div className="accent-line" />
+              <p className="max-w-70 text-lg leading-9 text-brand-grey/80">
                 An independent game studio.
                 <br />
-                Craft over scale.
+                <span className="text-brand-orange font-medium">Craft</span>{' '}
+                <span className="text-brand-white/80">over scale.</span>
               </p>
             </motion.div>
           </div>
@@ -136,14 +138,23 @@ export function StudioHero({ teamCount }: StudioHeroProps) {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: EASE_OUT }}
-            className="mt-16 grid grid-cols-2 gap-y-10 border-t border-brand-white/5 pt-10 lg:grid-cols-4"
+            className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4"
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="pr-6">
-                <dd className="font-display text-3xl font-semibold tracking-tight text-brand-white/90 md:text-4xl">
+              <div
+                key={stat.label}
+                className="flex flex-col justify-center p-6 md:p-8 bg-brand-white/5 border border-brand-white/10 backdrop-blur-sm"
+              >
+                <dd
+                  className={cn(
+                    'font-display font-semibold tracking-tight text-brand-white',
+                    stat.value === '100%' ? 'text-5xl md:text-6xl' : 'text-4xl md:text-5xl'
+                  )}
+                >
                   {stat.value}
                 </dd>
-                <dt className="mt-3 font-accent text-[10px] tracking-[0.25em] text-brand-grey/50 uppercase">
+                <div className="w-12 h-px bg-brand-white/20 my-4" />
+                <dt className="font-accent text-[10px] tracking-[0.25em] text-brand-grey/70 uppercase">
                   {stat.label}
                 </dt>
               </div>

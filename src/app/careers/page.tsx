@@ -35,7 +35,8 @@ export default async function CareersPage() {
       <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">
         <FadeIn>
           <p className="mb-12 max-w-2xl text-base text-brand-grey">
-            Most roles are marked as future opportunities — we&apos;re growing
+            We&apos;re currently hiring a UI/UX Design Intern. The rest of our
+            roles are marked as future opportunities — we&apos;re growing
             thoughtfully. If you share our vision, we&apos;d love to hear from you
             regardless of current openings.
           </p>

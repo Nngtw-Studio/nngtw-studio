@@ -333,6 +333,29 @@ export const newsArticles: NewsArticle[] = [
 
 export const careers: Career[] = [
   {
+    id: "12",
+    slug: "ui-ux-design-intern",
+    title: "UI/UX Design Intern",
+    department: "Design",
+    location: "India (Remote)",
+    type: "Internship",
+    status: "internship",
+    description:
+      "Help design engaging, user-friendly experiences for our web, mobile, and gamified applications. You'll create wireframes, mockups, and interactive prototypes, run basic user research, iterate on designs with feedback throughout development, and keep visual consistency across products — with room to explore new UI trends, creative solutions, and AI tools that speed up design workflows. Expect hands-on work on real products, regular design feedback and mentorship, credits for your contributions where applicable, and a certificate on successful completion.",
+    requirements: [
+      "Basic understanding of UI/UX design principles",
+      "Basic knowledge of Figma",
+      "Willingness to learn, explore new tools, and improve continuously",
+      "Passion for UI/UX design with attention to detail",
+      "Comfortable receiving feedback and iterating on designs",
+      "Nice to have: portfolio, resume, or personal projects",
+      "Nice to have: understanding of color theory, typography, or visual hierarchy",
+      "Nice to have: basic knowledge of responsive design",
+      "Nice to have: familiarity with AI tools for design and creative workflows",
+      "Nice to have: serious about learning, self-improvement, and investing time in developing UI/UX skills",
+    ],
+  },
+  {
     id: "1",
     slug: "game-programmer",
     title: "Game Programmer",

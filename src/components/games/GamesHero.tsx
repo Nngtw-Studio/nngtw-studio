@@ -9,7 +9,7 @@ import {
   motion,
   MotionConfig,
 } from 'framer-motion';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { GAME_ART } from '@/lib/data/game-art';
 import { gameStatusLabels } from '@/lib/data/content';
 import { cn } from '@/lib/utils';
@@ -249,13 +249,13 @@ export function GamesHero({ games, conceptCount = 0 }: GamesHeroProps) {
                     </div>
 
                     <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-4">
-                      <CtaButton
+                      <Button
                         href={game.projectLink ?? `/games/${game.slug}`}
                         variant="primary"
                         className="-ml-5"
                       >
                         View Project
-                      </CtaButton>
+                      </Button>
                       <a
                         href="#in-development"
                         className="cursor-target group inline-flex items-center gap-3 label-overline text-brand-white/70 transition-colors duration-300 hover:text-brand-orange"

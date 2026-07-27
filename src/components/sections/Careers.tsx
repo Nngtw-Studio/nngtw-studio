@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { careerStatusLabels } from '@/lib/data/content';
 import { getActiveCareers } from '@/lib/supabase/queries/careers';
 import { cn } from '@/lib/utils';
@@ -37,9 +37,10 @@ export async function Careers() {
             </div>
             <div className="lg:col-span-5 lg:col-start-7 lg:self-end">
               <p className="text-base leading-9 text-brand-grey/70">
-                We&apos;re building a team of passionate creators. While most
-                roles are future opportunities, we&apos;re always interested in
-                hearing from talented people who share our vision.
+                We&apos;re building a team of passionate creators. Our UI/UX
+                Design Intern role is open now — and while most other roles are
+                future opportunities, we&apos;re always interested in hearing
+                from talented people who share our vision.
               </p>
             </div>
           </div>
@@ -81,9 +82,9 @@ export async function Careers() {
         </StaggerContainer>
 
         <FadeIn className="mt-14 text-center">
-          <CtaButton href="/careers" variant="secondary">
+          <Button href="/careers" variant="secondary">
             View All Opportunities
-          </CtaButton>
+          </Button>
         </FadeIn>
       </div>
     </section>

@@ -32,11 +32,7 @@ export function StudioStory() {
             <span className="mx-3">·</span>Vision
           </p>
           <blockquote className="mt-8 max-w-5xl font-display text-3xl leading-tight font-medium tracking-tight text-brand-white/90 md:text-4xl lg:text-5xl lg:leading-[1.15]">
-            Original interactive worlds that inspire players to{' '}
-            <em className="text-brand-orange not-italic">imagine</em>,{' '}
-            <em className="text-brand-orange not-italic">explore</em>, and{' '}
-            <em className="text-brand-orange not-italic">evolve</em> — from
-            screens to immersive realities.
+            Creating worlds worth remembering.
           </blockquote>
         </FadeIn>
 
@@ -48,7 +44,7 @@ export function StudioStory() {
               <span className="mx-3">·</span>Mission
             </p>
             <p className="mt-6 border-l border-brand-orange/40 pl-8 text-base leading-9 text-brand-grey">
-              {studioContent.mission}
+              We craft original games, animation, and interactive experiences that leave a lasting impression. Every project is designed with purpose, creativity, and attention to detail—not trends.
             </p>
           </FadeIn>
         </div>

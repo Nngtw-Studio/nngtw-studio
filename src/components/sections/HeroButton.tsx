@@ -81,8 +81,8 @@ export function HeroButton({
   const fillDelay = revealDelay;
   const iconDelay = revealDelay + 1.85;
   const labelDelay =
-    variant === "primary" ? revealDelay + 2.3 : revealDelay + 3.2;
-  const arrowDelay = revealDelay + 3.65;
+    variant === "primary" ? revealDelay + 2.3 : revealDelay + 2.9;
+  const arrowDelay = revealDelay + 3.9;
   const entranceStyle = (delay: number): React.CSSProperties | undefined =>
     reveal ? { animationDelay: `${delay}s` } : undefined;
 
@@ -179,8 +179,7 @@ export function HeroButton({
           </span>
         )}
         <span
-          className={cn("relative z-10 inline-flex", reveal && "animate-cta-text")}
-          style={entranceStyle(labelDelay)}
+          className="relative z-10 inline-flex"
         >
         <span
           ref={labelRef}
@@ -207,7 +206,22 @@ export function HeroButton({
             variant === "secondary" && "group-hover:tracking-widest",
           )}
         >
-          {children}
+          {typeof children === "string"
+            ? children.split("").map((char, index) => (
+                <span
+                  key={index}
+                  className={cn("inline-block", reveal && "animate-cta-text")}
+                  style={{
+                    animationDelay: reveal
+                      ? `${labelDelay + index * 0.03}s`
+                      : undefined,
+                    whiteSpace: char === " " ? "pre" : "normal",
+                  }}
+                >
+                  {char}
+                </span>
+              ))
+            : children}
         </span>
         </span>
 

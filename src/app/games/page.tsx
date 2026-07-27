@@ -7,7 +7,7 @@ import { GamesSectionNav } from '@/components/games/GamesSectionNav';
 import { GameShowcaseCard } from '@/components/sections/GameShowcaseCard';
 import { ComingSoonCard } from '@/components/games/ComingSoonCard';
 import { LifeAppsSection } from '@/components/games/LifeAppsSection';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { getActiveGames, getPlannedGames } from '@/lib/supabase/queries/games';
 import { SOCIAL } from '@/lib/constants';
 
@@ -154,12 +154,12 @@ export default async function GamesPage() {
               anywhere else. Come build these worlds with us.
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-4">
-              <CtaButton href={SOCIAL.discord} variant="discord" external>
+              <Button href={SOCIAL.discord} variant="discord" external>
                 Join the Discord
-              </CtaButton>
-              <CtaButton href="/news" variant="secondary">
+              </Button>
+              <Button href="/news" variant="secondary">
                 Development News
-              </CtaButton>
+              </Button>
             </div>
           </FadeIn>
         </div>

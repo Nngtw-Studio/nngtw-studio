@@ -4,16 +4,34 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+type Topic = "general" | "business" | "press" | "career";
+
+const TOPICS: { value: Topic; label: string }[] = [
+  { value: "general", label: "General" },
+  { value: "business", label: "Business" },
+  { value: "press", label: "Press" },
+  { value: "career", label: "Careers" },
+];
+
+const FIELD_BASE =
+  "cursor-target w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
+
+const LABEL_BASE =
+  "mb-2 block text-xs tracking-[0.15em] text-brand-grey uppercase transition-colors duration-300";
+
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [focused, setFocused] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
-    type: "general" as "business" | "general",
+    type: "general" as Topic,
   });
+
+  const set = <K extends keyof typeof formData>(key: K, value: (typeof formData)[K]) =>
+    setFormData((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,91 +52,79 @@ export function ContactForm() {
     }
   };
 
-  const inputBase =
-    "w-full border bg-transparent px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300";
-  const inputBorder = "border-brand-white/10 focus:border-brand-orange/60";
-  const inputBg = "focus:bg-brand-white/[0.02]";
-
-  const labelBase = "mb-2 block text-xs tracking-[0.15em] text-brand-grey uppercase transition-colors duration-300";
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Type toggle */}
-      <div className="flex gap-3">
-        {(["general", "business"] as const).map((type) => (
-          <button
-            key={type}
-            type="button"
-            onClick={() => setFormData((prev) => ({ ...prev, type }))}
-            className={cn(
-              "relative border px-5 py-2.5 text-xs tracking-[0.15em] uppercase transition-all duration-300",
-              formData.type === type
-                ? "border-brand-orange text-brand-orange"
-                : "border-brand-white/10 text-brand-grey hover:border-brand-white/20 hover:text-brand-white/70"
-            )}
-          >
-            {formData.type === type && (
-              <motion.div
-                layoutId="contact-type-indicator"
-                className="absolute inset-0 bg-brand-orange/5"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
-              />
-            )}
-            <span className="relative z-10">
-              {type === "business" ? "Business Enquiry" : "General Contact"}
-            </span>
-          </button>
-        ))}
+    <form onSubmit={handleSubmit} className="space-y-7">
+      {/* Topic */}
+      <div>
+        <p className={LABEL_BASE}>What is this about?</p>
+        <div className="flex flex-wrap gap-2.5">
+          {TOPICS.map((topic) => (
+            <button
+              key={topic.value}
+              type="button"
+              onClick={() => set("type", topic.value)}
+              className={cn(
+                "cursor-target relative rounded-full border px-5 py-2 text-xs tracking-[0.12em] uppercase transition-colors duration-300",
+                formData.type === topic.value
+                  ? "border-brand-orange/60 text-brand-orange"
+                  : "border-brand-white/10 text-brand-grey hover:border-brand-white/25 hover:text-brand-white/80"
+              )}
+            >
+              {formData.type === topic.value && (
+                <motion.span
+                  layoutId="contact-topic-indicator"
+                  className="absolute inset-0 rounded-full bg-brand-orange/10"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                />
+              )}
+              <span className="relative z-10">{topic.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Name + Email */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-2">
         <Field
           id="name"
-          label="Name"
+          label="Full name"
+          placeholder="Your name"
           required
           value={formData.name}
-          onChange={(v) => setFormData((prev) => ({ ...prev, name: v }))}
-          focusedField={focusedField}
-          setFocusedField={setFocusedField}
+          onChange={(v) => set("name", v)}
+          focused={focused}
+          setFocused={setFocused}
         />
         <Field
           id="email"
           label="Email"
           type="email"
+          placeholder="you@example.com"
           required
           value={formData.email}
-          onChange={(v) => setFormData((prev) => ({ ...prev, email: v }))}
-          focusedField={focusedField}
-          setFocusedField={setFocusedField}
+          onChange={(v) => set("email", v)}
+          focused={focused}
+          setFocused={setFocused}
         />
       </div>
 
       {/* Subject */}
-      <div>
-        <label
-          htmlFor="subject"
-          className={cn(labelBase, focusedField === "subject" && "text-brand-orange/70")}
-        >
-          Subject
-        </label>
-        <input
-          id="subject"
-          type="text"
-          required
-          value={formData.subject}
-          onChange={(e) => setFormData((prev) => ({ ...prev, subject: e.target.value }))}
-          onFocus={() => setFocusedField("subject")}
-          onBlur={() => setFocusedField(null)}
-          className={cn(inputBase, inputBorder, inputBg)}
-        />
-      </div>
+      <Field
+        id="subject"
+        label="Subject"
+        placeholder="What can we help with?"
+        required
+        value={formData.subject}
+        onChange={(v) => set("subject", v)}
+        focused={focused}
+        setFocused={setFocused}
+      />
 
       {/* Message */}
       <div>
         <label
           htmlFor="message"
-          className={cn(labelBase, focusedField === "message" && "text-brand-orange/70")}
+          className={cn(LABEL_BASE, focused === "message" && "text-brand-orange/70")}
         >
           Message
         </label>
@@ -126,59 +132,45 @@ export function ContactForm() {
           id="message"
           required
           rows={6}
+          placeholder="Tell us a little more…"
           value={formData.message}
-          onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
-          onFocus={() => setFocusedField("message")}
-          onBlur={() => setFocusedField(null)}
-          className={cn(inputBase, inputBorder, inputBg, "resize-none leading-relaxed")}
+          onChange={(e) => set("message", e.target.value)}
+          onFocus={() => setFocused("message")}
+          onBlur={() => setFocused(null)}
+          className={cn(FIELD_BASE, "resize-none leading-relaxed")}
         />
       </div>
 
       {/* Submit + status */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="submit"
           disabled={status === "loading"}
-          className="group relative inline-flex items-center justify-center overflow-hidden bg-brand-orange px-10 py-4 font-display text-sm tracking-widest text-brand-black uppercase transition-all duration-300 hover:bg-brand-orange/90 disabled:opacity-50"
+          className="group cursor-target inline-flex items-center gap-3 rounded-full bg-brand-orange px-8 py-4 font-display text-sm tracking-widest text-brand-black uppercase transition-all duration-300 hover:gap-4 hover:bg-brand-orange/90 disabled:opacity-50"
         >
-          <span className="relative z-10">
-            {status === "loading" ? "Sending..." : "Send Message"}
-          </span>
-          {status !== "loading" && (
-            <span className="absolute inset-0 translate-y-full bg-brand-black/10 transition-transform duration-300 group-hover:translate-y-0" />
-          )}
+          {status === "loading" ? "Sending…" : "Send message"}
+          <svg
+            className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
         </button>
 
         <AnimatePresence mode="wait">
           {status === "success" && (
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.3 }}
-              className="flex items-center gap-2 text-sm text-green-400"
-            >
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+            <StatusNote key="success" tone="success">
               Message sent. We&apos;ll be in touch.
-            </motion.p>
+            </StatusNote>
           )}
           {status === "error" && (
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.3 }}
-              className="flex items-center gap-2 text-sm text-red-400"
-            >
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              Something went wrong. Please try again or email us directly.
-            </motion.p>
+            <StatusNote key="error" tone="error">
+              Something went wrong — please email us directly.
+            </StatusNote>
           )}
         </AnimatePresence>
       </div>
@@ -186,48 +178,76 @@ export function ContactForm() {
   );
 }
 
-/* ── Sub-component: animated text field ─────────────────────────────────── */
+function StatusNote({
+  tone,
+  children,
+}: {
+  tone: "success" | "error";
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.p
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.3 }}
+      className={cn(
+        "flex items-center gap-2 text-sm",
+        tone === "success" ? "text-green-400" : "text-red-400"
+      )}
+    >
+      <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        {tone === "success" ? (
+          <polyline points="20 6 9 17 4 12" />
+        ) : (
+          <>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </>
+        )}
+      </svg>
+      {children}
+    </motion.p>
+  );
+}
 
 function Field({
   id,
   label,
   type = "text",
+  placeholder,
   required,
   value,
   onChange,
-  focusedField,
-  setFocusedField,
+  focused,
+  setFocused,
 }: {
   id: string;
   label: string;
   type?: string;
+  placeholder?: string;
   required?: boolean;
   value: string;
   onChange: (v: string) => void;
-  focusedField: string | null;
-  setFocusedField: (f: string | null) => void;
+  focused: string | null;
+  setFocused: (f: string | null) => void;
 }) {
-  const labelBase = "mb-2 block text-xs tracking-[0.15em] text-brand-grey uppercase transition-colors duration-300";
-  const inputBase =
-    "w-full border bg-transparent px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300";
-
   return (
     <div>
-      <label htmlFor={id} className={cn(labelBase, focusedField === id && "text-brand-orange/70")}>
+      <label htmlFor={id} className={cn(LABEL_BASE, focused === id && "text-brand-orange/70")}>
         {label}
       </label>
       <input
         id={id}
         type={type}
         required={required}
+        placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onFocus={() => setFocusedField(id)}
-        onBlur={() => setFocusedField(null)}
-        className={cn(
-          inputBase,
-          "border-brand-white/10 focus:border-brand-orange/60 focus:bg-brand-white/[0.02]"
-        )}
+        onFocus={() => setFocused(id)}
+        onBlur={() => setFocused(null)}
+        className={FIELD_BASE}
       />
     </div>
   );

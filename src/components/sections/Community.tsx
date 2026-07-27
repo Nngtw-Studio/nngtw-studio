@@ -4,7 +4,7 @@
 
 import { motion } from 'framer-motion';
 import { FadeIn } from '@/components/motion/FadeIn';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { SOCIAL } from '@/lib/constants';
 
 const DiscordIcon = ({ className }: { className?: string }) => (
@@ -60,12 +60,12 @@ export function Community() {
 
             <FadeIn delay={0.25}>
               <div className="mt-12 flex flex-col items-start gap-4 xl:flex-row">
-                <CtaButton href={SOCIAL.discord} variant="discord" external>
+                <Button href={SOCIAL.discord} variant="discord" external>
                   Join Discord
-                </CtaButton>
-                <CtaButton href="/news" variant="secondary">
+                </Button>
+                <Button href="/news" variant="secondary">
                   Follow Development
-                </CtaButton>
+                </Button>
               </div>
             </FadeIn>
           </div>

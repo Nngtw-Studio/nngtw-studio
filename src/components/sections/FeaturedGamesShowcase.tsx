@@ -2,10 +2,10 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
+import { AnimatePresence, motion, MotionConfig, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
 import { FadeIn } from '@/components/motion/FadeIn';
 import { Button } from '@/components/ui/Button';
 import { GAME_ART } from '@/lib/data/game-art';
@@ -17,8 +17,8 @@ import type { FeaturedGame } from '@/types';
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const ACCENT = {
-  orange: { badge: 'border-brand-orange/40 bg-brand-orange/12 text-brand-orange', bar: 'bg-brand-orange' },
-  pink: { badge: 'border-brand-secondary/40 bg-brand-secondary/12 text-brand-secondary', bar: 'bg-brand-secondary' },
+  orange: { badge: 'border-brand-orange/40 bg-brand-orange/12 text-brand-orange', bar: 'bg-brand-orange', text: 'text-brand-orange' },
+  pink: { badge: 'border-brand-secondary/40 bg-brand-secondary/12 text-brand-secondary', bar: 'bg-brand-secondary', text: 'text-brand-secondary' },
 } as const;
 
 function accentFor(game: FeaturedGame, index: number) {
@@ -105,42 +105,88 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
   const count = games.length;
   const [active, setActive] = useState(0);
   const [cycle, setCycle] = useState(0);
-  const [hovering, setHovering] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Pointer-tilt on the hero frame
+  const reduce = useReducedMotion();
+  const frameRef = useRef<HTMLDivElement>(null);
+  const px = useMotionValue(0.5);
+  const py = useMotionValue(0.5);
+  const springX = useSpring(px, { stiffness: 160, damping: 24 });
+  const springY = useSpring(py, { stiffness: 160, damping: 24 });
+  const rotateX = useTransform(springY, [0, 1], [2, -2]);
+  const rotateY = useTransform(springX, [0, 1], [-2.5, 2.5]);
+
+  const onFrameMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduce) return;
+    const rect = frameRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    px.set((e.clientX - rect.left) / rect.width);
+    py.set((e.clientY - rect.top) / rect.height);
+  };
+
+  const onFrameLeave = () => {
+    px.set(0.5);
+    py.set(0.5);
+  };
+  const progressPathRef = useRef<SVGRectElement>(null);
+  const [startOffset, setStartOffset] = useState(0);
+
+  const advance = useCallback(() => {
+    setActive((a) => (a + 1) % count);
+    setCycle((c) => c + 1);
+    setVideoReady(false);
+    setStartOffset(Math.random() * 100);
+  }, [count]);
 
   useEffect(() => {
-    if (count < 2) return;
-    const id = setTimeout(() => {
-      setActive((a) => (a + 1) % count);
-      setCycle((c) => c + 1);
-    }, SLIDE_DURATION_MS);
-    return () => clearTimeout(id);
-  }, [active, cycle, count]);
+    setStartOffset(Math.random() * 100);
+  }, []);
+
+  const game = count > 0 ? games[active] : null;
+
+  useEffect(() => {
+    if (count < 2 || !game) return;
+    let animationFrameId: number;
+    let startTime = Date.now();
+
+    const updateProgress = () => {
+      const video = videoRef.current;
+      const path = progressPathRef.current;
+      let p = 0;
+
+      if (video && game.trailerUrl && video.duration > 0) {
+        p = video.currentTime / video.duration;
+      } else {
+        const elapsed = Date.now() - startTime;
+        p = Math.min(elapsed / SLIDE_DURATION_MS, 1);
+        if (p >= 1) {
+          advance();
+          return;
+        }
+      }
+
+      if (path) {
+        path.style.strokeDasharray = `${p * 100} 100`;
+      }
+
+      animationFrameId = requestAnimationFrame(updateProgress);
+    };
+
+    animationFrameId = requestAnimationFrame(updateProgress);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [active, count, advance, game]);
 
   const select = (i: number) => {
     if (i === active) return;
     setActive(i);
     setCycle((c) => c + 1);
-  };
-
-  if (!count) return null;
-  const game = games[active];
-  const accent = accentFor(game, active);
-
-  const handleEnter = () => {
-    setHovering(true);
-    videoRef.current?.play().catch(() => {});
-  };
-
-  const handleLeave = () => {
-    setHovering(false);
     setVideoReady(false);
-    const v = videoRef.current;
-    if (!v) return;
-    v.pause();
-    v.currentTime = 0;
   };
+
+  if (!game) return null;
+  const accent = accentFor(game, active);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -149,6 +195,13 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
         className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
         aria-label="Featured games"
       >
+        {/* Full-section blurred background of the active game */}
+        <div className="absolute inset-0 opacity-20" aria-hidden="true">
+          {games.map((g, i) => (
+            <Backdrop key={g.id} game={g} active={i === active} />
+          ))}
+        </div>
+
         {/* Ambient lighting rig — echoes the hero so the section reads as part of the same world */}
         <div
           className="pointer-events-none absolute inset-0 opacity-70"
@@ -190,32 +243,57 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
           </FadeIn>
 
           {/* Cinematic card */}
-          <FadeIn
-            delay={0.1}
-            onMouseEnter={handleEnter}
-            onMouseLeave={handleLeave}
-            className="relative mt-12 min-h-125 overflow-hidden rounded-3xl border border-brand-white/10 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.85)] md:mt-16 lg:min-h-150"
-          >
+          <FadeIn delay={0.1} className="mt-6 md:mt-8">
+            <motion.div
+              ref={frameRef}
+              onMouseMove={onFrameMouseMove}
+              onMouseLeave={onFrameLeave}
+              style={{ rotateX, rotateY, transformPerspective: 1400 }}
+              whileHover={{ scale: 1.015 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+              className="relative w-full aspect-video overflow-hidden rounded-3xl border border-brand-white/10 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.85)]"
+            >
+            {/* Animated SVG Border Timeline */}
+            <svg
+              className={cn("pointer-events-none absolute inset-0 z-50 h-full w-full transition-colors duration-500 overflow-visible", accent.text)}
+              aria-hidden="true"
+            >
+              <rect
+                ref={progressPathRef}
+                x="2"
+                y="2"
+                className="w-[calc(100%-4px)] h-[calc(100%-4px)]"
+                rx="22"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                pathLength="100"
+                strokeDasharray="0 100"
+                strokeDashoffset={-startOffset}
+              />
+            </svg>
+
             <div className="absolute inset-0">
               {games.map((g, i) => (
                 <Backdrop key={g.id} game={g} active={i === active} />
               ))}
             </div>
 
-            {/* Hover-to-play trailer for the active slide only */}
+            {/* Autoplaying trailer for the active slide only */}
             {game.trailerUrl && (
               <video
                 key={game.slug}
                 ref={videoRef}
                 src={game.trailerUrl}
                 muted
-                loop
+                autoPlay
                 playsInline
-                preload="none"
+                preload="auto"
                 onPlaying={() => setVideoReady(true)}
+                onEnded={advance}
                 className={cn(
                   'absolute inset-0 h-full w-full object-cover transition-opacity duration-500',
-                  hovering && videoReady ? 'opacity-100' : 'pointer-events-none opacity-0',
+                  videoReady ? 'opacity-100' : 'opacity-0',
                 )}
                 aria-hidden="true"
                 tabIndex={-1}
@@ -232,9 +310,9 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
               aria-hidden="true"
             />
 
-            <div className="relative z-10 flex h-full min-h-125 flex-col justify-end p-8 md:p-11 lg:min-h-150">
+            <div className="relative z-10 flex h-full flex-col justify-end p-8 md:p-11">
               {/* Active slide info */}
-              <div className="max-w-xl" aria-live="polite">
+              <div className="w-full max-w-4xl" aria-live="polite">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={game.id}
@@ -264,7 +342,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
                         {game.title}
                       </h3>
                     </div>
-                    <p className="mt-4 max-w-md text-sm leading-7 text-brand-white/75 md:text-base">
+                    <p className="mt-4 max-w-3xl text-sm leading-7 text-brand-white/75 md:text-base">
                       {game.description}
                     </p>
                     <p className="mt-4 font-accent text-[10px] tracking-[0.24em] text-brand-white/55 uppercase">
@@ -274,37 +352,23 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
                     </p>
 
                     <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
-                      <Button href={game.projectLink ?? `/games/${game.slug}`} variant="primary" size="md">
+                      <Button href={game.projectLink ?? `/games/${game.slug}`} variant="primary">
                         View Project
                       </Button>
-                      {game.followLink && (
-                        <a
-                          href={game.followLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="cursor-target group inline-flex items-center gap-2 label-overline text-brand-white/70 transition-colors duration-300 hover:text-brand-white"
-                        >
-                          Follow Dev
-                          <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                            →
-                          </span>
-                        </a>
-                      )}
                     </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
             </div>
+            </motion.div>
           </FadeIn>
 
-          {/* Slide progress — one segment per title, filling left to right on
-              the auto-advance timer. Replaces a title list so the section
-              never gets crowded no matter how many games are featured. */}
+          {/* Pagination dots */}
           {count > 1 && (
             <div
               role="tablist"
               aria-label="Featured games"
-              className="mt-5 flex items-center gap-2"
+              className="mt-8 flex justify-center items-center gap-3"
             >
               {games.map((g, i) => (
                 <button
@@ -314,22 +378,13 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
                   onClick={() => select(i)}
                   aria-selected={i === active}
                   aria-label={`Show ${g.title}`}
-                  className="cursor-target group relative h-1 flex-1 overflow-hidden rounded-full bg-brand-white/10"
-                >
-                  {i === active ? (
-                    <motion.div
-                      key={cycle}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: SLIDE_DURATION_MS / 1000, ease: 'linear' }}
-                      className={cn('h-full w-full origin-left', accentFor(g, i).bar)}
-                    />
-                  ) : i < active ? (
-                    <div className={cn('h-full w-full opacity-50', accentFor(g, i).bar)} />
-                  ) : (
-                    <div className="h-full w-full bg-brand-white/0 transition-colors duration-300 group-hover:bg-brand-white/35" />
+                  className={cn(
+                    "cursor-target rounded-full transition-all duration-500",
+                    i === active 
+                      ? cn("h-2 w-8", accentFor(g, i).bar) 
+                      : "h-2 w-2 bg-brand-white/30 hover:bg-brand-white/50"
                   )}
-                </button>
+                />
               ))}
             </div>
           )}

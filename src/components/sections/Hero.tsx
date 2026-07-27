@@ -364,7 +364,7 @@ export function Hero() {
             <HeroButton href="/games" variant="primary" reveal={ready} revealDelay={0.9} revealOrigin="15% 50%">
               Experience the Games
             </HeroButton>
-            <HeroButton href="/studio" variant="secondary" reveal={ready} revealDelay={1.05} revealOrigin="77% 50%">
+            <HeroButton href="/studio" variant="secondary" reveal={ready} revealDelay={1.7} revealOrigin="77% 50%">
               Discover Why
             </HeroButton>
           </motion.div>

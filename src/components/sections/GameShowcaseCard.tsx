@@ -13,7 +13,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { FadeIn } from '@/components/motion/FadeIn';
 import { GAME_ART } from '@/lib/data/game-art';
 import { gameStatusLabels } from '@/lib/data/content';
@@ -256,16 +256,16 @@ export function GameShowcaseCard({ game, index }: GameShowcaseCardProps) {
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-4">
-                <CtaButton href={projectHref} variant="primary">
+                <Button href={projectHref} variant="primary">
                   Explore Game
-                </CtaButton>
-                <CtaButton
+                </Button>
+                <Button
                   href={secondaryHref}
                   variant="secondary"
                   external={art?.secondaryCta?.external ?? true}
                 >
                   {secondaryLabel}
-                </CtaButton>
+                </Button>
               </div>
             </div>
           </div>

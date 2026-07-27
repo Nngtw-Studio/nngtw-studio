@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, MotionConfig } from 'framer-motion';
 import { FadeIn } from '@/components/motion/FadeIn';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 import { GAME_ART } from '@/lib/data/game-art';
 import { gameStatusLabels } from '@/lib/data/content';
 import { cn } from '@/lib/utils';
@@ -93,13 +93,13 @@ export function GameHero({ game }: GameHeroProps) {
                 </div>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-4">
                   {game.followLink && (
-                    <CtaButton href={game.followLink} variant="discord" external>
+                    <Button href={game.followLink} variant="discord" external>
                       Join Discord
-                    </CtaButton>
+                    </Button>
                   )}
-                  <CtaButton href="/games" variant="secondary">
+                  <Button href="/games" variant="secondary">
                     All Games
-                  </CtaButton>
+                  </Button>
                 </div>
               </div>
 

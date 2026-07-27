@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
-import { CtaButton } from '@/components/ui/CtaButton';
+import { Button } from '@/components/ui/Button';
 
 const TAGS = ['Unity', 'Unreal', 'PC · Mobile'];
 
@@ -122,9 +122,9 @@ export function WhatWeBuild() {
               <p className="max-w-md font-display text-xl leading-relaxed font-medium tracking-tight text-brand-white/90 md:text-[1.375rem]">
                 One small team, one standard: craft over scale.
               </p>
-              <CtaButton href="/studio" variant="secondary">
+              <Button href="/studio" variant="secondary">
                 How We Work
-              </CtaButton>
+              </Button>
             </div>
           </StaggerItem>
         </StaggerContainer>
