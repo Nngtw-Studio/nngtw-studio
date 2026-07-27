@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
-import { careerStatusLabels } from "@/lib/data/content";
+import { CareersHero } from "@/components/sections/CareersHero";
+import { RoleCard } from "@/components/sections/RoleCard";
 import { getAllCareers } from "@/lib/supabase/queries/careers";
-import { cn } from "@/lib/utils";
 
 export const revalidate = 3600;
 
@@ -14,69 +12,78 @@ export const metadata: Metadata = {
     "Join Nngtw Studio — game development careers and future opportunities.",
 };
 
-const statusStyles: Record<string, string> = {
-  open: "border-green-500/30 bg-green-500/10 text-green-400",
-  internship: "border-brand-orange/30 bg-brand-orange/10 text-brand-orange",
-  future: "border-brand-white/20 bg-brand-white/5 text-brand-grey",
-  closed: "border-red-500/20 bg-red-500/5 text-red-400/60",
-};
-
+/**
+ * Two bands, because "we're hiring right now" and "we'll hire for this
+ * eventually" are different promises to a candidate. Status drives the
+ * split — nothing is hardcoded per role, so a role moving from `future`
+ * to `open` in the admin moves it between bands (and into the hero) with
+ * no code change.
+ */
 export default async function CareersPage() {
   const careers = await getAllCareers();
 
+  const openRoles = careers.filter(
+    (c) => c.status === "open" || c.status === "internship"
+  );
+  const futureRoles = careers.filter((c) => c.status === "future");
+
   return (
     <>
-      <PageHeader
-        label="Join Us"
-        title="Careers"
-        description="We're building a team of passionate creators. Explore current and future opportunities at Nngtw Studio."
-      />
+      <CareersHero openRoles={openRoles} totalRoles={careers.length} />
 
-      <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20">
-        <FadeIn>
-          <p className="mb-12 max-w-2xl text-base text-brand-grey">
-            We&apos;re currently hiring a UI/UX Design Intern. The rest of our
-            roles are marked as future opportunities — we&apos;re growing
-            thoughtfully. If you share our vision, we&apos;d love to hear from you
-            regardless of current openings.
-          </p>
-        </FadeIn>
-
-        <StaggerContainer className="space-y-4">
-          {careers.map((career) => (
-            <StaggerItem key={career.id}>
-              <Link
-                href={`/careers/${career.slug}`}
-                className="group flex flex-col gap-4 border border-brand-white/5 p-6 transition-colors hover:border-brand-orange/20 md:flex-row md:items-center md:justify-between md:p-8"
-              >
-                <div>
-                  <div className="mb-2 flex flex-wrap items-center gap-3">
-                    <h2 className="font-display text-lg tracking-wide text-brand-white uppercase transition-colors group-hover:text-brand-orange md:text-xl">
-                      {career.title}
-                    </h2>
-                    <span
-                      className={cn(
-                        "inline-block border px-2 py-0.5 text-[10px] tracking-[0.15em] uppercase",
-                        statusStyles[career.status]
-                      )}
-                    >
-                      {careerStatusLabels[career.status]}
-                    </span>
-                  </div>
-                  <p className="text-sm text-brand-grey">
-                    {career.department} · {career.location} · {career.type}
-                  </p>
-                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-brand-grey">
-                    {career.description}
-                  </p>
-                </div>
-                <span className="shrink-0 text-xs tracking-[0.2em] text-brand-grey uppercase transition-colors group-hover:text-brand-orange">
-                  View &rarr;
+      <section
+        id="all-roles"
+        className="relative mx-auto max-w-[1600px] scroll-mt-24 px-6 pb-32 md:px-12 lg:px-20 xl:px-28"
+      >
+        {openRoles.length > 0 && (
+          <div className="mb-20">
+            <FadeIn>
+              <div className="mb-3 flex flex-wrap items-baseline gap-4">
+                <h2 className="editorial-heading text-3xl text-brand-white md:text-4xl">
+                  Open Positions
+                </h2>
+                <span className="border border-brand-orange/30 bg-brand-orange/10 px-2.5 py-0.5 label-overline text-brand-orange">
+                  Applications open
                 </span>
-              </Link>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+              </div>
+              <p className="mb-10 max-w-2xl text-base leading-8 text-brand-grey/60">
+                Reviewed as they come in. Apply straight from the role page —
+                no account, no portal.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {openRoles.map((career) => (
+                <StaggerItem key={career.id}>
+                  <RoleCard role={career} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        )}
+
+        {futureRoles.length > 0 && (
+          <div>
+            <FadeIn>
+              <h2 className="editorial-heading mb-3 text-3xl text-brand-white md:text-4xl">
+                Future Opportunities
+              </h2>
+              <p className="mb-10 max-w-2xl text-base leading-8 text-brand-grey/60">
+                Not open yet — these are the roles we expect to hire for as the
+                studio grows. If one of them is yours, introduce yourself early
+                and we&apos;ll come to you first.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {futureRoles.map((career) => (
+                <StaggerItem key={career.id}>
+                  <RoleCard role={career} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        )}
       </section>
     </>
   );

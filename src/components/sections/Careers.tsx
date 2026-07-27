@@ -5,6 +5,7 @@ import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeI
 import { Button } from '@/components/ui/Button';
 import { careerStatusLabels } from '@/lib/data/content';
 import { getActiveCareers } from '@/lib/supabase/queries/careers';
+import type { Career } from '@/types';
 import { cn } from '@/lib/utils';
 
 const statusStyles: Record<string, string> = {
@@ -14,8 +15,47 @@ const statusStyles: Record<string, string> = {
   closed: 'border-red-500/15 bg-red-500/5 text-red-400/50',
 };
 
+function CareerRow({ career }: { career: Career }) {
+  return (
+    <Link
+      href={`/careers/${career.slug}`}
+      className="group flex flex-col gap-4 py-7 transition-colors duration-300 md:flex-row md:items-center md:justify-between md:py-8"
+    >
+      <div className="flex flex-wrap items-center gap-4">
+        <h3 className="font-display text-base font-semibold tracking-tight text-brand-white/80 transition-colors duration-300 group-hover:text-brand-white md:text-lg">
+          {career.title}
+        </h3>
+        <span
+          className={cn(
+            'inline-block border px-2.5 py-0.5 label-overline',
+            statusStyles[career.status],
+          )}
+        >
+          {careerStatusLabels[career.status]}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-6">
+        <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/40">
+          {career.department}&ensp;·&ensp;{career.location}&ensp;·&ensp;{career.type}
+        </p>
+        <span className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-brand-orange">
+          &rarr;
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 export async function Careers() {
   const highlighted = await getActiveCareers(6);
+
+  /* Open roles lead — a candidate scanning the homepage should hit the
+     thing they can act on today before the aspirational list. */
+  const openRoles = highlighted.filter(
+    (c) => c.status === 'open' || c.status === 'internship',
+  );
+  const futureRoles = highlighted.filter((c) => c.status === 'future');
 
   return (
     <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
@@ -46,40 +86,44 @@ export async function Careers() {
           </div>
         </FadeIn>
 
-        {/* Role list */}
-        <StaggerContainer className="divide-y divide-brand-white/5">
-          {highlighted.map((career) => (
-            <StaggerItem key={career.id}>
-              <Link
-                href={`/careers/${career.slug}`}
-                className="group flex flex-col gap-4 py-7 transition-colors duration-300 md:flex-row md:items-center md:justify-between md:py-8"
-              >
-                <div className="flex flex-wrap items-center gap-4">
-                  <h3 className="font-display text-base font-semibold tracking-tight text-brand-white/80 transition-colors duration-300 group-hover:text-brand-white md:text-lg">
-                    {career.title}
-                  </h3>
-                  <span
-                    className={cn(
-                      'inline-block border px-2.5 py-0.5 label-overline',
-                      statusStyles[career.status],
-                    )}
-                  >
-                    {careerStatusLabels[career.status]}
-                  </span>
-                </div>
+        {/* Role list — banded by whether you can apply today */}
+        {openRoles.length > 0 && (
+          <>
+            <FadeIn>
+              <div className="mb-2 flex items-center gap-4">
+                <p className="label-overline text-brand-orange">Open Positions</p>
+                <span className="h-px flex-1 bg-brand-orange/20" />
+              </div>
+            </FadeIn>
+            <StaggerContainer className="mb-14 divide-y divide-brand-white/5">
+              {openRoles.map((career) => (
+                <StaggerItem key={career.id}>
+                  <CareerRow career={career} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </>
+        )}
 
-                <div className="flex items-center gap-6">
-                  <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/40">
-                    {career.department}&ensp;·&ensp;{career.location}&ensp;·&ensp;{career.type}
-                  </p>
-                  <span className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-brand-orange">
-                    &rarr;
-                  </span>
-                </div>
-              </Link>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+        {futureRoles.length > 0 && (
+          <>
+            <FadeIn>
+              <div className="mb-2 flex items-center gap-4">
+                <p className="label-overline text-brand-grey/50">
+                  Future Opportunities
+                </p>
+                <span className="h-px flex-1 bg-brand-white/8" />
+              </div>
+            </FadeIn>
+            <StaggerContainer className="divide-y divide-brand-white/5">
+              {futureRoles.map((career) => (
+                <StaggerItem key={career.id}>
+                  <CareerRow career={career} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </>
+        )}
 
         <FadeIn className="mt-14 text-center">
           <Button href="/careers" variant="secondary">

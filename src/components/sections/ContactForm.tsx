@@ -4,14 +4,17 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-type Topic = "general" | "business" | "press" | "career";
+type Topic = "general" | "support" | "business" | "press" | "career";
 
 const TOPICS: { value: Topic; label: string }[] = [
   { value: "general", label: "General" },
+  { value: "support", label: "Game support" },
   { value: "business", label: "Business" },
   { value: "press", label: "Press" },
   { value: "career", label: "Careers" },
 ];
+
+const MESSAGE_LIMIT = 1000;
 
 const FIELD_BASE =
   "cursor-target w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
@@ -90,6 +93,7 @@ export function ContactForm() {
           label="Full name"
           placeholder="Your name"
           required
+          maxLength={80}
           value={formData.name}
           onChange={(v) => set("name", v)}
           focused={focused}
@@ -114,6 +118,7 @@ export function ContactForm() {
         label="Subject"
         placeholder="What can we help with?"
         required
+        maxLength={120}
         value={formData.subject}
         onChange={(v) => set("subject", v)}
         focused={focused}
@@ -122,17 +127,30 @@ export function ContactForm() {
 
       {/* Message */}
       <div>
-        <label
-          htmlFor="message"
-          className={cn(LABEL_BASE, focused === "message" && "text-brand-orange/70")}
-        >
-          Message
-        </label>
+        <div className="flex items-baseline justify-between gap-4">
+          <label
+            htmlFor="message"
+            className={cn(LABEL_BASE, focused === "message" && "text-brand-orange/70")}
+          >
+            Message
+          </label>
+          <span
+            className={cn(
+              "mb-2 text-xs tabular-nums transition-colors duration-300",
+              formData.message.length > MESSAGE_LIMIT * 0.9
+                ? "text-brand-orange"
+                : "text-brand-grey/60"
+            )}
+          >
+            {formData.message.length}/{MESSAGE_LIMIT}
+          </span>
+        </div>
         <textarea
           id="message"
           required
           rows={6}
-          placeholder="Tell us a little more…"
+          maxLength={MESSAGE_LIMIT}
+          placeholder="What do you need, and what would help most?"
           value={formData.message}
           onChange={(e) => set("message", e.target.value)}
           onFocus={() => setFocused("message")}
@@ -146,7 +164,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="group cursor-target inline-flex items-center gap-3 rounded-full bg-brand-orange px-8 py-4 font-display text-sm tracking-widest text-brand-black uppercase transition-all duration-300 hover:gap-4 hover:bg-brand-orange/90 disabled:opacity-50"
+          className="group cursor-target inline-flex shrink-0 items-center gap-3 rounded-full bg-brand-orange px-8 py-4 font-display text-sm tracking-widest whitespace-nowrap text-brand-black uppercase transition-all duration-300 hover:gap-4 hover:bg-brand-orange/90 disabled:opacity-50"
         >
           {status === "loading" ? "Sending…" : "Send message"}
           <svg
@@ -218,6 +236,7 @@ function Field({
   type = "text",
   placeholder,
   required,
+  maxLength,
   value,
   onChange,
   focused,
@@ -228,6 +247,7 @@ function Field({
   type?: string;
   placeholder?: string;
   required?: boolean;
+  maxLength?: number;
   value: string;
   onChange: (v: string) => void;
   focused: string | null;
@@ -242,6 +262,7 @@ function Field({
         id={id}
         type={type}
         required={required}
+        maxLength={maxLength}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -88,6 +88,8 @@ export interface Career {
   status: CareerStatus;
   description: string;
   requirements: string[];
+  /** External application link (e.g. a Google Form). Falls back to /connect when unset. */
+  applyUrl?: string | null;
 }
 
 export interface PhilosophyValue {

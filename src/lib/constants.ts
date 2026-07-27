@@ -7,6 +7,14 @@ export const BRAND = {
   email: "hello@nngtw.studio",
 } as const;
 
+/** Public studio inboxes, surfaced on /connect */
+export const STUDIO_EMAILS = {
+  studio: "studio@nngtw.com",
+  support: "support@nngtw.com",
+  careers: "careers@nngtw.com",
+  contact: "contact@nngtw.com",
+} as const;
+
 export const COLORS = {
   orange: "#F58A1F",
   background: "#0C0C0C",

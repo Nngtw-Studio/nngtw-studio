@@ -149,7 +149,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
   useEffect(() => {
     if (count < 2 || !game) return;
     let animationFrameId: number;
-    let startTime = Date.now();
+    const startTime = Date.now();
 
     const updateProgress = () => {
       const video = videoRef.current;

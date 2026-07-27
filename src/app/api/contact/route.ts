@@ -11,6 +11,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    if (name.length > 80 || email.length > 160 || subject.length > 120 || message.length > 1000) {
+      return NextResponse.json({ error: "Field too long" }, { status: 400 });
+    }
+
     if (isSupabaseConfigured()) {
       const supabase = await createClient();
       const { error } = await supabase.from("studio_contact_messages").insert({

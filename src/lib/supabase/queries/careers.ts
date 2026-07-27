@@ -3,46 +3,68 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { careers } from "@/lib/data/content";
 import type { Career, CareerStatus } from "@/types";
 
-interface StudioCareerRow {
+/**
+ * Reads `public.careers` — the table the admin's Careers module owns
+ * (nngtw-admin/supabase/migrations/0005_careers.sql). Two state columns
+ * matter here and they are not the same thing:
+ *
+ *   status        — editorial. Only 'published' rows are readable at all;
+ *                   that's enforced by the table's RLS policy, not by
+ *                   this file, so a draft can't leak even if a query
+ *                   here forgot to filter.
+ *   hiring_status — candidate-facing. Maps 1:1 onto the site's
+ *                   CareerStatus union and drives the badge and which
+ *                   band the role renders in.
+ *
+ * Every function falls back to the hardcoded roster in
+ * `lib/data/content.ts` when Supabase is unconfigured or returns
+ * nothing, so the site still renders a full careers page against an
+ * empty database.
+ */
+
+interface CareerRow {
   id: string;
   slug: string;
   title: string;
   department: string;
   location: string;
-  type: string;
-  status: string;
+  employment_type: string;
+  hiring_status: string;
   description: string;
   requirements: string[];
+  apply_url: string | null;
 }
 
-function mapCareer(row: StudioCareerRow): Career {
+function mapCareer(row: CareerRow): Career {
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     department: row.department,
     location: row.location,
-    type: row.type,
-    status: row.status as CareerStatus,
+    type: row.employment_type,
+    status: row.hiring_status as CareerStatus,
     description: row.description,
     requirements: row.requirements ?? [],
+    applyUrl: row.apply_url ?? null,
   };
 }
 
 const COLUMNS =
-  "id, slug, title, department, location, type, status, description, requirements";
+  "id, slug, title, department, location, employment_type, hiring_status, description, requirements, apply_url";
 
-/** All published careers — used for careers listing page and generateStaticParams */
+/** All live careers — used for the careers listing page and generateStaticParams */
 export async function getAllCareers(): Promise<Career[]> {
   if (!isSupabaseConfigured()) return careers;
 
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
-      .from("studio_careers")
+      .from("careers")
       .select(COLUMNS)
-      .eq("published", true)
-      .order("order", { ascending: true });
+      .eq("status", "published")
+      .neq("hiring_status", "closed")
+      .order("position", { ascending: true });
 
     if (error || !data?.length) return careers;
     return data.map(mapCareer);
@@ -60,11 +82,11 @@ export async function getActiveCareers(limit = 6): Promise<Career[]> {
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
-      .from("studio_careers")
+      .from("careers")
       .select(COLUMNS)
-      .eq("published", true)
-      .neq("status", "closed")
-      .order("order", { ascending: true })
+      .eq("status", "published")
+      .neq("hiring_status", "closed")
+      .order("position", { ascending: true })
       .limit(limit);
 
     if (error || !data?.length) {
@@ -85,14 +107,14 @@ export async function getCareerBySlug(slug: string): Promise<Career | null> {
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
-      .from("studio_careers")
+      .from("careers")
       .select(COLUMNS)
       .eq("slug", slug)
-      .eq("published", true)
+      .eq("status", "published")
       .maybeSingle();
 
     if (error || !data) return careers.find((c) => c.slug === slug) ?? null;
-    return mapCareer(data as StudioCareerRow);
+    return mapCareer(data as CareerRow);
   } catch {
     return careers.find((c) => c.slug === slug) ?? null;
   }

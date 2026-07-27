@@ -354,6 +354,8 @@ export const careers: Career[] = [
       "Nice to have: familiarity with AI tools for design and creative workflows",
       "Nice to have: serious about learning, self-improvement, and investing time in developing UI/UX skills",
     ],
+    applyUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScLOwa6O_McDXujdHTrDAmGE-MTUgyVhcUMI2_1h3BVWyhTDA/viewform",
   },
   {
     id: "1",

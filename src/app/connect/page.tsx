@@ -3,13 +3,13 @@ import Link from "next/link";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
-import { BRAND, SOCIAL } from "@/lib/constants";
+import { BRAND, SOCIAL, STUDIO_EMAILS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Connect",
   description:
-    "Connect with Nngtw Studio — the official communication hub for partnerships, press, investors, legal, community, and game support.",
+    "Connect with Nngtw Studio — studio, support, careers, and community channels, plus a direct message form.",
 };
 
 /* ── Icons ───────────────────────────────────────────────────────────────── */
@@ -36,44 +36,67 @@ const MailIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-/* ── Quick facts (hero strip) ────────────────────────────────────────────── */
+/* ── Inboxes (bento) ─────────────────────────────────────────────────────── */
 
-const quickFacts = [
+interface Inbox {
+  label: string;
+  email: string;
+  blurb: string;
+  span: string;
+  primary?: boolean;
+  icon: React.ReactNode;
+}
+
+const inboxes: Inbox[] = [
   {
-    label: "Write to us",
-    value: BRAND.email,
-    href: `mailto:${BRAND.email}`,
+    label: "The studio",
+    email: STUDIO_EMAILS.studio,
+    blurb:
+      "Our main address. Partnerships, publishing, press, investors, legal — anything that belongs on the studio's desk.",
+    span: "lg:col-span-2",
+    primary: true,
     icon: <MailIcon className="h-5 w-5" />,
   },
   {
-    label: "Community",
-    value: "discord.gg/z3fpVJZkD",
-    href: SOCIAL.discord,
-    external: true,
-    icon: <DiscordIcon className="h-5 w-5" />,
-  },
-  {
-    label: "Response time",
-    value: "Within 2 business days",
+    label: "Game support",
+    email: STUDIO_EMAILS.support,
+    blurb: "Bugs, crashes, accounts, and anything that went wrong in one of our games.",
+    span: "lg:col-span-1",
     icon: (
       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
+        <path d="M6 12h4M8 10v4M15 11h.01M18 13h.01" />
+        <path d="M17.32 5H6.68a4 4 0 0 0-3.95 3.36l-1.2 7.2A3 3 0 0 0 4.5 19c1 0 1.8-.5 2.4-1.2L8.5 16h7l1.6 1.8c.6.7 1.4 1.2 2.4 1.2a3 3 0 0 0 2.97-3.44l-1.2-7.2A4 4 0 0 0 17.32 5Z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Careers",
+    email: STUDIO_EMAILS.careers,
+    blurb: "Applications, internships, and hiring questions.",
+    span: "lg:col-span-1",
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+        <rect x="2" y="7" width="20" height="14" rx="2" />
+        <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M2 13h20" />
+      </svg>
+    ),
+  },
+  {
+    label: "General contact",
+    email: STUDIO_EMAILS.contact,
+    blurb: "Not sure where it fits? Send it here and we'll route it.",
+    span: "lg:col-span-2",
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
       </svg>
     ),
   },
 ];
 
-/* ── Social channels ─────────────────────────────────────────────────────── */
+/* ── Socials — matches the homepage hero set ─────────────────────────────── */
 
 const socials = [
-  {
-    label: "Discord",
-    handle: "Join the server",
-    href: SOCIAL.discord,
-    accent: "#5865F2",
-    icon: <DiscordIcon className="h-4.5 w-4.5" />,
-  },
   {
     label: "LinkedIn",
     handle: "Nngtw Studio",
@@ -82,17 +105,6 @@ const socials = [
     icon: (
       <svg className="h-4.5 w-4.5" viewBox="0 0 25 24" fill="currentColor" aria-hidden="true">
         <path d="m5.706 7.798v16.202h-5.395v-16.202zm.343-5.002c.001.029.002.063.002.098 0 .749-.318 1.423-.826 1.895l-.002.001c-.545.498-1.274.803-2.075.803-.049 0-.099-.001-.148-.003h.007-.033c-.041.002-.089.003-.137.003-.784 0-1.496-.306-2.025-.804l.001.001c-.504-.488-.816-1.17-.816-1.925 0-.024 0-.048.001-.073v.004c-.001-.021-.001-.045-.001-.069 0-.762.324-1.448.841-1.929l.002-.001c.544-.495 1.271-.799 2.068-.799.046 0 .091.001.137.003h-.006c.043-.002.092-.003.143-.003.785 0 1.5.303 2.034.798l-.002-.002c.515.497.835 1.193.835 1.964v.042-.002zm19.062 11.92v9.284h-5.378v-8.665c.005-.079.007-.171.007-.263 0-.896-.249-1.733-.682-2.447l.012.021c-.427-.596-1.117-.979-1.896-.979-.06 0-.12.002-.18.007h.008c-.027-.001-.058-.002-.089-.002-.62 0-1.19.213-1.641.57l.006-.004c-.453.367-.808.836-1.032 1.375l-.008.023c-.116.355-.182.763-.182 1.187 0 .048.001.096.003.144v-.007 9.042h-5.378q.033-6.523.033-10.578t-.016-4.839l-.016-.785h5.378v2.354h-.033c.214-.345.435-.644.678-.924l-.008.009c.281-.309.583-.588.908-.838l.016-.012c.404-.311.878-.555 1.392-.704l.03-.007c.538-.161 1.157-.254 1.797-.254h.079-.004c.071-.003.154-.005.237-.005 1.681 0 3.195.714 4.256 1.856l.003.004q1.702 1.856 1.702 5.436z" />
-      </svg>
-    ),
-  },
-  {
-    label: "X",
-    handle: "@nngtw_studio",
-    href: SOCIAL.x,
-    accent: "#f2efe7",
-    icon: (
-      <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
       </svg>
     ),
   },
@@ -114,96 +126,10 @@ const socials = [
     href: SOCIAL.facebook,
     accent: "#1877F2",
     icon: (
-      <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.25h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z" />
+      <svg className="h-4.5 w-4.5" viewBox="0 0 25.26 47.17" fill="currentColor" aria-hidden="true">
+        <path d="M23.61 26.53 24.92 18h-8.19v-5.54c0-2.34 1.14-4.62 4.81-4.62h3.72V.58A45.17 45.17 0 0 0 18.65 0C11.91 0 7.5 4.09 7.5 11.49V18H0v8.54h7.5v20.63h9.23V26.53Z" />
       </svg>
     ),
-  },
-];
-
-/* ── Departments ─────────────────────────────────────────────────────────── */
-
-interface Department {
-  title: string;
-  description: string;
-  items: string[];
-  action: { label: string; href: string; external?: boolean };
-  icon: React.ReactNode;
-  highlight?: boolean;
-}
-
-const departments: Department[] = [
-  {
-    title: "Game Support",
-    description:
-      "Bug reports, player reports, and technical issues are handled from each game's own support page.",
-    items: ["Bug reports", "Player reports", "Technical issues", "Gameplay help"],
-    action: { label: "Open game pages", href: "/games" },
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M6 12h4M8 10v4M15 11h.01M18 13h.01" />
-        <path d="M17.32 5H6.68a4 4 0 0 0-3.95 3.36l-1.2 7.2A3 3 0 0 0 4.5 19c1 0 1.8-.5 2.4-1.2L8.5 16h7l1.6 1.8c.6.7 1.4 1.2 2.4 1.2a3 3 0 0 0 2.97-3.44l-1.2-7.2A4 4 0 0 0 17.32 5Z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Business & Partnerships",
-    description:
-      "Publishing, platform partnerships, brand collaborations, licensing, and sponsorships.",
-    items: ["Publishing", "Platform partnerships", "Licensing", "Sponsorships"],
-    action: { label: "Email us", href: `mailto:${BRAND.email}`, external: true },
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-  },
-  {
-    title: "Press & Media",
-    description:
-      "Interviews, press kits, creator requests, media enquiries, and event invitations.",
-    items: ["Interviews", "Press kits", "Creator requests", "Events"],
-    action: { label: "Email us", href: `mailto:${BRAND.email}`, external: true },
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0V4" />
-        <path d="M8 7h8M8 11h8M8 15h5" />
-      </svg>
-    ),
-  },
-  {
-    title: "Investors",
-    description:
-      "Investment opportunities, strategic partnerships, and corporate discussions.",
-    items: ["Investment", "Strategic partnerships", "Corporate"],
-    action: { label: "Email us", href: `mailto:${BRAND.email}`, external: true },
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-      </svg>
-    ),
-  },
-  {
-    title: "Legal",
-    description: "Copyright, trademark, privacy requests, and legal notices.",
-    items: ["Copyright", "Trademark", "Privacy requests", "Notices"],
-    action: { label: "Email us", href: `mailto:${BRAND.email}`, external: true },
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Community",
-    description:
-      "Discord is our home base — fan art, playtests, events, and direct chat with the team.",
-    items: ["Fan art", "Playtests", "Events", "Dev updates"],
-    action: { label: "Join Discord", href: SOCIAL.discord, external: true },
-    highlight: true,
-    icon: <DiscordIcon className="h-5 w-5" />,
   },
 ];
 
@@ -244,33 +170,58 @@ export default function ConnectPage() {
 
             <FadeIn delay={0.15} className="lg:col-span-4 lg:col-start-9">
               <p className="max-w-md text-base leading-8 text-brand-grey/70">
-                Publishing, partnerships, press, legal, or a bug that ruined your run —
-                tell us what you need and it lands with the right person at the studio.
+                Pick the inbox that fits, jump into Discord, or send us a message right
+                here. Whichever you choose, it reaches a real person at the studio.
               </p>
             </FadeIn>
           </div>
+        </div>
+      </section>
 
-          {/* Quick facts strip */}
-          <StaggerContainer
-            className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-brand-white/8 bg-brand-white/8 sm:grid-cols-3"
-            stagger={0.08}
-          >
-            {quickFacts.map((fact) => (
-              <StaggerItem key={fact.label} className="bg-brand-bg">
-                <QuickFact fact={fact} />
+      {/* ═══════════════════════════════════════════════════════════════════════
+          BENTO — inboxes, community, socials
+         ═══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="relative mx-auto max-w-[1600px] px-6 py-20 md:px-12 md:py-24 lg:px-20 xl:px-28">
+          <FadeIn>
+            <p className="label-overline mb-8 text-brand-grey/50">Reach us directly</p>
+          </FadeIn>
+
+          <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" stagger={0.07}>
+            {/* Discord — the big one */}
+            <StaggerItem className="sm:col-span-2 lg:col-span-2 lg:row-span-2">
+              <DiscordCard />
+            </StaggerItem>
+
+            {inboxes.map((inbox) => (
+              <StaggerItem key={inbox.email} className={cn("h-full", inbox.span)}>
+                <InboxCard inbox={inbox} />
               </StaggerItem>
             ))}
+
+            {/* Socials */}
+            <StaggerItem className="sm:col-span-2 lg:col-span-2">
+              <SocialCard />
+            </StaggerItem>
           </StaggerContainer>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          GET IN TOUCH — message form + channels
+          MESSAGE FORM
          ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden border-t border-brand-white/5">
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(ellipse 50% 45% at 5% 15%, rgba(245,138,31,0.05), transparent 65%), radial-gradient(ellipse 50% 50% at 95% 85%, rgba(223,19,138,0.04), transparent 68%)",
+          }}
+        />
+
         <div className="relative mx-auto max-w-[1600px] px-6 py-24 md:px-12 md:py-28 lg:px-20 xl:px-28">
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
-            {/* Left — pitch + channels */}
             <div className="lg:col-span-5">
               <FadeIn>
                 <p className="label-overline text-brand-grey/50">Send a message</p>
@@ -280,50 +231,34 @@ export default function ConnectPage() {
                   in touch.
                 </h2>
                 <p className="mt-7 max-w-md text-base leading-8 text-brand-grey/70">
-                  One form, every enquiry. Pick a topic so it reaches the right desk —
-                  or reach us directly on any channel below.
+                  Tell us what the message is about so it lands with the right person, then
+                  keep it short and specific — the clearer the ask, the faster the reply.
                 </p>
               </FadeIn>
 
               <FadeIn delay={0.12}>
-                <a
-                  href={`mailto:${BRAND.email}`}
-                  className="cursor-target group mt-10 flex items-center gap-4 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-5 transition-colors duration-300 hover:border-brand-orange/30 hover:bg-brand-white/[0.04]"
-                >
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-brand-orange/40 group-hover:text-brand-orange">
-                    <MailIcon className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-xs tracking-[0.2em] text-brand-grey uppercase">
-                      Prefer email?
-                    </span>
-                    <span className="mt-0.5 block truncate text-sm text-brand-white transition-colors duration-300 group-hover:text-brand-orange">
-                      {BRAND.email}
-                    </span>
-                  </span>
-                  <ArrowIcon className="ml-auto h-3.5 w-3.5 shrink-0 text-brand-white/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-orange" />
-                </a>
-              </FadeIn>
-
-              <FadeIn delay={0.2}>
-                <p className="label-overline mt-12 mb-5 text-brand-grey/40">Follow the studio</p>
-                <StaggerContainer className="grid gap-3 sm:grid-cols-2" stagger={0.06}>
-                  {socials.map((social) => (
-                    <StaggerItem
-                      key={social.label}
-                      className={social.label === "Discord" ? "sm:col-span-2" : undefined}
+                <dl className="mt-10 max-w-md space-y-0 border-t border-brand-white/8">
+                  {[
+                    { term: "Typical reply", detail: "Within 2 business days" },
+                    { term: "Faster answers", detail: "Ask in Discord — the team is there daily" },
+                    { term: "Attachments", detail: "Email the relevant inbox instead" },
+                  ].map((row) => (
+                    <div
+                      key={row.term}
+                      className="flex items-baseline gap-6 border-b border-brand-white/8 py-4"
                     >
-                      <SocialTile social={social} />
-                    </StaggerItem>
+                      <dt className="w-32 shrink-0 text-xs tracking-[0.18em] text-brand-grey uppercase">
+                        {row.term}
+                      </dt>
+                      <dd className="text-sm text-brand-white/80">{row.detail}</dd>
+                    </div>
                   ))}
-                </StaggerContainer>
+                </dl>
               </FadeIn>
             </div>
 
-            {/* Right — form */}
             <FadeIn delay={0.15} direction="left" className="lg:col-span-6 lg:col-start-7">
               <div className="relative overflow-hidden rounded-[28px] border border-brand-white/8 bg-brand-white/[0.02] p-7 backdrop-blur-sm md:p-10">
-                {/* Sheen */}
                 <div
                   className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-brand-white/20 to-transparent"
                   aria-hidden="true"
@@ -338,43 +273,6 @@ export default function ConnectPage() {
               </div>
             </FadeIn>
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════════
-          DEPARTMENTS
-         ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden border-t border-brand-white/5">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(ellipse 50% 45% at 5% 15%, rgba(245,138,31,0.05), transparent 65%), radial-gradient(ellipse 50% 50% at 95% 85%, rgba(223,19,138,0.04), transparent 68%)",
-          }}
-        />
-
-        <div className="relative mx-auto max-w-[1600px] px-6 py-24 md:px-12 md:py-28 lg:px-20 xl:px-28">
-          <FadeIn>
-            <div className="mb-4 flex items-center gap-4">
-              <div className="accent-line" />
-              <p className="label-overline text-brand-orange">Where to reach us</p>
-            </div>
-            <h2 className="editorial-heading max-w-2xl text-3xl text-brand-white md:text-4xl">
-              Every enquiry has a home.
-            </h2>
-          </FadeIn>
-
-          <StaggerContainer
-            className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
-            stagger={0.07}
-          >
-            {departments.map((dept) => (
-              <StaggerItem key={dept.title} className="h-full">
-                <DepartmentCard dept={dept} />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
         </div>
       </section>
 
@@ -434,117 +332,124 @@ export default function ConnectPage() {
 
 /* ── Sub-components ──────────────────────────────────────────────────────── */
 
-function QuickFact({ fact }: { fact: (typeof quickFacts)[number] }) {
-  const body = (
-    <>
-      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-brand-orange/40 group-hover:text-brand-orange">
-        {fact.icon}
-      </span>
-      <span className="min-w-0">
-        <span className="block text-xs tracking-[0.2em] text-brand-grey uppercase">
-          {fact.label}
-        </span>
-        <span className="mt-1 block truncate text-sm text-brand-white transition-colors duration-300 group-hover:text-brand-orange">
-          {fact.value}
-        </span>
-      </span>
-    </>
-  );
-
-  if (!fact.href) {
-    return <div className="group flex h-full items-center gap-4 p-6">{body}</div>;
-  }
-
+function DiscordCard() {
   return (
     <a
-      href={fact.href}
-      target={fact.external ? "_blank" : undefined}
-      rel={fact.external ? "noopener noreferrer" : undefined}
-      className="cursor-target group flex h-full items-center gap-4 p-6 transition-colors duration-300 hover:bg-brand-white/[0.03]"
-    >
-      {body}
-      <ArrowIcon className="ml-auto h-3.5 w-3.5 shrink-0 text-brand-white/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-orange" />
-    </a>
-  );
-}
-
-function SocialTile({ social }: { social: (typeof socials)[number] }) {
-  return (
-    <a
-      href={social.href}
+      href={SOCIAL.discord}
       target="_blank"
       rel="noopener noreferrer"
-      style={
-        {
-          "--accent": social.accent,
-          "--accent-soft": `color-mix(in srgb, ${social.accent} 40%, transparent)`,
-        } as React.CSSProperties
-      }
-      className="cursor-target group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-4 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
+      className="cursor-target group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#5865F2]/25 bg-[#5865F2]/[0.06] p-8 transition-colors duration-500 hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.1] md:p-10"
     >
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-(--accent-soft) group-hover:text-(--accent)">
-        {social.icon}
-      </span>
-      <span className="min-w-0">
-        <span className="block text-sm text-brand-white">{social.label}</span>
-        <span className="block truncate text-xs text-brand-grey">{social.handle}</span>
-      </span>
+      <div
+        className="pointer-events-none absolute -top-20 -right-10 h-64 w-64 rounded-full bg-[#5865F2]/20 blur-[110px]"
+        aria-hidden="true"
+      />
+      <DiscordIcon className="pointer-events-none absolute -right-6 -bottom-10 h-52 w-52 text-[#5865F2]/8 transition-transform duration-700 group-hover:scale-105" />
+
+      <div className="relative">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[#5865F2]/30 text-[#5865F2] transition-colors duration-300 group-hover:border-[#5865F2]/60">
+          <DiscordIcon className="h-6 w-6" />
+        </span>
+        <h3 className="editorial-heading mt-7 text-3xl text-brand-white md:text-4xl">
+          The community
+          <br />
+          lives on Discord.
+        </h3>
+        <p className="mt-5 max-w-sm text-sm leading-relaxed text-brand-grey">
+          Dev updates, playtests, fan art, events, and the fastest way to get an answer
+          from someone on the team.
+        </p>
+      </div>
+
+      <div className="relative mt-10 flex items-center gap-3">
+        <span className="inline-flex items-center gap-3 rounded-full bg-[#5865F2] px-6 py-3 font-display text-xs tracking-widest whitespace-nowrap text-white uppercase transition-colors duration-300 group-hover:bg-[#6B77F5]">
+          Join Discord
+          <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+        </span>
+        <span className="hidden truncate text-xs text-brand-grey sm:block">
+          discord.gg/z3fpVJZkD
+        </span>
+      </div>
     </a>
   );
 }
 
-function DepartmentCard({ dept }: { dept: Department }) {
+function InboxCard({ inbox }: { inbox: Inbox }) {
   return (
-    <div
+    <a
+      href={`mailto:${inbox.email}`}
       className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 transition-all duration-500 lg:p-8",
-        dept.highlight
-          ? "border-[#5865F2]/25 bg-[#5865F2]/5 hover:border-[#5865F2]/45 hover:bg-[#5865F2]/8"
-          : "border-brand-white/8 bg-brand-white/[0.02] hover:border-brand-white/15 hover:bg-brand-white/[0.04]"
+        "cursor-target group relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 transition-all duration-500",
+        inbox.primary
+          ? "border-brand-orange/25 bg-brand-orange/[0.05] hover:border-brand-orange/45 hover:bg-brand-orange/[0.08]"
+          : "border-brand-white/8 bg-brand-white/[0.02] hover:border-brand-white/18 hover:bg-brand-white/[0.05]"
       )}
     >
-      <div
-        className={cn(
-          "inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors duration-300",
-          dept.highlight
-            ? "border-[#5865F2]/25 text-[#5865F2] group-hover:border-[#5865F2]/50"
-            : "border-brand-white/10 text-brand-grey/60 group-hover:border-brand-orange/40 group-hover:text-brand-orange"
-        )}
-      >
-        {dept.icon}
+      <div className="flex items-start justify-between gap-4">
+        <span
+          className={cn(
+            "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors duration-300",
+            inbox.primary
+              ? "border-brand-orange/35 text-brand-orange"
+              : "border-brand-white/10 text-brand-grey/60 group-hover:border-brand-orange/40 group-hover:text-brand-orange"
+          )}
+        >
+          {inbox.icon}
+        </span>
+        <ArrowIcon className="h-4 w-4 shrink-0 text-brand-white/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-orange" />
       </div>
 
-      <h3 className="mt-6 font-display text-base tracking-wide text-brand-white uppercase">
-        {dept.title}
-      </h3>
-      <p className="mt-3 text-sm leading-relaxed text-brand-grey">{dept.description}</p>
-
-      <ul className="mt-5 flex flex-wrap gap-2">
-        {dept.items.map((item) => (
-          <li
-            key={item}
-            className={cn(
-              "rounded-full border px-3 py-1 text-xs text-brand-grey/70",
-              dept.highlight ? "border-[#5865F2]/20" : "border-brand-white/8"
-            )}
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
-
-      <a
-        href={dept.action.href}
-        target={dept.action.external ? "_blank" : undefined}
-        rel={dept.action.external ? "noopener noreferrer" : undefined}
+      <p className="mt-6 text-xs tracking-[0.2em] text-brand-grey uppercase">{inbox.label}</p>
+      <p
         className={cn(
-          "cursor-target mt-auto inline-flex items-center gap-2 pt-7 text-xs tracking-[0.12em] uppercase transition-all duration-300 hover:gap-3",
-          dept.highlight ? "text-[#8891F5]" : "text-brand-orange"
+          "mt-2 font-display tracking-wide break-all transition-colors duration-300",
+          inbox.primary
+            ? "text-xl text-brand-orange md:text-2xl"
+            : "text-base text-brand-white group-hover:text-brand-orange"
         )}
       >
-        {dept.action.label}
-        <ArrowIcon className="h-3 w-3" />
-      </a>
+        {inbox.email}
+      </p>
+      <p className="mt-3 text-sm leading-relaxed text-brand-grey">{inbox.blurb}</p>
+    </a>
+  );
+}
+
+function SocialCard() {
+  return (
+    <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7">
+      <div>
+        <p className="text-xs tracking-[0.2em] text-brand-grey uppercase">Follow the studio</p>
+        <p className="mt-3 text-sm leading-relaxed text-brand-grey">
+          Announcements, work-in-progress, and behind-the-scenes from the team.
+        </p>
+      </div>
+
+      <div className="mt-7 grid gap-3 sm:grid-cols-3">
+        {socials.map((social) => (
+          <a
+            key={social.label}
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={
+              {
+                "--accent": social.accent,
+                "--accent-soft": `color-mix(in srgb, ${social.accent} 40%, transparent)`,
+              } as React.CSSProperties
+            }
+            className="cursor-target group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-3.5 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
+          >
+            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-(--accent-soft) group-hover:text-(--accent)">
+              {social.icon}
+            </span>
+            <span className="min-w-0">
+              <span className="block text-sm text-brand-white">{social.label}</span>
+              <span className="block truncate text-xs text-brand-grey">{social.handle}</span>
+            </span>
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
