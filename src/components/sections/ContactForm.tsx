@@ -17,7 +17,7 @@ const TOPICS: { value: Topic; label: string }[] = [
 const MESSAGE_LIMIT = 1000;
 
 const FIELD_BASE =
-  "cursor-target w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
+  "w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
 
 const LABEL_BASE =
   "mb-2 block text-xs tracking-[0.15em] text-brand-grey uppercase transition-colors duration-300";
@@ -67,7 +67,7 @@ export function ContactForm() {
               type="button"
               onClick={() => set("type", topic.value)}
               className={cn(
-                "cursor-target relative rounded-full border px-5 py-2 text-xs tracking-[0.12em] uppercase transition-colors duration-300",
+                "relative rounded-full border px-5 py-2 text-xs tracking-[0.12em] uppercase transition-colors duration-300",
                 formData.type === topic.value
                   ? "border-brand-orange/60 text-brand-orange"
                   : "border-brand-white/10 text-brand-grey hover:border-brand-white/25 hover:text-brand-white/80"
@@ -164,7 +164,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="group cursor-target inline-flex shrink-0 items-center gap-3 rounded-full bg-brand-orange px-8 py-4 font-display text-sm tracking-widest whitespace-nowrap text-brand-black uppercase transition-all duration-300 hover:gap-4 hover:bg-brand-orange/90 disabled:opacity-50"
+          className="group inline-flex shrink-0 items-center gap-3 rounded-full bg-brand-orange px-8 py-4 font-display text-sm tracking-widest whitespace-nowrap text-brand-black uppercase transition-all duration-300 hover:gap-4 hover:bg-brand-orange/90 disabled:opacity-50"
         >
           {status === "loading" ? "Sending…" : "Send message"}
           <svg

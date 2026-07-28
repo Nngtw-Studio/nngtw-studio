@@ -8,7 +8,7 @@ export async function Technology() {
   return (
     <section
       id="technology"
-      className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
+      className="relative snap-start overflow-hidden border-t border-brand-white/5 "
     >
       {/* Ambient treatment — faint brand-orange bloom, mirroring sibling sections */}
       <div

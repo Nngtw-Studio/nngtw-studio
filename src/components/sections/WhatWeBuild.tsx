@@ -15,7 +15,7 @@ export function WhatWeBuild() {
   return (
     <section
       id="what-we-build"
-      className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
+      className="relative snap-start overflow-hidden border-t border-brand-white/5 "
     >
       <div className="section-padding relative mx-auto max-w-[1600px]">
         <FadeIn className="mb-14 max-w-2xl md:mb-16">
@@ -33,7 +33,7 @@ export function WhatWeBuild() {
           <StaggerItem className="sm:row-span-2">
             <Link
               href="/games"
-              className="cursor-target group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-brand-white/10 bg-[linear-gradient(160deg,rgba(245,138,31,0.12),transparent_55%)] bg-brand-muted/40 p-9 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-brand-orange/50 md:p-11"
+              className="group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-brand-white/10 bg-[linear-gradient(160deg,rgba(245,138,31,0.12),transparent_55%)] bg-brand-muted/40 p-9 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-brand-orange/50 md:p-11"
             >
               <div className="flex items-start justify-between gap-4">
                 <span className="font-accent text-[10px] tracking-[0.26em] text-brand-orange uppercase">
@@ -80,7 +80,7 @@ export function WhatWeBuild() {
           <StaggerItem>
             <Link
               href="/technology"
-              className="cursor-target group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-brand-white/10 bg-[linear-gradient(160deg,rgba(223,19,138,0.14),transparent_60%)] bg-brand-muted/40 p-8 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-brand-secondary/50"
+              className="group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-brand-white/10 bg-[linear-gradient(160deg,rgba(223,19,138,0.14),transparent_60%)] bg-brand-muted/40 p-8 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-brand-secondary/50"
             >
               <span className="font-accent text-[10px] tracking-[0.26em] text-brand-secondary uppercase">
                 02 — Next
@@ -100,7 +100,7 @@ export function WhatWeBuild() {
           <StaggerItem>
             <Link
               href="/technology"
-              className="cursor-target group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-brand-white/10 bg-brand-muted/40 p-8 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-brand-white/32"
+              className="group flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-brand-white/10 bg-brand-muted/40 p-8 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-brand-white/32"
             >
               <span className="font-accent text-[10px] tracking-[0.26em] text-brand-white/50 uppercase">
                 03 — Also

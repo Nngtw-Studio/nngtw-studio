@@ -47,7 +47,7 @@ export function Button({
   const { ripples, addRipple } = useRipple();
 
   const classes = cn(
-    'group cursor-target relative isolate inline-flex items-center justify-center overflow-hidden',
+    'group/btn cursor-target relative isolate inline-flex items-center justify-center overflow-hidden',
     'w-[280px] h-[56px] rounded-[16px] hover:w-[320px] hover:h-[64px] hover:rounded-none',
     'font-secondary text-[18px] font-semibold',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-black',
@@ -65,7 +65,7 @@ export function Button({
 
   const content = (
     <>
-      <span className="relative z-10 leading-none whitespace-nowrap tracking-[0.01em] transition-[letter-spacing] duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] group-hover:tracking-[0.1em]">
+      <span className="relative z-10 leading-none whitespace-nowrap tracking-[0.01em] transition-[letter-spacing] duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] group-hover/btn:tracking-[0.1em]">
         {children}
       </span>
       <RippleLayer ripples={ripples} />

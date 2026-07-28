@@ -281,7 +281,7 @@ export default function ConnectPage() {
          ═══════════════════════════════════════════════════════════════════════ */}
       <Link
         href="/careers"
-        className="cursor-target group relative block overflow-hidden bg-brand-orange"
+        className="group relative block overflow-hidden bg-brand-orange"
       >
         <span className="absolute inset-0 origin-left scale-x-0 bg-brand-black/85 transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:scale-x-100" />
         <span className="relative flex items-center justify-center gap-5 px-6 py-9 md:py-11">
@@ -338,7 +338,7 @@ function DiscordCard() {
       href={SOCIAL.discord}
       target="_blank"
       rel="noopener noreferrer"
-      className="cursor-target group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#5865F2]/25 bg-[#5865F2]/[0.06] p-8 transition-colors duration-500 hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.1] md:p-10"
+      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#5865F2]/25 bg-[#5865F2]/[0.06] p-8 transition-colors duration-500 hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.1] md:p-10"
     >
       <div
         className="pointer-events-none absolute -top-20 -right-10 h-64 w-64 rounded-full bg-[#5865F2]/20 blur-[110px]"
@@ -379,7 +379,7 @@ function InboxCard({ inbox }: { inbox: Inbox }) {
     <a
       href={`mailto:${inbox.email}`}
       className={cn(
-        "cursor-target group relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 transition-all duration-500",
+        "group relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 transition-all duration-500",
         inbox.primary
           ? "border-brand-orange/25 bg-brand-orange/[0.05] hover:border-brand-orange/45 hover:bg-brand-orange/[0.08]"
           : "border-brand-white/8 bg-brand-white/[0.02] hover:border-brand-white/18 hover:bg-brand-white/[0.05]"
@@ -438,7 +438,7 @@ function SocialCard() {
                 "--accent-soft": `color-mix(in srgb, ${social.accent} 40%, transparent)`,
               } as React.CSSProperties
             }
-            className="cursor-target group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-3.5 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
+            className="group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-3.5 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
           >
             <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-(--accent-soft) group-hover:text-(--accent)">
               {social.icon}

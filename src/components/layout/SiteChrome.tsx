@@ -6,6 +6,8 @@ import { AdaptiveCursor } from '@/components/effects/AdaptiveCursor';
 import { IntroSplash } from '@/components/layout/IntroSplash';
 import { IntroProvider } from '@/components/layout/IntroContext';
 
+import { AmbientField } from '@/components/effects/AmbientField';
+
 /**
  * Public-site chrome (custom cursor, header, footer) wraps every marketing
  * route. The admin panel is a separate productivity surface — it supplies its
@@ -17,6 +19,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <IntroProvider>
       <AdaptiveCursor />
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: -1 }}>
+        <AmbientField />
+      </div>
       <Header />
       <main>{children}</main>
       <Footer />

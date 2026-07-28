@@ -10,7 +10,7 @@ import { studioContent } from '@/lib/data/content';
  */
 export function StudioStory() {
   return (
-    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 ">
       {/* Ambient treatment — a faint brand-orange bloom, mirroring sibling sections */}
       <div
         aria-hidden

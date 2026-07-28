@@ -247,7 +247,7 @@ const studioCompany = [
 
 function HeroSection() {
   return (
-    <section data-hero className="relative overflow-hidden bg-brand-black pt-36 pb-16 md:pt-44 md:pb-20">
+    <section data-hero className="relative overflow-hidden pt-36 pb-16 md:pt-44 md:pb-20">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_12%_0%,rgba(245,138,31,.13),transparent_62%),radial-gradient(ellipse_55%_60%_at_92%_20%,rgba(223,19,138,.1),transparent_66%),radial-gradient(ellipse_50%_40%_at_60%_100%,rgba(88,101,242,.07),transparent_70%)]"
@@ -286,7 +286,7 @@ function HeroSection() {
           <div className="grid gap-6 lg:grid-cols-12 lg:items-stretch">
             <Link
               href="/news"
-              className="cursor-target group relative flex min-h-[520px] flex-col justify-end overflow-hidden rounded-3xl border border-brand-orange/28 bg-[#241616] shadow-[0_40px_90px_-45px_rgba(0,0,0,.85)] transition-all duration-350 hover:-translate-y-1 hover:border-brand-orange/70 lg:col-span-7"
+              className="group relative flex min-h-[520px] flex-col justify-end overflow-hidden rounded-3xl border border-brand-orange/28 bg-[#241616] shadow-[0_40px_90px_-45px_rgba(0,0,0,.85)] transition-all duration-350 hover:-translate-y-1 hover:border-brand-orange/70 lg:col-span-7"
             >
               <img
                 src="/banners/king-summon.svg"
@@ -333,7 +333,7 @@ function HeroSection() {
                 </span>
                 <a
                   href="#recent"
-                  className="cursor-target font-accent text-[9px] tracking-[0.24em] text-brand-orange/90 uppercase"
+                  className="font-accent text-[9px] tracking-[0.24em] text-brand-orange/90 uppercase"
                 >
                   All recent &rarr;
                 </a>
@@ -342,7 +342,7 @@ function HeroSection() {
                 <Link
                   key={n.title}
                   href="/news"
-                  className="cursor-target flex flex-1 flex-col justify-center gap-2 border-b border-brand-white/6 px-7 py-6 transition-colors last:border-b-0 hover:bg-brand-white/3"
+                  className="flex flex-1 flex-col justify-center gap-2 border-b border-brand-white/6 px-7 py-6 transition-colors last:border-b-0 hover:bg-brand-white/3"
                 >
                   <div className="flex flex-wrap items-center gap-2.5">
                     <span className={tagClass(n.tag)}>{n.tag}</span>
@@ -366,19 +366,19 @@ function HeroSection() {
               </span>
               <a
                 href="#xr"
-                className="cursor-target rounded-full border border-brand-secondary/40 px-4 py-2 font-accent text-[10px] tracking-[0.2em] text-[#f472b6] uppercase transition-colors hover:bg-brand-secondary/14"
+                className="rounded-full border border-brand-secondary/40 px-4 py-2 font-accent text-[10px] tracking-[0.2em] text-[#f472b6] uppercase transition-colors hover:bg-brand-secondary/14"
               >
                 XR &middot; 5
               </a>
               <a
                 href="#recent"
-                className="cursor-target rounded-full border border-brand-white/16 px-4 py-2 font-accent text-[10px] tracking-[0.2em] text-brand-white/75 uppercase transition-colors hover:border-brand-white hover:bg-brand-white hover:text-brand-black"
+                className="rounded-full border border-brand-white/16 px-4 py-2 font-accent text-[10px] tracking-[0.2em] text-brand-white/75 uppercase transition-colors hover:border-brand-white hover:bg-brand-white hover:text-brand-black"
               >
                 Recent &middot; 9
               </a>
               <a
                 href="#studio"
-                className="cursor-target rounded-full border border-brand-white/16 px-4 py-2 font-accent text-[10px] tracking-[0.2em] text-brand-white/75 uppercase transition-colors hover:bg-brand-white/10"
+                className="rounded-full border border-brand-white/16 px-4 py-2 font-accent text-[10px] tracking-[0.2em] text-brand-white/75 uppercase transition-colors hover:bg-brand-white/10"
               >
                 Studio &middot; 7
               </a>
@@ -437,7 +437,7 @@ function XrSection() {
             </div>
             <Link
               href="/technology"
-              className="cursor-target inline-flex h-11 items-center gap-2.5 rounded-xl border border-brand-white/14 px-5 font-secondary text-[13px] text-brand-white/75 transition-colors hover:border-brand-white hover:bg-brand-white hover:text-brand-black"
+              className="inline-flex h-11 items-center gap-2.5 rounded-xl border border-brand-white/14 px-5 font-secondary text-[13px] text-brand-white/75 transition-colors hover:border-brand-white hover:bg-brand-white hover:text-brand-black"
             >
               Our XR stack <span aria-hidden="true">&rarr;</span>
             </Link>
@@ -447,7 +447,7 @@ function XrSection() {
         <FadeIn delay={0.05}>
           <Link
             href="/news"
-            className="cursor-target group relative mb-13 flex min-h-[520px] flex-col justify-end overflow-hidden rounded-3xl border border-brand-secondary/26 bg-[linear-gradient(135deg,rgba(223,19,138,.22),rgba(27,16,22,.2)_55%)] p-5 shadow-[0_40px_90px_-45px_rgba(0,0,0,.85)] transition-all duration-350 hover:-translate-y-1 hover:border-brand-secondary/70 md:p-10"
+            className="group relative mb-13 flex min-h-[520px] flex-col justify-end overflow-hidden rounded-3xl border border-brand-secondary/26 bg-[linear-gradient(135deg,rgba(223,19,138,.22),rgba(27,16,22,.2)_55%)] p-5 shadow-[0_40px_90px_-45px_rgba(0,0,0,.85)] transition-all duration-350 hover:-translate-y-1 hover:border-brand-secondary/70 md:p-10"
             style={{ backgroundColor: "#241620" }}
           >
             <span
@@ -505,7 +505,7 @@ function XrSection() {
             </div>
             <Link
               href="/news"
-              className="cursor-target inline-flex h-10 items-center gap-2.5 rounded-full border border-brand-secondary/40 py-0 pr-2 pl-4.5 font-accent text-[10px] tracking-[0.22em] text-[#f472b6] uppercase transition-colors hover:border-brand-secondary hover:bg-brand-secondary/14"
+              className="inline-flex h-10 items-center gap-2.5 rounded-full border border-brand-secondary/40 py-0 pr-2 pl-4.5 font-accent text-[10px] tracking-[0.22em] text-[#f472b6] uppercase transition-colors hover:border-brand-secondary hover:bg-brand-secondary/14"
             >
               View all
               <span
@@ -523,7 +523,7 @@ function XrSection() {
             <StaggerItem key={c.num}>
               <Link
                 href="/news"
-                className="cursor-target group flex flex-wrap items-center gap-4 border-t border-brand-white/7 px-4.5 py-6.5 transition-colors first:border-t-0 hover:bg-brand-secondary/6 md:gap-8 md:px-8"
+                className="group flex flex-wrap items-center gap-4 border-t border-brand-white/7 px-4.5 py-6.5 transition-colors first:border-t-0 hover:bg-brand-secondary/6 md:gap-8 md:px-8"
               >
                 <span className="shrink-0 font-accent text-[11px] tracking-[0.24em] text-[#f472b6]/70">
                   {c.num}
@@ -572,7 +572,7 @@ function XrSection() {
 function RecentSection() {
   const filters = ["All", "Development log", "Game update", "Technology", "Announcement"];
   return (
-    <section id="recent" className="relative scroll-mt-20 overflow-hidden border-t border-brand-white/6 bg-brand-black">
+    <section id="recent" className="relative scroll-mt-20 overflow-hidden border-t border-brand-white/6 ">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-45 -right-35 h-130 w-130 rounded-full bg-brand-orange/5 blur-[160px]"
@@ -612,7 +612,7 @@ function RecentSection() {
             <StaggerItem key={c.title}>
               <Link
                 href="/news"
-                className="cursor-target group flex h-full flex-col overflow-hidden rounded-[20px] border border-brand-white/9 bg-[#241616] transition-all duration-300 hover:-translate-y-1 hover:border-brand-orange/50"
+                className="group flex h-full flex-col overflow-hidden rounded-[20px] border border-brand-white/9 bg-[#241616] transition-all duration-300 hover:-translate-y-1 hover:border-brand-orange/50"
               >
                 <div className={cn("flex h-40 items-center justify-center border-b border-brand-white/7", ART_BG[c.kind])}>
                   <span className="font-accent text-[8px] tracking-[0.26em] text-brand-white/30 uppercase">
@@ -644,7 +644,7 @@ function RecentSection() {
             <StaggerItem key={r.title}>
               <Link
                 href="/news"
-                className="cursor-target grid grid-cols-1 gap-3 border-t border-brand-white/6 px-6.5 py-6 transition-colors first:border-t-0 hover:bg-brand-white/3 sm:grid-cols-[110px_minmax(0,1fr)_auto] sm:items-center sm:gap-8"
+                className="grid grid-cols-1 gap-3 border-t border-brand-white/6 px-6.5 py-6 transition-colors first:border-t-0 hover:bg-brand-white/3 sm:grid-cols-[110px_minmax(0,1fr)_auto] sm:items-center sm:gap-8"
               >
                 <time className="font-accent text-[10px] tracking-[0.16em] text-brand-white/45 uppercase">
                   {r.date}
@@ -669,7 +669,7 @@ function RecentSection() {
         <div className="mt-10 text-center">
           <a
             href="#recent"
-            className="cursor-target inline-flex h-13 items-center justify-center rounded-xl border border-brand-white/18 px-7.5 font-secondary text-[15px] font-semibold text-brand-white/85 transition-all hover:border-brand-white/50 hover:bg-brand-white/6"
+            className="inline-flex h-13 items-center justify-center rounded-xl border border-brand-white/18 px-7.5 font-secondary text-[15px] font-semibold text-brand-white/85 transition-all hover:border-brand-white/50 hover:bg-brand-white/6"
           >
             Load older updates
           </a>
@@ -699,7 +699,7 @@ function StudioColumn({
         <Link
           key={s.title}
           href={href}
-          className="cursor-target block border-t border-brand-white/7 py-4.5 first:border-t-0"
+          className="block border-t border-brand-white/7 py-4.5 first:border-t-0"
         >
           <time className="font-accent text-[9px] tracking-[0.16em] text-brand-white/40 uppercase">{s.date}</time>
           <h4 className="mt-2 font-display text-[17px] leading-tight font-semibold tracking-tight text-brand-white">
@@ -733,7 +733,7 @@ function StudioSection() {
             </div>
             <Link
               href="/studio"
-              className="cursor-target inline-flex h-11 items-center gap-2.5 rounded-xl border border-brand-white/14 px-5 font-secondary text-[13px] text-brand-white/75 transition-colors hover:border-brand-white hover:bg-brand-white hover:text-brand-black"
+              className="inline-flex h-11 items-center gap-2.5 rounded-xl border border-brand-white/14 px-5 font-secondary text-[13px] text-brand-white/75 transition-colors hover:border-brand-white hover:bg-brand-white hover:text-brand-black"
             >
               About Nngtw <span aria-hidden="true">&rarr;</span>
             </Link>
@@ -784,7 +784,7 @@ function StudioSection() {
 
 function DiscordBand() {
   return (
-    <section className="relative overflow-hidden border-t border-brand-white/6 bg-brand-black">
+    <section className="relative overflow-hidden border-t border-brand-white/6 ">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-[-40%] left-1/2 h-[620px] w-[1000px] -translate-x-1/2 rounded-full bg-[#5865F2]/10 blur-[200px]"
@@ -804,7 +804,7 @@ function DiscordBand() {
             href={SOCIAL.discord}
             target="_blank"
             rel="noopener noreferrer"
-            className="cursor-target inline-flex h-15 items-center justify-center gap-3 rounded-2xl bg-[#5865F2] px-8.5 font-secondary text-[17px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#4752c4] hover:shadow-[0_16px_40px_-16px_rgba(88,101,242,.85)]"
+            className="inline-flex h-15 items-center justify-center gap-3 rounded-2xl bg-[#5865F2] px-8.5 font-secondary text-[17px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#4752c4] hover:shadow-[0_16px_40px_-16px_rgba(88,101,242,.85)]"
           >
             <DiscordIcon className="h-5 w-5" />
             Join Discord

@@ -223,7 +223,7 @@ function TeamCard({
     onBlur: () => onHover(null),
     'aria-label': `${member.name} — ${member.role}`,
     className:
-      'cursor-target group relative block h-full w-full overflow-hidden rounded-2xl border border-brand-white/10 bg-brand-black transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60',
+      'group relative block h-full w-full overflow-hidden rounded-2xl border border-brand-white/10 bg-brand-black transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60',
   };
 
   const body = (
@@ -427,7 +427,7 @@ function TeamDesktop({ members, heading }: { members: TeamMember[]; heading: Tea
                   onMouseEnter={() => engage(member.id)}
                   onFocus={() => engage(member.id)}
                   className={cn(
-                    'cursor-target group/index flex flex-col border-b border-brand-white/10 py-4 text-left transition-colors duration-300 focus-visible:outline-none',
+                    'group/index flex flex-col border-b border-brand-white/10 py-4 text-left transition-colors duration-300 focus-visible:outline-none',
                     active ? 'text-brand-orange' : 'text-brand-white/75 hover:text-brand-white',
                   )}
                 >

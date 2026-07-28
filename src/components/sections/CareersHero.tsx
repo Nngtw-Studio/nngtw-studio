@@ -105,7 +105,7 @@ export function CareersHero({
         <FadeIn className="mt-16 md:mt-20">
           <Link
             href="#all-roles"
-            className="cursor-target group inline-flex items-center gap-3 text-brand-grey/40 transition-colors duration-300 hover:text-brand-orange"
+            className="group inline-flex items-center gap-3 text-brand-grey/40 transition-colors duration-300 hover:text-brand-orange"
           >
             <span className="label-overline">
               All {totalRoles} opportunities
@@ -144,7 +144,7 @@ function SpotlightCard({ role }: { role: Career }) {
           </p>
         </div>
 
-        <Link href={`/careers/${role.slug}`} className="cursor-target">
+        <Link href={`/careers/${role.slug}`} className="">
           <h2 className="editorial-heading text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-orange md:text-3xl">
             {role.title}
           </h2>
@@ -169,7 +169,7 @@ function SpotlightCard({ role }: { role: Career }) {
           </div>
           <Link
             href={`/careers/${role.slug}`}
-            className="cursor-target font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/40 transition-colors duration-300 hover:text-brand-white"
+            className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/40 transition-colors duration-300 hover:text-brand-white"
           >
             Read the full role &rarr;
           </Link>

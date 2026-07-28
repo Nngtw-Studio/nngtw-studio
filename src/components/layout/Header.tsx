@@ -485,7 +485,7 @@ export function Header() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
-                  className="cursor-target flex items-center gap-3 font-accent text-[10px] tracking-[0.3em] uppercase text-[#5865F2]"
+                  className="flex items-center gap-3 font-accent text-[10px] tracking-[0.3em] uppercase text-[#5865F2]"
                 >
                   <svg
                     className="h-4 w-4"

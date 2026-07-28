@@ -26,7 +26,7 @@ export function RoleCard({ role }: { role: Career }) {
     <Link
       href={`/careers/${role.slug}`}
       className={cn(
-        'cursor-target group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 transition-all duration-500',
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 transition-all duration-500',
         isOpen
           ? 'border-brand-orange/20 bg-brand-orange/3 hover:border-brand-orange/45'
           : 'border-brand-white/7 bg-brand-white/2 hover:border-brand-white/18',

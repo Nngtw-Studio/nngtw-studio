@@ -15,7 +15,7 @@ export function AboutStudio() {
   return (
     <section
       id="about-studio"
-      className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
+      className="relative snap-start overflow-hidden border-t border-brand-white/5 "
     >
       {/* Ambient treatment — a faint brand-orange bloom behind the heading */}
       <div

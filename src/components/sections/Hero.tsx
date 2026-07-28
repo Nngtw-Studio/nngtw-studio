@@ -15,8 +15,8 @@ import {
   useTransform,
 } from 'framer-motion';
 import { HeroButton } from '@/components/sections/HeroButton';
-import { AmbientField } from '@/components/effects/AmbientField';
 import { SOCIAL } from '@/lib/constants';
+import Threads from '@/components/effects/Threads';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const CLIP_EASE: [number, number, number, number] = [0.25, 1, 0.3, 1];
@@ -211,7 +211,20 @@ export function Hero() {
         onMouseMove={onMouseMove}
         className="relative snap-start flex min-h-svh items-center justify-center overflow-hidden"
       >
-        <div className="absolute inset-0 bg-brand-black" />
+
+        {/* Threads Background */}
+        <motion.div
+          animate={reduce ? { opacity: 0.1 } : { opacity: [0.05, 0.15, 0.05] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute inset-0 z-0 pointer-events-none -translate-y-[30px]"
+        >
+          <Threads
+            amplitude={1}
+            distance={0}
+            enableMouseInteraction={false}
+            color={[0.949, 0.937, 0.905]}
+          />
+        </motion.div>
 
         {/* Lighting rig — two corner whispers, orange low right and pink low
             left. Oversized so the parallax lean never reveals an edge. */}
@@ -285,17 +298,6 @@ export function Hero() {
           className="absolute inset-0"
           aria-hidden="true"
         />
-
-        {/* Crossfades with the intro overlay's own copy of this same field as
-            the backdrop dissolves — see IntroSplash.tsx's particle layer. */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: ready ? 1 : 0 }}
-          transition={{ duration: 0.9, ease: 'easeOut' }}
-          className="absolute inset-0"
-        >
-          <AmbientField />
-        </motion.div>
 
         {/* Content */}
         <motion.div

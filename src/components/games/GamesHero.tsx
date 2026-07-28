@@ -155,7 +155,7 @@ export function GamesHero({ games, conceptCount = 0 }: GamesHeroProps) {
         data-hero
         id="games-hero"
         aria-label="Featured games"
-        className="relative snap-start flex min-h-svh flex-col overflow-hidden bg-brand-black"
+        className="relative snap-start flex min-h-svh flex-col overflow-hidden "
       >
         {/* Key art backdrops */}
         <div className="absolute inset-0">
@@ -258,7 +258,7 @@ export function GamesHero({ games, conceptCount = 0 }: GamesHeroProps) {
                       </Button>
                       <a
                         href="#in-development"
-                        className="cursor-target group inline-flex items-center gap-3 label-overline text-brand-white/70 transition-colors duration-300 hover:text-brand-orange"
+                        className="group inline-flex items-center gap-3 label-overline text-brand-white/70 transition-colors duration-300 hover:text-brand-orange"
                       >
                         All Projects
                         <span
@@ -285,7 +285,7 @@ export function GamesHero({ games, conceptCount = 0 }: GamesHeroProps) {
                     aria-current={i === active}
                     aria-label={`Show ${g.title}`}
                     className={cn(
-                      'cursor-target group w-full text-left transition-opacity duration-300',
+                      'group w-full text-left transition-opacity duration-300',
                       i === active ? 'opacity-100' : 'opacity-40 hover:opacity-75',
                     )}
                   >
@@ -356,7 +356,7 @@ export function GamesHero({ games, conceptCount = 0 }: GamesHeroProps) {
                     aria-label={`Show ${g.title}`}
                     aria-current={i === active}
                     className={cn(
-                      'cursor-target h-1 rounded-full transition-all duration-300',
+                      'h-1 rounded-full transition-all duration-300',
                       i === active
                         ? 'w-10 bg-brand-orange'
                         : 'w-5 bg-brand-white/25 hover:bg-brand-white/45',
@@ -368,7 +368,7 @@ export function GamesHero({ games, conceptCount = 0 }: GamesHeroProps) {
 
             <a
               href="#in-development"
-              className="cursor-target group ml-auto inline-flex items-center gap-3 label-overline text-brand-white/55 transition-colors duration-300 hover:text-brand-white"
+              className="group ml-auto inline-flex items-center gap-3 label-overline text-brand-white/55 transition-colors duration-300 hover:text-brand-white"
             >
               Scroll
               <motion.span

@@ -84,7 +84,7 @@ export function GamesSectionNav({ items }: GamesSectionNavProps) {
                 onClick={() => setActive(id)}
                 aria-current={isActive ? 'true' : undefined}
                 className={cn(
-                  'cursor-target relative flex h-full shrink-0 items-center gap-2 label-overline transition-colors duration-300',
+                  'relative flex h-full shrink-0 items-center gap-2 label-overline transition-colors duration-300',
                   isActive
                     ? 'text-brand-white'
                     : 'text-brand-grey hover:text-brand-white/80',
@@ -112,7 +112,7 @@ export function GamesSectionNav({ items }: GamesSectionNavProps) {
           href={SOCIAL.discord}
           target="_blank"
           rel="noopener noreferrer"
-          className="cursor-target hidden shrink-0 items-center gap-2 label-overline text-brand-white/40 transition-colors duration-300 hover:text-brand-white sm:inline-flex"
+          className="hidden shrink-0 items-center gap-2 label-overline text-brand-white/40 transition-colors duration-300 hover:text-brand-white sm:inline-flex"
         >
           Follow Development
           <span aria-hidden="true">↗</span>

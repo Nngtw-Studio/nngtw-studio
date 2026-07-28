@@ -29,7 +29,7 @@ export function ComingSoonCard({ game, index }: ComingSoonCardProps) {
   };
 
   return (
-    <Link href={`/games/${game.slug}`} className="cursor-target group block h-full">
+    <Link href={`/games/${game.slug}`} className="group block h-full">
       <article
         ref={cardRef}
         onMouseMove={onMouseMove}

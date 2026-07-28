@@ -18,113 +18,187 @@ const DiscordIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const CheckIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const communityPerks = [
+  'Direct communication with game developers',
+  'Exclusive early access & playtest builds',
+  'Vote on upcoming features & game updates',
+  'Behind-the-scenes concept art & dev logs',
+];
+
+const channels = [
+  { name: '#announcements', active: true },
+  { name: '#dev-logs', active: true },
+  { name: '#game-feedback', active: false },
+  { name: '#community-hangout', active: false },
+];
+
 export function Community() {
   return (
-    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
-      {/* Atmosphere: very faint Discord blue bleeding in */}
-      <div className="pointer-events-none absolute inset-0 bg-[#5865F2]/2" />
-      <div className="pointer-events-none absolute -top-1/4 left-1/3 h-200 w-300 -translate-x-1/2 rounded-full bg-[#5865F2]/4 blur-[250px]" />
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/10 bg-brand-bg py-20 lg:py-32">
+      {/* Dynamic Background Atmosphere */}
+      <div className="pointer-events-none absolute inset-0 bg-radial from-[#5865F2]/10 via-transparent to-transparent blur-3xl opacity-60" />
+      <div className="pointer-events-none absolute -top-40 right-10 h-[500px] w-[500px] rounded-full bg-[#5865F2]/15 blur-[160px]" />
+      <div className="pointer-events-none absolute -bottom-40 left-10 h-[500px] w-[500px] rounded-full bg-brand-secondary/10 blur-[160px]" />
 
       <div className="section-padding relative mx-auto max-w-[1600px]">
-
-        {/* Overline */}
+        {/* Header Tag / Overline */}
         <FadeIn>
-          <div className="mb-12 flex items-center gap-5">
-            <DiscordIcon className="h-5 w-5 text-[#5865F2]/70" />
-            <p className="label-overline text-brand-orange">Community</p>
+          <div className="mb-10 inline-flex items-center gap-3 rounded-full border border-[#5865F2]/30 bg-[#5865F2]/10 px-4 py-1.5 backdrop-blur-md">
+            <DiscordIcon className="h-4 w-4 text-[#5865F2]" />
+            <span className="font-accent text-xs tracking-[0.2em] uppercase text-brand-white/90 font-medium">
+              Official Community Hub
+            </span>
           </div>
         </FadeIn>
 
-        {/* Main layout: headline left, Discord card right */}
-        <div className="grid gap-16 lg:grid-cols-12 lg:gap-10">
-
-          {/* Left — large headline + description + CTAs */}
+        {/* Main Grid Layout */}
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
+          {/* Left Column — Headline & Content */}
           <div className="lg:col-span-6">
             <FadeIn>
-              <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
-                Join
-                <br />
-                the
-                <br />
-                journey.
+              <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
+                Join the <br />
+                <span className="bg-gradient-to-r from-[#5865F2] via-indigo-300 to-brand-secondary bg-clip-text text-transparent">
+                  journey.
+                </span>
               </h2>
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <p className="mt-10 max-w-md text-base leading-9 text-brand-grey/70">
-                Our Discord is where Nngtw Studio develops its games in public.
-                Follow progress, shape decisions, and be there from the very
-                beginning — not as an audience, but as part of the process.
+              <p className="mt-8 max-w-lg text-lg leading-relaxed text-brand-grey/80">
+                Our Discord is where Nngtw Studio develops games in public.
+                Shape decisions, get early playtest access, and collaborate directly with our team.
               </p>
             </FadeIn>
 
+            {/* Value Proposition Perks */}
+            <FadeIn delay={0.2}>
+              <ul className="mt-8 space-y-3.5 max-w-lg">
+                {communityPerks.map((perk, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-sm text-brand-white/90">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#5865F2]/20 text-[#7289DA] border border-[#5865F2]/40">
+                      <CheckIcon className="h-3 w-3" />
+                    </span>
+                    <span>{perk}</span>
+                  </li>
+                ))}
+              </ul>
+            </FadeIn>
+
+            {/* Action CTA Button */}
             <FadeIn delay={0.25}>
-              <div className="mt-12 flex flex-col items-start gap-4 xl:flex-row">
+              <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row">
                 <Button href={SOCIAL.discord} variant="discord" external>
-                  Join Discord
-                </Button>
-                <Button href="/news" variant="secondary">
-                  Follow Development
+                  Join Discord Server
                 </Button>
               </div>
             </FadeIn>
           </div>
 
-          {/* Right — Discord invite card */}
+          {/* Right Column — Premium Interactive Glass Discord Card */}
           <FadeIn
             delay={0.2}
             direction="left"
-            className="lg:col-span-5 lg:col-start-8"
+            className="lg:col-span-6"
           >
             <a
               href={SOCIAL.discord}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Join the Nngtw Studio Discord server"
-              className="cursor-target group relative block h-full"
+              className="group relative block"
             >
-              {/* Card — the whole invite is clickable */}
-              <div className="flex h-full min-h-80 flex-col justify-between rounded-2xl border border-[#5865F2]/15 bg-[#5865F2]/5 p-10 transition-colors duration-500 group-hover:border-[#5865F2]/40 group-hover:bg-[#5865F2]/8 lg:p-12">
-                {/* Discord brand mark */}
-                <div className="flex items-start justify-between">
-                  <DiscordIcon className="h-10 w-10 text-[#5865F2]" />
-                  <motion.div
-                    animate={{ opacity: [0.4, 0.7, 0.4] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="flex items-center gap-2"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-                    <span className="font-accent text-[9px] tracking-[0.3em] uppercase text-brand-grey/50">
+              {/* Outer Card Glow on Hover */}
+              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#5865F2]/30 via-indigo-500/20 to-brand-secondary/30 opacity-40 blur-xl transition-all duration-500 group-hover:opacity-100 group-hover:blur-2xl" />
+
+              {/* Main Glass Card Container */}
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-brand-black/60 p-8 md:p-10 backdrop-blur-xl shadow-2xl transition-all duration-500 group-hover:border-[#5865F2]/50 group-hover:bg-brand-black/80">
+                
+                {/* Header: Discord Brand Icon & Live Status Indicator */}
+                <div className="flex items-center justify-between border-b border-white/10 pb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/30 transition-transform duration-500 group-hover:scale-105">
+                      <DiscordIcon className="h-8 w-8" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl font-bold text-brand-white group-hover:text-[#5865F2] transition-colors duration-300">
+                        Nngtw Studio
+                      </h3>
+                      <p className="font-accent text-xs tracking-wider uppercase text-brand-grey/60">
+                        Official Server
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 backdrop-blur-md">
+                    <motion.span
+                      animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="h-2 w-2 rounded-full bg-green-400"
+                    />
+                    <span className="font-accent text-xs font-semibold uppercase tracking-wider text-green-400">
                       Online
                     </span>
-                  </motion.div>
+                  </div>
                 </div>
 
-                {/* Server info */}
-                <div className="mt-10">
-                  <p className="font-display text-2xl font-semibold tracking-tight text-brand-white">
-                    Nngtw Studio
+                {/* Body Content */}
+                <div className="my-6 space-y-5">
+                  <p className="text-sm text-brand-grey/70 leading-relaxed">
+                    Connect with players, developers, and creators. Get live game news and exclusive developer updates.
                   </p>
-                  <p className="mt-2 font-accent text-[10px] tracking-[0.35em] uppercase text-brand-grey/50">
-                    Players · Developers · Creators
-                  </p>
+
+                  {/* Active Channels Chips */}
+                  <div>
+                    <span className="block font-accent text-[11px] font-medium tracking-widest text-brand-grey/50 uppercase mb-3">
+                      Featured Channels
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {channels.map((ch, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-brand-white/80 transition-colors group-hover:border-[#5865F2]/30 group-hover:bg-[#5865F2]/10"
+                        >
+                          <span className="text-[#5865F2] font-mono">#</span>
+                          {ch.name.substring(1)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Invite link */}
-                <div className="mt-10 border-t border-[#5865F2]/15 pt-8">
-                  <p className="label-overline text-brand-grey/40 mb-3">
-                    Invite link
-                  </p>
-                  <p className="font-body text-sm tracking-wide text-brand-white/50 transition-colors duration-300 group-hover:text-brand-white/80">
-                    discord.gg/z3fpVJZkD
-                  </p>
+                {/* Footer / Link Banner */}
+                <div className="mt-8 flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4 transition-all duration-300 group-hover:border-[#5865F2]/40 group-hover:bg-[#5865F2]/10">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-brand-white/80">
+                      Get the latest updates
+                    </span>
+                  </div>
+                  <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#5865F2] transition-transform duration-300 group-hover:translate-x-1">
+                    Connect ↗
+                  </span>
                 </div>
+
               </div>
             </a>
           </FadeIn>
         </div>
-
       </div>
     </section>
   );
 }
+

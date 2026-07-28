@@ -29,7 +29,7 @@ const STEPS = [
 
 export function StudioProcess() {
   return (
-    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 ">
       {/* Ambient treatment — bloom swings right for section rhythm */}
       <div
         aria-hidden

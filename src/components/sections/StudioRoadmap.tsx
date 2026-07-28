@@ -12,7 +12,7 @@ const EXPLORE_LINKS = [
 /** Long-term goals as a numbered editorial ledger — commitments, not bullets. */
 export function StudioRoadmap() {
   return (
-    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 ">
       {/* Ambient treatment — bloom swings back left */}
       <div
         aria-hidden
@@ -64,7 +64,7 @@ export function StudioRoadmap() {
             <Link
               key={link.href}
               href={link.href}
-              className="cursor-target group inline-flex items-center gap-3 font-accent text-[11px] tracking-[0.25em] text-brand-grey/60 uppercase transition-colors duration-300 hover:text-brand-orange"
+              className="group inline-flex items-center gap-3 font-accent text-[11px] tracking-[0.25em] text-brand-grey/60 uppercase transition-colors duration-300 hover:text-brand-orange"
             >
               {link.label}
               <span className="transition-transform duration-300 group-hover:translate-x-1.5">

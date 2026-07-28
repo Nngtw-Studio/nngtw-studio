@@ -58,7 +58,7 @@ export async function Careers() {
   const futureRoles = highlighted.filter((c) => c.status === 'future');
 
   return (
-    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black">
+    <section className="relative snap-start overflow-hidden border-t border-brand-white/5 ">
       <div className="section-padding mx-auto max-w-[1600px]">
 
         {/* Header */}
