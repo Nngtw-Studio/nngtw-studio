@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useReducedMotion, useInView } from 'framer-motion';
 import { FadeIn } from '@/components/motion/FadeIn';
 import { Button } from '@/components/ui/Button';
 import { GAME_ART } from '@/lib/data/game-art';
@@ -58,13 +58,17 @@ function GameIcon({ game }: { game: FeaturedGame }) {
 function AccordionCard({ 
   game, 
   index, 
-  isActive, 
+  isActive,
+  isEntered, 
+  transitionClass,
   selectCard,
   advance
 }: { 
   game: FeaturedGame, 
   index: number, 
-  isActive: boolean, 
+  isActive: boolean,
+  isEntered: boolean, 
+  transitionClass: string,
   selectCard: (i: number) => void,
   advance: () => void
 }) {
@@ -126,20 +130,37 @@ function AccordionCard({
   };
 
   return (
-    <motion.div
-      ref={frameRef}
-      onClick={() => selectCard(index)}
-      onMouseMove={onFrameMouseMove}
-      onMouseLeave={onFrameLeave}
-      style={{ rotateX, rotateY, transformPerspective: 1400 }}
+    <div
       className={cn(
-        'group relative overflow-hidden rounded-3xl border transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] hover:border-brand-secondary/40',
-        isActive
-          ? 'w-full aspect-video lg:aspect-auto lg:flex-[3.5] border-brand-white/20 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)]'
-          : 'w-full h-48 lg:h-auto lg:flex-1 border-brand-white/10'
+        "transition-[flex,flex-grow,flex-basis,width,height,aspect-ratio,opacity,margin] ease-[cubic-bezier(0.25,1,0.5,1)]",
+        transitionClass,
+        !isEntered && "opacity-0 overflow-hidden m-0 h-0 lg:h-auto lg:w-0 lg:flex-[0_0_0%]",
+        isEntered && !isActive && "opacity-100 w-full h-48 lg:h-auto lg:flex-1",
+        isEntered && isActive && "opacity-100 w-full aspect-video lg:aspect-auto lg:flex-[3.5]",
+        isEntered && index > 0 && "mt-5 lg:mt-0 lg:ml-5"
       )}
     >
-      {/* Poster image background */}
+      <motion.div
+        ref={frameRef}
+        onClick={() => selectCard(index)}
+        onMouseMove={onFrameMouseMove}
+        onMouseLeave={onFrameLeave}
+        style={{ 
+          rotateX, 
+          rotateY, 
+          transformPerspective: 1400,
+          transitionProperty: 'border-color, box-shadow',
+          transitionDuration: '1000ms',
+          transitionTimingFunction: 'cubic-bezier(0.25, 1, 0.5, 1)'
+        }}
+        className={cn(
+          'group relative h-full w-full overflow-hidden rounded-3xl border hover:border-brand-secondary/40',
+          isActive
+            ? 'border-brand-white/20 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)]'
+            : 'border-brand-white/10'
+        )}
+      >
+        {/* Poster image background */}
       <div className="absolute inset-0 bg-brand-black">
         {imageSrc && (
           <Image
@@ -268,7 +289,8 @@ function AccordionCard({
           </div>
         </div>
       )}
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -278,7 +300,41 @@ interface FeaturedGamesShowcaseProps {
 
 export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
   const count = games.length;
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(-1);
+  const [enteredCount, setEnteredCount] = useState(0);
+  const containerRef = useRef<HTMLElement>(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.6 });
+
+  useEffect(() => {
+    if (isInView) {
+      const timeouts: NodeJS.Timeout[] = [];
+      
+      setEnteredCount(1);
+      
+      timeouts.push(setTimeout(() => {
+        setActive(0);
+        if (count > 1) {
+          setEnteredCount(2);
+        }
+      }, 550));
+
+      for (let i = 2; i < count; i++) {
+        timeouts.push(setTimeout(() => {
+          setEnteredCount(i + 1);
+        }, 550 + (i - 1) * 1000));
+      }
+
+      return () => timeouts.forEach(clearTimeout);
+    }
+  }, [isInView, count]);
+
+  const totalFlex = 3.5 + (count > 1 ? count - 1 : 0);
+  let currentEnteredFlex = 0;
+  for (let i = 0; i < enteredCount; i++) {
+    currentEnteredFlex += (i === active) ? 3.5 : 1;
+  }
+  const spacerFlex = Math.max(0, totalFlex - currentEnteredFlex);
+  const transitionClass = active === -1 ? 'duration-500' : 'duration-1000';
 
   const advance = useCallback(() => {
     setActive((prev) => (prev + 1) % count);
@@ -294,6 +350,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
   return (
     <section
       id="featured-games"
+      ref={containerRef}
       className="relative snap-start overflow-hidden border-t border-brand-white/5 bg-brand-black"
       aria-label="Featured games"
     >
@@ -367,20 +424,31 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
         </FadeIn>
 
         {/* Accordion Showcase Row */}
-        <FadeIn delay={0.1} className="mt-8 md:mt-10">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch lg:min-h-[460px] xl:min-h-[520px]">
+        <div className="mt-8 md:mt-10">
+          <div className="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[460px] xl:min-h-[520px]">
+            {/* Invisible spacer to push entering cards to the right */}
+            <div 
+              className={cn(
+                "hidden lg:block transition-[flex,flex-grow,flex-basis] ease-[cubic-bezier(0.25,1,0.5,1)]",
+                transitionClass
+              )}
+              style={{ flex: `${spacerFlex} ${spacerFlex} 0%` }}
+              aria-hidden="true"
+            />
             {games.map((g, i) => (
               <AccordionCard
                 key={g.id}
                 game={g}
                 index={i}
                 isActive={i === active}
+                isEntered={i < enteredCount}
+                transitionClass={transitionClass}
                 selectCard={selectCard}
                 advance={advance}
               />
             ))}
           </div>
-        </FadeIn>
+        </div>
 
         {/* Indicator dots */}
         {count > 1 && (

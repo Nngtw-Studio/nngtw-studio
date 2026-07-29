@@ -3,8 +3,7 @@ import Link from "next/link";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
-import { BRAND, SOCIAL, STUDIO_EMAILS } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { BRAND, SOCIAL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Connect",
@@ -29,70 +28,7 @@ const ArrowIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const MailIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-    <polyline points="22,6 12,13 2,6" />
-  </svg>
-);
 
-/* ── Inboxes (bento) ─────────────────────────────────────────────────────── */
-
-interface Inbox {
-  label: string;
-  email: string;
-  blurb: string;
-  span: string;
-  primary?: boolean;
-  icon: React.ReactNode;
-}
-
-const inboxes: Inbox[] = [
-  {
-    label: "The studio",
-    email: STUDIO_EMAILS.studio,
-    blurb:
-      "Our main address. Partnerships, publishing, press, investors, legal — anything that belongs on the studio's desk.",
-    span: "lg:col-span-2",
-    primary: true,
-    icon: <MailIcon className="h-5 w-5" />,
-  },
-  {
-    label: "Game support",
-    email: STUDIO_EMAILS.support,
-    blurb: "Bugs, crashes, accounts, and anything that went wrong in one of our games.",
-    span: "lg:col-span-1",
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M6 12h4M8 10v4M15 11h.01M18 13h.01" />
-        <path d="M17.32 5H6.68a4 4 0 0 0-3.95 3.36l-1.2 7.2A3 3 0 0 0 4.5 19c1 0 1.8-.5 2.4-1.2L8.5 16h7l1.6 1.8c.6.7 1.4 1.2 2.4 1.2a3 3 0 0 0 2.97-3.44l-1.2-7.2A4 4 0 0 0 17.32 5Z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Careers",
-    email: STUDIO_EMAILS.careers,
-    blurb: "Applications, internships, and hiring questions.",
-    span: "lg:col-span-1",
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <rect x="2" y="7" width="20" height="14" rx="2" />
-        <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M2 13h20" />
-      </svg>
-    ),
-  },
-  {
-    label: "General contact",
-    email: STUDIO_EMAILS.contact,
-    blurb: "Not sure where it fits? Send it here and we'll route it.",
-    span: "lg:col-span-2",
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-      </svg>
-    ),
-  },
-];
 
 /* ── Socials — matches the homepage hero set ─────────────────────────────── */
 
@@ -170,8 +106,8 @@ export default function ConnectPage() {
 
             <FadeIn delay={0.15} className="lg:col-span-4 lg:col-start-9">
               <p className="max-w-md text-base leading-8 text-brand-grey/70">
-                Pick the inbox that fits, jump into Discord, or send us a message right
-                here. Whichever you choose, it reaches a real person at the studio.
+                Jump into Discord, or send us a message right here — tell us what it&apos;s
+                about and it lands with the right person at the studio.
               </p>
             </FadeIn>
           </div>
@@ -179,38 +115,9 @@ export default function ConnectPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          BENTO — inboxes, community, socials
+          GET IN TOUCH — community + message form
          ═══════════════════════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="relative mx-auto max-w-[1600px] px-6 py-20 md:px-12 md:py-24 lg:px-20 xl:px-28">
-          <FadeIn>
-            <p className="label-overline mb-8 text-brand-grey/50">Reach us directly</p>
-          </FadeIn>
-
-          <StaggerContainer className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" stagger={0.07}>
-            {/* Discord — the big one */}
-            <StaggerItem className="sm:col-span-2 lg:col-span-2 lg:row-span-2">
-              <DiscordCard />
-            </StaggerItem>
-
-            {inboxes.map((inbox) => (
-              <StaggerItem key={inbox.email} className={cn("h-full", inbox.span)}>
-                <InboxCard inbox={inbox} />
-              </StaggerItem>
-            ))}
-
-            {/* Socials */}
-            <StaggerItem className="sm:col-span-2 lg:col-span-2">
-              <SocialCard />
-            </StaggerItem>
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════════
-          MESSAGE FORM
-         ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden border-t border-brand-white/5">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
@@ -220,28 +127,28 @@ export default function ConnectPage() {
           }}
         />
 
-        <div className="relative mx-auto max-w-[1600px] px-6 py-24 md:px-12 md:py-28 lg:px-20 xl:px-28">
+        <div className="relative mx-auto max-w-[1600px] px-6 py-20 md:px-12 md:py-24 lg:px-20 xl:px-28">
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-5">
               <FadeIn>
-                <p className="label-overline text-brand-grey/50">Send a message</p>
+                <p className="label-overline text-brand-grey/50">Reach us</p>
                 <h2 className="editorial-heading mt-6 text-4xl text-brand-white md:text-5xl">
                   Let&apos;s get
                   <br />
                   in touch.
                 </h2>
                 <p className="mt-7 max-w-md text-base leading-8 text-brand-grey/70">
-                  Tell us what the message is about so it lands with the right person, then
-                  keep it short and specific — the clearer the ask, the faster the reply.
+                  Tell us what it&apos;s about in the form and we&apos;ll route it to the
+                  right person — no need to guess an inbox. Keep it short and specific and
+                  the reply comes faster.
                 </p>
               </FadeIn>
 
-              <FadeIn delay={0.12}>
+              <FadeIn delay={0.1}>
                 <dl className="mt-10 max-w-md space-y-0 border-t border-brand-white/8">
                   {[
                     { term: "Typical reply", detail: "Within 2 business days" },
                     { term: "Faster answers", detail: "Ask in Discord — the team is there daily" },
-                    { term: "Attachments", detail: "Email the relevant inbox instead" },
                   ].map((row) => (
                     <div
                       key={row.term}
@@ -254,6 +161,10 @@ export default function ConnectPage() {
                     </div>
                   ))}
                 </dl>
+              </FadeIn>
+
+              <FadeIn delay={0.2} className="mt-12">
+                <SocialCard />
               </FadeIn>
             </div>
 
@@ -272,9 +183,15 @@ export default function ConnectPage() {
                 </div>
               </div>
             </FadeIn>
+
+            <FadeIn delay={0.25} className="lg:col-span-12">
+              <DiscordCardBento />
+            </FadeIn>
           </div>
         </div>
       </section>
+
+
 
       {/* ═══════════════════════════════════════════════════════════════════════
           CAREERS STRIP
@@ -332,100 +249,17 @@ export default function ConnectPage() {
 
 /* ── Sub-components ──────────────────────────────────────────────────────── */
 
-function DiscordCard() {
-  return (
-    <a
-      href={SOCIAL.discord}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#5865F2]/25 bg-[#5865F2]/[0.06] p-8 transition-colors duration-500 hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.1] md:p-10"
-    >
-      <div
-        className="pointer-events-none absolute -top-20 -right-10 h-64 w-64 rounded-full bg-[#5865F2]/20 blur-[110px]"
-        aria-hidden="true"
-      />
-      <DiscordIcon className="pointer-events-none absolute -right-6 -bottom-10 h-52 w-52 text-[#5865F2]/8 transition-transform duration-700 group-hover:scale-105" />
-
-      <div className="relative">
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[#5865F2]/30 text-[#5865F2] transition-colors duration-300 group-hover:border-[#5865F2]/60">
-          <DiscordIcon className="h-6 w-6" />
-        </span>
-        <h3 className="editorial-heading mt-7 text-3xl text-brand-white md:text-4xl">
-          The community
-          <br />
-          lives on Discord.
-        </h3>
-        <p className="mt-5 max-w-sm text-sm leading-relaxed text-brand-grey">
-          Dev updates, playtests, fan art, events, and the fastest way to get an answer
-          from someone on the team.
-        </p>
-      </div>
-
-      <div className="relative mt-10 flex items-center gap-3">
-        <span className="inline-flex items-center gap-3 rounded-full bg-[#5865F2] px-6 py-3 font-display text-xs tracking-widest whitespace-nowrap text-white uppercase transition-colors duration-300 group-hover:bg-[#6B77F5]">
-          Join Discord
-          <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-        </span>
-        <span className="hidden truncate text-xs text-brand-grey sm:block">
-          discord.gg/z3fpVJZkD
-        </span>
-      </div>
-    </a>
-  );
-}
-
-function InboxCard({ inbox }: { inbox: Inbox }) {
-  return (
-    <a
-      href={`mailto:${inbox.email}`}
-      className={cn(
-        "group relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 transition-all duration-500",
-        inbox.primary
-          ? "border-brand-orange/25 bg-brand-orange/[0.05] hover:border-brand-orange/45 hover:bg-brand-orange/[0.08]"
-          : "border-brand-white/8 bg-brand-white/[0.02] hover:border-brand-white/18 hover:bg-brand-white/[0.05]"
-      )}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <span
-          className={cn(
-            "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors duration-300",
-            inbox.primary
-              ? "border-brand-orange/35 text-brand-orange"
-              : "border-brand-white/10 text-brand-grey/60 group-hover:border-brand-orange/40 group-hover:text-brand-orange"
-          )}
-        >
-          {inbox.icon}
-        </span>
-        <ArrowIcon className="h-4 w-4 shrink-0 text-brand-white/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-orange" />
-      </div>
-
-      <p className="mt-6 text-xs tracking-[0.2em] text-brand-grey uppercase">{inbox.label}</p>
-      <p
-        className={cn(
-          "mt-2 font-display tracking-wide break-all transition-colors duration-300",
-          inbox.primary
-            ? "text-xl text-brand-orange md:text-2xl"
-            : "text-base text-brand-white group-hover:text-brand-orange"
-        )}
-      >
-        {inbox.email}
-      </p>
-      <p className="mt-3 text-sm leading-relaxed text-brand-grey">{inbox.blurb}</p>
-    </a>
-  );
-}
-
 function SocialCard() {
   return (
     <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7">
       <div>
         <p className="text-xs tracking-[0.2em] text-brand-grey uppercase">Follow the studio</p>
         <p className="mt-3 text-sm leading-relaxed text-brand-grey">
-          Announcements, work-in-progress, and behind-the-scenes from the team.
+          Announcements and behind-the-scenes from the team.
         </p>
       </div>
 
-      <div className="mt-7 grid gap-3 sm:grid-cols-3">
+      <div className="mt-6 flex flex-col gap-2.5">
         {socials.map((social) => (
           <a
             key={social.label}
@@ -438,9 +272,9 @@ function SocialCard() {
                 "--accent-soft": `color-mix(in srgb, ${social.accent} 40%, transparent)`,
               } as React.CSSProperties
             }
-            className="group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-3.5 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
+            className="cursor-target group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-3 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
           >
-            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-(--accent-soft) group-hover:text-(--accent)">
+            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-(--accent-soft) group-hover:text-(--accent)">
               {social.icon}
             </span>
             <span className="min-w-0">
@@ -451,5 +285,94 @@ function SocialCard() {
         ))}
       </div>
     </div>
+  );
+}
+
+function DiscordCardBento() {
+  const features = [
+    "Latest development updates",
+    "Early playtests & previews",
+    "Community discussions",
+    "Share feedback & ideas",
+    "Behind-the-scenes progress",
+    "Talk with the Nngtw team"
+  ];
+
+  return (
+    <a
+      href={SOCIAL.discord}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[#5865F2]/25 bg-[#5865F2]/[0.06] backdrop-blur-[2px] p-8 transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.09] md:p-12 lg:flex-row lg:items-center lg:gap-6 lg:p-16"
+    >
+      {/* Glow Blobs & Ambient Balance */}
+      <div
+        className="pointer-events-none absolute -top-32 -right-20 z-0 h-[400px] w-[400px] rounded-full bg-[#5865F2]/10 blur-[120px] transition-all duration-700 group-hover:bg-[#5865F2]/15 group-hover:blur-[140px]"
+        aria-hidden="true"
+      />
+      {/* Subtle secondary pink bloom to balance upper right / center */}
+      <div
+        className="pointer-events-none absolute top-10 right-1/4 z-0 h-[500px] w-[500px] animate-sway rounded-full bg-brand-secondary/[0.06] blur-[150px]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-20 -left-10 z-0 h-64 w-64 rounded-full bg-[#5865F2]/[0.07] blur-[110px] transition-all duration-700 group-hover:bg-[#5865F2]/10"
+        aria-hidden="true"
+      />
+
+      {/* Large Background Logo */}
+      <DiscordIcon className="pointer-events-none absolute -right-10 -bottom-24 z-0 h-[340px] w-[340px] text-[#5865F2]/[0.08] transition-all duration-700 group-hover:scale-105 group-hover:text-[#5865F2]/[0.12] group-hover:drop-shadow-[0_0_20px_rgba(88,101,242,0.3)]" />
+
+      {/* Left Content */}
+      <div className="relative z-10 flex flex-col lg:w-[55%]">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+          <span className="inline-flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border border-brand-white/10 bg-brand-secondary/5 text-[#5865F2] transition-colors duration-300 group-hover:border-brand-white/20">
+            <DiscordIcon className="h-12 w-12 transition-all duration-300 group-hover:h-14 group-hover:w-14" />
+          </span>
+          <h3 className="editorial-heading whitespace-pre-line text-3xl text-brand-white md:text-4xl lg:text-5xl">
+            {`Our community lives\non Discord.`}
+          </h3>
+        </div>
+        <p className="mt-6 font-secondary font-light tracking-[0.02em] whitespace-pre-line text-[16px] leading-normal text-brand-white/60">
+          {`Stay connected with Nngtw. Follow development, discover upcoming projects, share feedback, and connect with the people building them.`}
+        </p>
+
+        <div className="mt-6 flex items-center font-secondary text-[18px] font-semibold text-[#5865F2] md:mt-8">
+          <span className="tracking-[0.01em] transition-[letter-spacing] duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] group-hover:tracking-[0.1em]">
+            Join the community
+          </span>
+          <span className="ml-2.5 inline-flex origin-left pt-0.75 transition-transform group-hover:animate-jello-vertical">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="45"
+              height="18"
+              viewBox="0 0 38 15"
+              fill="none"
+            >
+              <path
+                fill="currentColor"
+                d="M10 7.519l-.939-.344h0l.939.344zm14.386-1.205l-.981-.192.981.192zm1.276 5.509l.537.843.148-.094.107-.139-.792-.611zm4.819-4.304l-.385-.923h0l.385.923zm7.227.707a1 1 0 0 0 0-1.414L31.343.448a1 1 0 0 0-1.414 0 1 1 0 0 0 0 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364zM1 7.519l.554.833.029-.019.094-.061.361-.23 1.277-.77c1.054-.609 2.397-1.32 3.629-1.787.617-.234 1.17-.392 1.623-.455.477-.066.707-.008.788.034.025.013.031.021.039.034a.56.56 0 0 1 .058.235c.029.327-.047.906-.39 1.842l1.878.689c.383-1.044.571-1.949.505-2.705-.072-.815-.45-1.493-1.16-1.865-.627-.329-1.358-.332-1.993-.244-.659.092-1.367.305-2.056.566-1.381.523-2.833 1.297-3.921 1.925l-1.341.808-.385.245-.104.068-.028.018c-.011.007-.011.007.543.84zm8.061-.344c-.198.54-.328 1.038-.36 1.484-.032.441.024.94.325 1.364.319.45.786.64 1.21.697.403.054.824-.001 1.21-.09.775-.179 1.694-.566 2.633-1.014l3.023-1.554c2.115-1.122 4.107-2.168 5.476-2.524.329-.086.573-.117.742-.115s.195.038.161.014c-.15-.105.085-.139-.076.685l1.963.384c.192-.98.152-2.083-.74-2.707-.405-.283-.868-.37-1.28-.376s-.849.069-1.274.179c-1.65.43-3.888 1.621-5.909 2.693l-2.948 1.517c-.92.439-1.673.743-2.221.87-.276.064-.429.065-.492.057-.043-.006.066.003.155.127.07.099.024.131.038-.063.014-.187.078-.49.243-.94l-1.878-.689zm14.343-1.053c-.361 1.844-.474 3.185-.413 4.161.059.95.294 1.72.811 2.215.567.544 1.242.546 1.664.459a2.34 2.34 0 0 0 .502-.167l.15-.076.049-.028.018-.011c.013-.008.013-.008-.524-.852l-.536-.844.019-.012c-.038.018-.064.027-.084.032-.037.008.053-.013.125.056.021.02-.151-.135-.198-.895-.046-.734.034-1.887.38-3.652l-1.963-.384zm2.257 5.701l.791.611.024-.031.08-.101.311-.377 1.093-1.213c.922-.954 2.005-1.894 2.904-2.27l-.771-1.846c-1.31.547-2.637 1.758-3.572 2.725l-1.184 1.314-.341.414-.093.117-.025.032c-.01.013-.01.013.781.624zm5.204-3.381c.989-.413 1.791-.42 2.697-.307.871.108 2.083.385 3.437.385v-2c-1.197 0-2.041-.226-3.19-.369-1.114-.139-2.297-.146-3.715.447l.771 1.846z"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      {/* Right Content: Feature List */}
+      <div className="relative z-10 mt-12 shrink-0 lg:mt-0 lg:flex-1">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+          {features.map((feature, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-orange/15 text-brand-orange">
+                <svg viewBox="0 0 14 14" fill="none" className="h-3 w-3">
+                  <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <span className="font-secondary font-light tracking-[0.02em] text-[16px] text-brand-white/60">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </a>
   );
 }

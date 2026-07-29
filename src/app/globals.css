@@ -44,6 +44,16 @@
      different feels; `both` parks it hidden at the end. Total 2.8s = 2s
      reveal + 0.8s hide. */
   --animate-cta-fill: cta-fill-reveal-hide 2.8s both;
+  --animate-sway: sway 12s ease-in-out infinite alternate;
+
+  @keyframes sway {
+    0% {
+      transform: translateX(-10%);
+    }
+    100% {
+      transform: translateX(10%);
+    }
+  }
 
   @keyframes circle-in-center {
     from {

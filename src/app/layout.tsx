@@ -77,6 +77,11 @@ const posterama2001 = localFont({
 const posteramaText = localFont({
   src: [
     {
+      path: '../../public/fonts/PosteramaText/Posterama Text W01 Thin.woff',
+      weight: '100',
+      style: 'normal',
+    },
+    {
       path: '../../public/fonts/PosteramaText/PosteramaText-Regular.woff2',
       weight: '400',
       style: 'normal',

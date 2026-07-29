@@ -22,8 +22,10 @@ const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const CLIP_EASE: [number, number, number, number] = [0.25, 1, 0.3, 1];
 
 const rise = (delay: number, ready: boolean) => ({
-  initial: { opacity: 0, y: 28 },
-  animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 },
+  initial: { opacity: 0, y: 28, pointerEvents: 'none' as const },
+  animate: ready 
+    ? { opacity: 1, y: 0, pointerEvents: 'auto' as const } 
+    : { opacity: 0, y: 28, pointerEvents: 'none' as const },
   transition: { duration: 1, delay, ease: EASE_OUT },
 });
 
@@ -214,16 +216,25 @@ export function Hero() {
 
         {/* Threads Background */}
         <motion.div
-          animate={reduce ? { opacity: 0.1 } : { opacity: [0.05, 0.15, 0.05] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: introComplete ? 1 : 0 }}
+          transition={{ duration: 3, ease: 'easeInOut' }}
           className="absolute inset-0 z-0 pointer-events-none -translate-y-[30px]"
         >
-          <Threads
-            amplitude={1}
-            distance={0}
-            enableMouseInteraction={false}
-            color={[0.949, 0.937, 0.905]}
-          />
+          {introComplete && (
+            <motion.div
+              animate={reduce ? { opacity: 0.14 } : { opacity: [0.08, 0.20, 0.08] }}
+              transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute inset-0"
+            >
+              <Threads
+                amplitude={1}
+                distance={0}
+                enableMouseInteraction={false}
+                color={[0.949, 0.937, 0.905]}
+              />
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Lighting rig — two corner whispers, orange low right and pink low
@@ -359,17 +370,19 @@ export function Hero() {
           </motion.p>
 
           {/* CTAs */}
-          <motion.div
-            {...rise(0.9, ready)}
-            className="mt-10 flex flex-col items-center justify-center gap-4 md:flex-row md:gap-0 md:-space-x-2"
-          >
-            <HeroButton href="/games" variant="primary" reveal={ready} revealDelay={0.9} revealOrigin="15% 50%">
-              Experience the Games
-            </HeroButton>
-            <HeroButton href="/studio" variant="secondary" reveal={ready} revealDelay={1.7} revealOrigin="77% 50%">
-              Discover Why
-            </HeroButton>
-          </motion.div>
+          {ready && (
+            <motion.div
+              {...rise(0.9, ready)}
+              className="mt-10 flex flex-col items-center justify-center gap-4 md:flex-row md:gap-0 md:-space-x-2"
+            >
+              <HeroButton href="/games" variant="primary" reveal={ready} revealDelay={0.9} revealOrigin="15% 50%">
+                Experience the Games
+              </HeroButton>
+              <HeroButton href="/studio" variant="secondary" reveal={ready} revealDelay={1.7} revealOrigin="77% 50%">
+                Discover Why
+              </HeroButton>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Social icons orchestrated between horizontal/vertical on resize */}
