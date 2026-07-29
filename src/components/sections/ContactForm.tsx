@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 type Topic = "general" | "support" | "business" | "press" | "career";
 
@@ -20,7 +21,7 @@ const FIELD_BASE =
   "w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
 
 const LABEL_BASE =
-  "mb-2 block text-xs tracking-[0.15em] text-brand-grey uppercase transition-colors duration-300";
+  "mb-2 block text-xs tracking-[0.2em] text-brand-grey uppercase transition-colors duration-300";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -67,7 +68,7 @@ export function ContactForm() {
               type="button"
               onClick={() => set("type", topic.value)}
               className={cn(
-                "relative rounded-full border px-5 py-2 text-xs tracking-[0.12em] uppercase transition-colors duration-300",
+                "relative rounded-full border px-5 py-2 text-xs tracking-[0.2em] uppercase transition-colors duration-300",
                 formData.type === topic.value
                   ? "border-brand-orange/60 text-brand-orange"
                   : "border-brand-white/10 text-brand-grey hover:border-brand-white/25 hover:text-brand-white/80"
@@ -160,24 +161,17 @@ export function ContactForm() {
       </div>
 
       {/* Submit + status */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <button
+      <div className="flex flex-col gap-4">
+        <Button
           type="submit"
+          variant="primary"
           disabled={status === "loading"}
-          className="group inline-flex shrink-0 items-center gap-3 rounded-full bg-brand-orange px-8 py-4 font-display text-sm tracking-widest whitespace-nowrap text-brand-black uppercase transition-all duration-300 hover:gap-4 hover:bg-brand-orange/90 disabled:opacity-50"
+          fullWidth
+          className="transition-all duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] hover:w-[calc(100%+56px)] hover:-ml-7 md:hover:w-[calc(100%+80px)] md:hover:-ml-10"
+          buttonClassName="uppercase tracking-widest hover:rounded-none"
         >
           {status === "loading" ? "Sending…" : "Send message"}
-          <svg
-            className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            aria-hidden="true"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
+        </Button>
 
         <AnimatePresence mode="wait">
           {status === "success" && (

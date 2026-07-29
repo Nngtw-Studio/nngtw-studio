@@ -77,7 +77,7 @@ export default function ConnectPage() {
       {/* ═══════════════════════════════════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════════════════════════════════ */}
-      <section data-hero className="relative overflow-hidden pt-36 pb-4 md:pt-44">
+      <section data-hero className="relative overflow-hidden pt-36 pb-16 md:pt-44">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
@@ -117,9 +117,25 @@ export default function ConnectPage() {
       {/* ═══════════════════════════════════════════════════════════════════════
           GET IN TOUCH — community + message form
          ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative">
+        {/* Fading Glass Separator */}
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-t-[48px]">
+          <div 
+            className="absolute inset-0 border-t border-x border-brand-white/10 bg-brand-white/[0.02] backdrop-blur-2xl"
+            style={{
+              maskImage: 'linear-gradient(to bottom, black 0%, rgba(0,0,0,0) 400px, rgba(0,0,0,0) 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, rgba(0,0,0,0) 400px, rgba(0,0,0,0) 100%)'
+            }}
+          />
+          {/* Glowing Top Edge Highlight */}
+          <div
+            className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-brand-secondary/60 to-transparent shadow-[0_0_16px_rgba(223,19,138,0.5)]"
+            aria-hidden="true"
+          />
+        </div>
+
         <div
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 z-0"
           aria-hidden="true"
           style={{
             background:
@@ -127,8 +143,8 @@ export default function ConnectPage() {
           }}
         />
 
-        <div className="relative mx-auto max-w-[1600px] px-6 py-20 md:px-12 md:py-24 lg:px-20 xl:px-28">
-          <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
+        <div className="relative z-10 mx-auto max-w-[1600px] px-6 pt-16 pb-16 md:px-12 md:pt-20 md:pb-24 lg:px-20 lg:pt-20 xl:px-28">
+          <div className="grid gap-14 lg:grid-cols-12 lg:gap-16 xl:gap-24">
             <div className="lg:col-span-5">
               <FadeIn>
                 <p className="label-overline text-brand-grey/50">Reach us</p>
@@ -169,18 +185,8 @@ export default function ConnectPage() {
             </div>
 
             <FadeIn delay={0.15} direction="left" className="lg:col-span-6 lg:col-start-7">
-              <div className="relative overflow-hidden rounded-[28px] border border-brand-white/8 bg-brand-white/[0.02] p-7 backdrop-blur-sm md:p-10">
-                <div
-                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-brand-white/20 to-transparent"
-                  aria-hidden="true"
-                />
-                <div
-                  className="pointer-events-none absolute -top-24 -right-16 h-56 w-56 rounded-full bg-brand-orange/8 blur-[100px]"
-                  aria-hidden="true"
-                />
-                <div className="relative">
-                  <ContactForm />
-                </div>
+              <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7 md:p-10">
+                <ContactForm />
               </div>
             </FadeIn>
 

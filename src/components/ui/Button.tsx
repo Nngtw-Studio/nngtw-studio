@@ -12,13 +12,17 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'discord';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps {
-  href: string;
+  href?: string;
   variant?: ButtonVariant;
   size?: ButtonSize; // Keeping size prop for compatibility, though we ignore it for styling now
   external?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  fullWidth?: boolean;
   children: React.ReactNode;
   className?: string;
-  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
+  buttonClassName?: string;
+  onClick?: (e: MouseEvent<HTMLElement>) => void;
 }
 
 const variants: Record<ButtonVariant, string> = {
@@ -40,21 +44,31 @@ export function Button({
   variant = 'primary',
   size,
   external,
+  type = 'button',
+  disabled,
+  fullWidth,
   children,
   className,
+  buttonClassName,
   onClick,
 }: ButtonProps) {
   const { ripples, addRipple } = useRipple();
 
   const classes = cn(
     'group/btn cursor-target relative isolate inline-flex items-center justify-center overflow-hidden',
-    'w-[280px] h-[56px] rounded-[16px] hover:w-[320px] hover:h-[64px] hover:rounded-none',
+    fullWidth ? 'w-full hover:w-full' : 'w-[280px] hover:w-[320px]',
+    'h-[56px] rounded-[16px]',
     'font-secondary text-[18px] font-semibold',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-black',
     variants[variant],
+    buttonClassName
   );
 
-  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (disabled) {
+      event.preventDefault();
+      return;
+    }
     addRipple(event);
     if (onClick) onClick(event);
   };
@@ -73,7 +87,27 @@ export function Button({
   );
 
   /* Slot reserves the hover footprint so growth never nudges neighbours. */
-  const slot = cn('inline-flex h-[64px] w-[320px] items-center justify-center', className);
+  const slot = cn(
+    'inline-flex h-[56px] items-center justify-center', 
+    fullWidth ? 'w-full' : 'w-[320px]',
+    className
+  );
+
+  if (!href) {
+    return (
+      <span className={slot}>
+        <button
+          type={type}
+          disabled={disabled}
+          style={style}
+          className={cn(classes, disabled && "opacity-50 cursor-not-allowed")}
+          onClick={handleClick}
+        >
+          {content}
+        </button>
+      </span>
+    );
+  }
 
   if (external) {
     return (
