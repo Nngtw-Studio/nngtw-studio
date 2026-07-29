@@ -106,8 +106,7 @@ export default function ConnectPage() {
 
             <FadeIn delay={0.15} className="lg:col-span-4 lg:col-start-9">
               <p className="max-w-md text-base leading-8 text-brand-grey/70">
-                Jump into Discord, or send us a message right here — tell us what it&apos;s
-                about and it lands with the right person at the studio.
+                Drop a signal straight to the studio. Whatever you need, we&apos;ll make sure it lands on exactly the right desk.
               </p>
             </FadeIn>
           </div>
