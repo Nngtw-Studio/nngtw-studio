@@ -183,7 +183,7 @@ export default function ConnectPage() {
               </FadeIn>
             </div>
 
-            <FadeIn delay={0.15} direction="left" className="lg:col-span-6 lg:col-start-7">
+            <FadeIn delay={0.15} direction="left" className="lg:col-span-7">
               <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7 md:p-10">
                 <ContactForm />
               </div>
@@ -338,7 +338,7 @@ function DiscordCardBento() {
             {`Our community lives\non Discord.`}
           </h3>
         </div>
-        <p className="mt-6 font-secondary font-light tracking-[0.02em] whitespace-pre-line text-[16px] leading-normal text-brand-white/60">
+        <p className="mt-6 font-secondary font-normal tracking-[0.02em] whitespace-pre-line text-[16px] leading-normal text-brand-white/60">
           {`Stay connected with Nngtw. Follow development, discover upcoming projects, share feedback, and connect with the people building them.`}
         </p>
 
@@ -373,7 +373,7 @@ function DiscordCardBento() {
                   <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <span className="font-secondary font-light tracking-[0.02em] text-[16px] text-brand-white/60">{feature}</span>
+              <span className="font-secondary font-normal tracking-[0.02em] text-[14px] text-brand-white/60">{feature}</span>
             </div>
           ))}
         </div>

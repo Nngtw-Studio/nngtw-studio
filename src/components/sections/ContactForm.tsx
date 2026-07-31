@@ -5,23 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 
-type Topic = "general" | "support" | "business" | "press" | "career";
+type Topic = "general" | "support" | "business" | "career";
 
 const TOPICS: { value: Topic; label: string }[] = [
   { value: "general", label: "General" },
-  { value: "support", label: "Game support" },
+  { value: "support", label: "Support" },
   { value: "business", label: "Business" },
-  { value: "press", label: "Press" },
   { value: "career", label: "Careers" },
 ];
 
 const MESSAGE_LIMIT = 1000;
 
 const FIELD_BASE =
-  "w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-sm text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
+  "w-full rounded-xl border border-brand-white/10 bg-brand-white/[0.03] px-4 py-3.5 text-base text-brand-white outline-none transition-all duration-300 placeholder:text-brand-grey/50 placeholder:font-bold placeholder:text-sm focus:border-brand-orange/60 focus:bg-brand-white/[0.05]";
 
 const LABEL_BASE =
-  "mb-2 block text-xs tracking-[0.2em] text-brand-grey uppercase transition-colors duration-300";
+  "mb-2 block text-xs tracking-[0.2em] text-brand-white uppercase transition-colors duration-300";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -60,29 +59,54 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-7">
       {/* Topic */}
       <div>
-        <p className={LABEL_BASE}>What is this about?</p>
-        <div className="flex flex-wrap gap-2.5">
+        <p className="mb-3 block font-secondary font-bold text-sm tracking-[0.1em] text-brand-white transition-colors duration-300">What can we help with?</p>
+        <div className="flex flex-wrap w-full gap-2.5">
           {TOPICS.map((topic) => (
-            <button
+            <motion.button
               key={topic.value}
               type="button"
               onClick={() => set("type", topic.value)}
+              initial="idle"
+              whileHover="hover"
               className={cn(
-                "relative rounded-full border px-5 py-2 text-xs tracking-[0.2em] uppercase transition-colors duration-300",
+                "relative flex-1 rounded-xl border px-3 py-2.5 text-center text-xs tracking-[0.25em] uppercase transition-colors duration-300 min-w-[120px]",
                 formData.type === topic.value
-                  ? "border-brand-orange/60 text-brand-orange"
-                  : "border-brand-white/10 text-brand-grey hover:border-brand-white/25 hover:text-brand-white/80"
+                  ? "border-brand-orange text-brand-orange font-bold"
+                  : "border-brand-white/10 text-brand-grey font-semibold hover:border-brand-orange/60 hover:text-brand-orange/80"
               )}
             >
+              {/* Hover Indicator */}
+              {formData.type !== topic.value && (
+                <motion.span
+                  variants={{
+                    idle: {
+                      clipPath: "inset(0% 100% 0% 100%)",
+                      transition: { duration: 0.3 }
+                    },
+                    hover: {
+                      clipPath: [
+                        "inset(0% 100% 0% 100%)",
+                        "inset(0% 10% 0% 10%)",
+                        "inset(0% 10% 0% 10%)",
+                        "inset(0% 0% 0% 0%)"
+                      ],
+                      transition: { times: [0, 0.3, 0.7, 1], duration: 0.6, ease: "easeInOut" }
+                    }
+                  }}
+                  className="absolute inset-0 rounded-xl bg-brand-orange/[0.05]"
+                />
+              )}
+
+              {/* Active Indicator */}
               {formData.type === topic.value && (
                 <motion.span
                   layoutId="contact-topic-indicator"
-                  className="absolute inset-0 rounded-full bg-brand-orange/10"
+                  className="absolute inset-0 rounded-xl bg-brand-orange/10"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                 />
               )}
               <span className="relative z-10">{topic.label}</span>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
@@ -137,7 +161,7 @@ export function ContactForm() {
           </label>
           <span
             className={cn(
-              "mb-2 text-xs tabular-nums transition-colors duration-300",
+              "mb-2 font-medium text-xs tabular-nums transition-colors duration-300",
               formData.message.length > MESSAGE_LIMIT * 0.9
                 ? "text-brand-orange"
                 : "text-brand-grey/60"
@@ -168,9 +192,8 @@ export function ContactForm() {
           disabled={status === "loading"}
           fullWidth
           className="transition-all duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] hover:w-[calc(100%+56px)] hover:-ml-7 md:hover:w-[calc(100%+80px)] md:hover:-ml-10"
-          buttonClassName="uppercase tracking-widest hover:rounded-none"
         >
-          {status === "loading" ? "Sending…" : "Send message"}
+          {status === "loading" ? "Sending…" : "Send Message"}
         </Button>
 
         <AnimatePresence mode="wait">
