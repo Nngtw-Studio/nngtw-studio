@@ -310,6 +310,12 @@ function DiscordCardBento() {
       rel="noopener noreferrer"
       className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[#5865F2]/25 bg-[#5865F2]/[0.06] backdrop-blur-[2px] p-8 transition-all duration-500 ease-out hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.09] md:p-12 lg:flex-row lg:items-center lg:gap-6 lg:p-16"
     >
+      {/* Sweeping Shine Effect */}
+      <div 
+        className="pointer-events-none absolute inset-0 z-20 w-1/2 -translate-x-[150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 ease-in-out group-hover:translate-x-[250%]" 
+        aria-hidden="true" 
+      />
+
       {/* Glow Blobs & Ambient Balance */}
       <div
         className="pointer-events-none absolute -top-32 -right-20 z-0 h-[400px] w-[400px] rounded-full bg-[#5865F2]/10 blur-[120px] transition-all duration-700 group-hover:bg-[#5865F2]/15 group-hover:blur-[140px]"
