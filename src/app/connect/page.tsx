@@ -308,7 +308,7 @@ function DiscordCardBento() {
       href={SOCIAL.discord}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[#5865F2]/25 bg-[#5865F2]/[0.06] backdrop-blur-[2px] p-8 transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.09] md:p-12 lg:flex-row lg:items-center lg:gap-6 lg:p-16"
+      className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[#5865F2]/25 bg-[#5865F2]/[0.06] backdrop-blur-[2px] p-8 transition-all duration-500 ease-out hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.09] md:p-12 lg:flex-row lg:items-center lg:gap-6 lg:p-16"
     >
       {/* Glow Blobs & Ambient Balance */}
       <div
