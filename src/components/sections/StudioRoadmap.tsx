@@ -34,7 +34,7 @@ export function StudioRoadmap() {
               </h2>
             </div>
             <div className="lg:col-span-5 lg:col-start-7 lg:self-end">
-              <p className="text-base leading-9 text-brand-grey/70">
+              <p className="body-description">
                 Five commitments guiding the studio — from the titles in
                 development today to the immersive realities we&apos;re building
                 toward.

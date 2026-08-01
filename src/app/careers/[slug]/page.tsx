@@ -64,7 +64,7 @@ export default async function CareerDetailPage({ params }: Props) {
           <h2 className="mt-12 font-display text-xl tracking-wide text-brand-white uppercase">
             About This Role
           </h2>
-          <p className="mt-6 text-base leading-relaxed text-brand-grey">
+          <p className="mt-6 body-description">
             {career.description}
           </p>
 
@@ -73,7 +73,7 @@ export default async function CareerDetailPage({ params }: Props) {
           </h2>
           <ul className="mt-6 space-y-3">
             {career.requirements.map((req) => (
-              <li key={req} className="flex items-start gap-4 text-sm text-brand-grey">
+              <li key={req} className="flex items-start gap-4 body-description">
                 <span className="mt-2 h-px w-4 shrink-0 bg-brand-orange" />
                 {req}
               </li>

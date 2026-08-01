@@ -51,7 +51,7 @@ export function StudioProcess() {
               </h2>
             </div>
             <div className="lg:col-span-5 lg:col-start-7 lg:self-end">
-              <p className="text-base leading-9 text-brand-grey">
+              <p className="body-description">
                 {studioContent.developmentPhilosophy}
               </p>
             </div>
@@ -75,7 +75,7 @@ export function StudioProcess() {
                 <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-brand-white">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-brand-grey/70">{step.body}</p>
+                <p className="mt-3 body-description">{step.body}</p>
               </div>
             </StaggerItem>
           ))}

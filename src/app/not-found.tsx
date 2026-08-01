@@ -139,7 +139,7 @@ export default function NotFound() {
           Page Not Found
         </h2>
         
-        <p className="mt-6 max-w-md text-center text-sm md:text-base text-brand-grey">
+        <p className="mt-6 max-w-md text-center body-description">
           Looks like this page wandered off.
         </p>
 

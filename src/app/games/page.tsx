@@ -70,7 +70,7 @@ export default async function GamesPage() {
                 </h2>
               </FadeIn>
               <FadeIn delay={0.1} className="lg:col-span-4 lg:col-start-9 lg:pb-2">
-                <p className="text-base leading-8 text-brand-grey">
+                <p className="body-description">
                   Two original titles moving from prototype to polish — shaped in
                   public, with our community playing, breaking, and steering every
                   milestone.
@@ -109,7 +109,7 @@ export default async function GamesPage() {
                 </h2>
               </FadeIn>
               <FadeIn delay={0.1} className="lg:col-span-4 lg:col-start-9 lg:pb-2">
-                <p className="text-base leading-8 text-brand-grey">
+                <p className="body-description">
                   Concepts we return to between milestones — no dates, no
                   promises, just the directions we&rsquo;re dreaming in next.
                 </p>
@@ -149,7 +149,7 @@ export default async function GamesPage() {
             <h2 className="editorial-heading mx-auto mt-6 max-w-2xl text-4xl text-brand-white md:text-5xl">
               Be first into our worlds.
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-sm leading-8 text-brand-grey md:text-base">
+            <p className="mx-auto mt-6 max-w-xl body-description">
               Playtests, dev logs, and every announcement land on Discord before
               anywhere else. Come build these worlds with us.
             </p>

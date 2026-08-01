@@ -79,7 +79,7 @@ export function Community() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <p className="mt-8 max-w-lg text-lg leading-relaxed text-brand-grey/80">
+              <p className="mt-8 max-w-lg body-description">
                 Our Discord is where Nngtw Studio develops games in public.
                 Shape decisions, get early playtest access, and collaborate directly with our team.
               </p>
@@ -158,7 +158,7 @@ export function Community() {
 
                 {/* Body Content */}
                 <div className="my-6 space-y-5">
-                  <p className="text-sm text-brand-grey/70 leading-relaxed">
+                  <p className="body-description">
                     Connect with players, developers, and creators. Get live game news and exclusive developer updates.
                   </p>
 

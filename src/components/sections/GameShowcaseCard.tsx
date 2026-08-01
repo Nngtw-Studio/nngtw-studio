@@ -251,7 +251,7 @@ export function GameShowcaseCard({ game, index }: GameShowcaseCardProps) {
                 {tags.join(' • ')}
               </p>
 
-              <p className="mt-5 line-clamp-3 max-w-md text-sm leading-8 text-brand-grey/80 md:text-base">
+              <p className="mt-5 line-clamp-3 max-w-md body-description">
                 {game.description}
               </p>
 

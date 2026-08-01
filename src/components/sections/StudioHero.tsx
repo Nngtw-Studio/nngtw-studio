@@ -124,7 +124,7 @@ export function StudioHero({ teamCount }: StudioHeroProps) {
               className="lg:col-span-4 lg:col-start-9 lg:self-end flex flex-col gap-4"
             >
               <div className="accent-line" />
-              <p className="max-w-70 text-lg leading-9 text-brand-grey/80">
+              <p className="max-w-70 body-description">
                 An independent game studio.
                 <br />
                 <span className="text-brand-orange font-medium">Craft</span>{' '}

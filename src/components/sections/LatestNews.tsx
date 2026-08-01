@@ -55,7 +55,7 @@ export async function LatestNews() {
                   <h3 className="editorial-heading text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-white/80 md:text-3xl lg:text-4xl">
                     {featured.title}
                   </h3>
-                  <p className="mt-5 text-sm leading-8 text-brand-grey/70 lg:max-w-xl">
+                  <p className="mt-5 lg:max-w-xl body-description">
                     {featured.excerpt}
                   </p>
                   <span className="mt-6 inline-block font-accent text-[10px] tracking-[0.3em] uppercase text-brand-grey/40 transition-colors duration-300 group-hover:text-brand-white/60">

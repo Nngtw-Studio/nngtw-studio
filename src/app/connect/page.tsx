@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/sections/ContactForm";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
 import { BRAND, SOCIAL } from "@/lib/constants";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export const metadata: Metadata = {
   title: "Connect",
@@ -89,23 +90,22 @@ export default function ConnectPage() {
 
         <div className="relative mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28">
           <FadeIn>
-            <div className="mb-8 flex items-center gap-4">
-              <div className="accent-line" />
-              <p className="label-overline text-brand-orange">Communication Hub</p>
-            </div>
+            <SectionLabel variant="main" className="mb-8">
+              Communication Hub
+            </SectionLabel>
           </FadeIn>
 
           <div className="grid items-end gap-10 lg:grid-cols-12">
             <FadeIn className="lg:col-span-7">
               <h1 className="editorial-heading text-5xl text-brand-white md:text-7xl lg:text-8xl">
-                Hey. Need
+                Hey<span className="text-brand-secondary">.</span> Need
                 <br />
                 <span className="text-brand-orange">something?</span>
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.15} className="lg:col-span-4 lg:col-start-9">
-              <p className="max-w-md text-base leading-8 text-brand-grey/70">
+              <p className="max-w-md body-description">
                 Drop a signal straight to the studio. Whatever you need, we&apos;ll make sure it lands on exactly the right desk.
               </p>
             </FadeIn>
@@ -146,13 +146,13 @@ export default function ConnectPage() {
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-16 xl:gap-24">
             <div className="lg:col-span-5">
               <FadeIn>
-                <p className="label-overline text-brand-grey/50">Reach us</p>
+              <SectionLabel>Reach us</SectionLabel>
                 <h2 className="editorial-heading mt-6 text-4xl text-brand-white md:text-5xl">
                   Let&apos;s get
                   <br />
                   in touch.
                 </h2>
-                <p className="mt-7 max-w-md text-base leading-8 text-brand-grey/70">
+                <p className="mt-7 max-w-md body-description">
                   Tell us what it&apos;s about in the form and we&apos;ll route it to the
                   right person — no need to guess an inbox. Keep it short and specific and
                   the reply comes faster.
@@ -208,43 +208,84 @@ export default function ConnectPage() {
         <span className="absolute inset-0 origin-left scale-x-0 bg-brand-black/85 transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:scale-x-100" />
         <span className="relative flex items-center justify-center gap-5 px-6 py-9 md:py-11">
           <span className="editorial-heading text-2xl text-brand-black transition-colors duration-500 group-hover:text-brand-orange md:text-4xl">
-            Want to join NNGTW? Careers
+            Want to join Nngtw? Careers
           </span>
-          <ArrowIcon className="h-6 w-6 shrink-0 text-brand-black transition-all duration-500 group-hover:translate-x-2 group-hover:text-brand-orange md:h-8 md:w-8" />
+          <span 
+            className="h-6 w-20 shrink-0 bg-brand-black transition-all duration-500 group-hover:translate-x-4 group-hover:bg-brand-orange md:h-8 md:w-28" 
+            style={{ 
+              maskImage: 'url(https://mmppezzzykbbfiqturvz.supabase.co/storage/v1/object/public/nngtw-assets/ui/arrow-drawn.svg)', 
+              maskSize: 'contain', 
+              maskRepeat: 'no-repeat', 
+              maskPosition: 'center',
+              WebkitMaskImage: 'url(https://mmppezzzykbbfiqturvz.supabase.co/storage/v1/object/public/nngtw-assets/ui/arrow-drawn.svg)',
+              WebkitMaskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center'
+            }} 
+          />
         </span>
       </Link>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          ABOUT NNGTW
+          ABOUT Nngtw
          ═══════════════════════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="relative mx-auto max-w-[1600px] px-6 py-24 md:px-12 md:py-28 lg:px-20 xl:px-28">
+        <div className="relative mx-auto max-w-[1600px] px-6 py-16 md:px-12 md:py-20 lg:px-20 xl:px-28">
           <FadeIn>
-            <div className="relative overflow-hidden rounded-[32px] border border-brand-white/8 bg-brand-white/[0.03] p-8 md:p-14">
+            <Link href="/studio" className="group relative block overflow-hidden rounded-[32px] border border-brand-orange/25 bg-brand-white/[0.03] backdrop-blur-[2px] px-8 py-10 transition-colors hover:border-brand-orange/50 md:px-14 md:py-12">
+              {/* Sweeping Border Shine */}
+              <div 
+                className="pointer-events-none absolute inset-0 z-20 rounded-[32px] border-[2px] border-transparent [mask-clip:padding-box,border-box] [mask-composite:exclude] [mask-image:linear-gradient(white,white),linear-gradient(white,white)] [-webkit-mask-clip:padding-box,border-box] [-webkit-mask-composite:xor] [-webkit-mask-image:-webkit-linear-gradient(white,white),-webkit-linear-gradient(white,white)]"
+                aria-hidden="true"
+              >
+                <div className="absolute -inset-4 w-full -translate-x-[150%] skew-x-[-25deg] bg-linear-to-r from-transparent via-brand-orange/40 to-transparent transition-transform duration-1000 ease-in-out group-hover:translate-x-[250%]" />
+              </div>
+              {/* Ambient Glows (Orange on corners, Pink in center) */}
               <div
-                className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-brand-orange/8 blur-[120px]"
+                className="pointer-events-none absolute top-16 left-0 z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-orange/[0.08] blur-[110px] transition-all duration-700 group-hover:bg-brand-orange/[0.12]"
                 aria-hidden="true"
               />
-              <div className="relative grid gap-10 lg:grid-cols-12 lg:items-end">
-                <div className="lg:col-span-7">
-                  <p className="label-overline text-brand-grey/50">About NNGTW</p>
-                  <h2 className="editorial-heading mt-6 text-3xl text-brand-white md:text-5xl">
-                    An independent studio,
-                    <br />
-                    building in the open.
-                  </h2>
-                  <p className="mt-7 max-w-xl text-base leading-8 text-brand-grey/70">
-                    {BRAND.description} Get to know the team, the tech, and what
-                    we&apos;re working on next.
-                  </p>
-                </div>
-                <div className="lg:col-span-4 lg:col-start-9 lg:justify-self-end">
-                  <Button href="/studio" variant="primary" className="-ml-5 lg:ml-0">
-                    Our Studio
-                  </Button>
+              <div
+                className="pointer-events-none absolute bottom-0 right-0 z-0 h-[800px] w-[800px] translate-x-1/2 translate-y-1/2 rounded-full bg-brand-orange/[0.08] blur-[110px] transition-all duration-700 group-hover:bg-brand-orange/[0.12]"
+                aria-hidden="true"
+              />
+              <div
+                className="pointer-events-none absolute top-1/2 left-1/2 z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 animate-sway rounded-full bg-brand-secondary/[0.08] blur-[150px]"
+                aria-hidden="true"
+              />
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <SectionLabel>Discover Nngtw Studio</SectionLabel>
+                <h2 className="editorial-heading mt-6 bg-[linear-gradient(65deg,#F8F8F8_40%,#f6c18b_50%,#F8F8F8_60%)] bg-[length:300%_100%] bg-[position:100%_0] bg-clip-text text-3xl text-transparent transition-all duration-1000 ease-in-out group-hover:bg-[position:0%_0] md:text-5xl">
+                  An independent game studio.
+                </h2>
+                <p className="mt-6 max-w-none body-description mx-auto px-4 bg-[linear-gradient(65deg,#F8F8F8_40%,#f6c18b_50%,#F8F8F8_60%)] bg-[length:300%_100%] bg-[position:100%_0] bg-clip-text text-transparent opacity-70 transition-all duration-1000 ease-in-out group-hover:bg-[position:0%_0] md:px-0">
+                  We&apos;re building original games, technology, and creative experiences. Explore our work, our vision, and the future we&apos;re building.
+                </p>
+
+                <div className="mt-6 flex items-center justify-center font-secondary text-[18px] font-semibold text-brand-orange md:mt-8">
+                  <span className="tracking-[0.01em] transition-[letter-spacing] duration-300 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] group-hover:tracking-[0.1em]">
+                    <span className="bg-[linear-gradient(65deg,#F58A1F_40%,#f6c18b_50%,#F58A1F_60%)] bg-[length:300%_100%] bg-[position:100%_0] bg-clip-text text-transparent transition-[background-position] duration-1000 ease-in-out group-hover:bg-[position:0%_0]">
+                      Continue Exploring
+                    </span>
+                  </span>
+                  <span className="ml-2.5 inline-flex origin-left pt-0.75 transition-transform group-hover:animate-jello-vertical">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="45"
+                      height="18"
+                      viewBox="0 0 38 15"
+                      fill="none"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M10 7.519l-.939-.344h0l.939.344zm14.386-1.205l-.981-.192.981.192zm1.276 5.509l.537.843.148-.094.107-.139-.792-.611zm4.819-4.304l-.385-.923h0l.385.923zm7.227.707a1 1 0 0 0 0-1.414L31.343.448a1 1 0 0 0-1.414 0 1 1 0 0 0 0 1.414l5.657 5.657-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364zM1 7.519l.554.833.029-.019.094-.061.361-.23 1.277-.77c1.054-.609 2.397-1.32 3.629-1.787.617-.234 1.17-.392 1.623-.455.477-.066.707-.008.788.034.025.013.031.021.039.034a.56.56 0 0 1 .058.235c.029.327-.047.906-.39 1.842l1.878.689c.383-1.044.571-1.949.505-2.705-.072-.815-.45-1.493-1.16-1.865-.627-.329-1.358-.332-1.993-.244-.659.092-1.367.305-2.056.566-1.381.523-2.833 1.297-3.921 1.925l-1.341.808-.385.245-.104.068-.028.018c-.011.007-.011.007.543.84zm8.061-.344c-.198.54-.328 1.038-.36 1.484-.032.441.024.94.325 1.364.319.45.786.64 1.21.697.403.054.824-.001 1.21-.09.775-.179 1.694-.566 2.633-1.014l3.023-1.554c2.115-1.122 4.107-2.168 5.476-2.524.329-.086.573-.117.742-.115s.195.038.161.014c-.15-.105.085-.139-.076.685l1.963.384c.192-.98.152-2.083-.74-2.707-.405-.283-.868-.37-1.28-.376s-.849.069-1.274.179c-1.65.43-3.888 1.621-5.909 2.693l-2.948 1.517c-.92.439-1.673.743-2.221.87-.276.064-.429.065-.492.057-.043-.006.066.003.155.127.07.099.024.131.038-.063.014-.187.078-.49.243-.94l-1.878-.689zm14.343-1.053c-.361 1.844-.474 3.185-.413 4.161.059.95.294 1.72.811 2.215.567.544 1.242.546 1.664.459a2.34 2.34 0 0 0 .502-.167l.15-.076.049-.028.018-.011c.013-.008.013-.008-.524-.852l-.536-.844.019-.012c-.038.018-.064.027-.084.032-.037.008.053-.013.125.056.021.02-.151-.135-.198-.895-.046-.734.034-1.887.38-3.652l-1.963-.384zm2.257 5.701l.791.611.024-.031.08-.101.311-.377 1.093-1.213c.922-.954 2.005-1.894 2.904-2.27l-.771-1.846c-1.31.547-2.637 1.758-3.572 2.725l-1.184 1.314-.341.414-.093.117-.025.032c-.01.013-.01.013.781.624zm5.204-3.381c.989-.413 1.791-.42 2.697-.307.871.108 2.083.385 3.437.385v-2c-1.197 0-2.041-.226-3.19-.369-1.114-.139-2.297-.146-3.715.447l.771 1.846z"
+                      />
+                    </svg>
+                  </span>
                 </div>
               </div>
-            </div>
+            </Link>
+
           </FadeIn>
         </div>
       </section>
@@ -259,7 +300,7 @@ function SocialCard() {
     <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7">
       <div>
         <p className="text-xs tracking-[0.2em] text-brand-grey uppercase">Follow the studio</p>
-        <p className="mt-3 text-sm leading-relaxed text-brand-grey">
+        <p className="mt-3 body-description">
           Announcements and behind-the-scenes from the team.
         </p>
       </div>

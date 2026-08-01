@@ -14,7 +14,7 @@ ALTER TABLE games
 --   trailer_url = '/videos/arithmetic-destination-trailer.mp4',
 --   banner_image_url = '/banners/arithmetic-destination.svg',
 --   project_link = '/games/arithmetic-destination',
---   follow_link = 'https://discord.gg/nngtw'
+--   follow_link = 'https://discord.gg/t7xbGjXFd'
 -- WHERE slug = 'arithmetic-destination';
 
 -- UPDATE games SET
@@ -24,5 +24,5 @@ ALTER TABLE games
 --   trailer_url = '/videos/king-summon-trailer.mp4',
 --   banner_image_url = '/banners/king-summon.svg',
 --   project_link = '/games/king-summon',
---   follow_link = 'https://discord.gg/nngtw'
+--   follow_link = 'https://discord.gg/t7xbGjXFd'
 -- WHERE slug = 'king-summon';

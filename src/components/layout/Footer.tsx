@@ -14,7 +14,7 @@ export function Footer() {
             <p className="label-overline text-brand-grey/50">
               Brand Statement
             </p>
-            <p className="mt-8 max-w-xs text-sm leading-8 text-brand-grey/70">
+            <p className="mt-8 max-w-xs body-description">
               An independent game studio building original worlds for PC, mobile, and XR.
             </p>
             <p className="mt-6 label-overline text-brand-grey/40">
@@ -32,7 +32,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-brand-grey/70 transition-colors duration-300 hover:text-brand-white"
+                    className="transition-colors duration-300 hover:text-brand-white body-description"
                   >
                     {link.label}
                   </Link>
@@ -52,7 +52,7 @@ export function Footer() {
                   href={SOCIAL.discord}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2.5 text-sm text-brand-grey/70 transition-colors duration-300 hover:text-[#5865F2]"
+                  className="group flex items-center gap-2.5 transition-colors duration-300 hover:text-[#5865F2] body-description"
                 >
                   <svg
                     className="h-3.5 w-3.5 opacity-50 transition-opacity group-hover:opacity-100"
@@ -70,7 +70,7 @@ export function Footer() {
                   href={SOCIAL.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-brand-grey/70 transition-colors duration-300 hover:text-brand-white"
+                  className="transition-colors duration-300 hover:text-brand-white body-description"
                 >
                   LinkedIn
                 </a>
@@ -80,7 +80,7 @@ export function Footer() {
                   href={SOCIAL.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-brand-grey/70 transition-colors duration-300 hover:text-brand-white"
+                  className="transition-colors duration-300 hover:text-brand-white body-description"
                 >
                   Facebook
                 </a>
@@ -93,7 +93,7 @@ export function Footer() {
             <h4 className="label-overline mb-8 text-brand-white/50">
               Community
             </h4>
-            <p className="mb-6 text-sm leading-7 text-brand-grey/70">
+            <p className="mb-6 body-description">
               Follow development, share ideas, and be part of what we&apos;re building.
             </p>
             <a

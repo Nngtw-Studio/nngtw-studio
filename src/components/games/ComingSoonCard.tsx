@@ -65,7 +65,7 @@ export function ComingSoonCard({ game, index }: ComingSoonCardProps) {
             {game.genre}
           </p>
 
-          <p className="mt-5 flex-1 text-sm leading-7 text-brand-grey">
+          <p className="mt-5 flex-1 body-description">
             {game.concept ?? game.description}
           </p>
 

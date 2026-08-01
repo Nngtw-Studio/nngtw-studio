@@ -46,7 +46,7 @@ export default async function CareersPage() {
                   Applications open
                 </span>
               </div>
-              <p className="mb-10 max-w-2xl text-base leading-8 text-brand-grey/60">
+              <p className="mb-10 max-w-2xl body-description">
                 Reviewed as they come in. Apply straight from the role page —
                 no account, no portal.
               </p>
@@ -68,7 +68,7 @@ export default async function CareersPage() {
               <h2 className="editorial-heading mb-3 text-3xl text-brand-white md:text-4xl">
                 Future Opportunities
               </h2>
-              <p className="mb-10 max-w-2xl text-base leading-8 text-brand-grey/60">
+              <p className="mb-10 max-w-2xl body-description">
                 Not open yet — these are the roles we expect to hire for as the
                 studio grows. If one of them is yours, introduce yourself early
                 and we&apos;ll come to you first.

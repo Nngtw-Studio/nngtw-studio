@@ -407,7 +407,7 @@ export function FeaturedGamesShowcase({ games }: FeaturedGamesShowcaseProps) {
               </h2>
             </div>
             <div className="flex flex-col items-start gap-5 lg:items-end">
-              <p className="max-w-xs text-sm leading-7 text-brand-grey lg:text-right">
+              <p className="max-w-xs body-description">
                 Original titles in active development.
               </p>
               <Link

@@ -320,7 +320,7 @@ VALUES
     '/videos/arithmetic-destination-trailer.mp4',
     '/banners/arithmetic-destination.svg',
     '/games/arithmetic-destination',
-    'https://discord.gg/z3fpVJZkD',
+    'https://discord.gg/t7xbGjXFd',
     '[{"phase":"Core Mechanics","description":"Number-based puzzle systems and world traversal"},{"phase":"World Building","description":"First three mathematical realms with unique art direction"},{"phase":"Playtesting","description":"Community feedback sessions via Discord"},{"phase":"Platform Polish","description":"PC and Mobile optimization"}]'
   ),
   (
@@ -336,7 +336,7 @@ VALUES
     '/videos/king-summon-trailer.mp4',
     '/banners/king-summon.svg',
     '/games/king-summon',
-    'https://discord.gg/z3fpVJZkD',
+    'https://discord.gg/t7xbGjXFd',
     '[{"phase":"Combat Prototype","description":"Core summoning and battle loop"},{"phase":"Kingdom Systems","description":"Building, resources, and progression"},{"phase":"Creature Design","description":"Initial roster with unique abilities"},{"phase":"Multiplayer Foundation","description":"Async and real-time battle modes"}]'
   ),
   (
@@ -351,7 +351,7 @@ VALUES
     false, false, 0,
     NULL, NULL,
     '/games/on-earth',
-    'https://discord.gg/z3fpVJZkD',
+    'https://discord.gg/t7xbGjXFd',
     '[]'
   ),
   (
@@ -366,7 +366,7 @@ VALUES
     false, false, 0,
     NULL, NULL,
     '/games/bored-zombie',
-    'https://discord.gg/z3fpVJZkD',
+    'https://discord.gg/t7xbGjXFd',
     '[]'
   ),
   (
@@ -381,7 +381,7 @@ VALUES
     false, false, 0,
     NULL, NULL,
     '/games/the-vastness',
-    'https://discord.gg/z3fpVJZkD',
+    'https://discord.gg/t7xbGjXFd',
     '[]'
   )
 ON CONFLICT (slug) DO NOTHING;
@@ -586,8 +586,8 @@ END $$;
 
 -- Settings
 INSERT INTO studio_settings (key, value) VALUES
-  ('discord_url',    '"https://discord.gg/z3fpVJZkD"'),
+  ('discord_url',    '"https://discord.gg/t7xbGjXFd"'),
   ('studio_name',    '"NNGTW Studio"'),
   ('contact_email',  '"nngtwstudio@gmail.com"'),
-  ('social_links',   '{"discord":"https://discord.gg/z3fpVJZkD","twitter":"","youtube":"","instagram":""}')
+  ('social_links',   '{"discord":"https://discord.gg/t7xbGjXFd","twitter":"","youtube":"","instagram":""}')
 ON CONFLICT (key) DO NOTHING;

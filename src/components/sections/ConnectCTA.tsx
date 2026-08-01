@@ -20,7 +20,7 @@ export function ConnectCTA() {
               <h2 className="editorial-heading text-4xl text-brand-white md:text-5xl lg:text-6xl">
                 Let&apos;s talk.
               </h2>
-              <p className="mt-8 max-w-md text-base leading-9 text-brand-grey/70">
+              <p className="mt-8 max-w-md body-description">
                 Business enquiries, partnerships, or general contact — we&apos;d
                 love to hear from you.
               </p>

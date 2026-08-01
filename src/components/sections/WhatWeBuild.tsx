@@ -58,7 +58,7 @@ export function WhatWeBuild() {
                 <h3 className="editorial-heading text-4xl text-brand-white md:text-5xl">
                   Original games
                 </h3>
-                <p className="mt-4 max-w-sm text-sm leading-7 text-brand-grey/80 md:text-base">
+                <p className="mt-4 max-w-sm body-description">
                   Worlds for PC and mobile, built to be returned to. Two titles in active
                   development.
                 </p>
@@ -89,7 +89,7 @@ export function WhatWeBuild() {
                 <h3 className="editorial-heading text-2xl text-brand-white md:text-[1.875rem]">
                   XR &amp; immersive
                 </h3>
-                <p className="mt-3.5 text-sm leading-7 text-brand-grey/75">
+                <p className="mt-3.5 body-description">
                   VR, AR, and mixed reality — prototyping with OpenXR today.
                 </p>
               </div>
@@ -109,7 +109,7 @@ export function WhatWeBuild() {
                 <h3 className="editorial-heading text-2xl text-brand-white md:text-[1.875rem]">
                   Apps &amp; tools
                 </h3>
-                <p className="mt-3.5 text-sm leading-7 text-brand-grey/75">
+                <p className="mt-3.5 body-description">
                   Interactive products and the internal tooling that ships our games.
                 </p>
               </div>

@@ -8,7 +8,7 @@ type Dino404Props = {
 };
 
 /**
- * NNGTW mascot for the 404 page, inlined so the eye group can be toggled for
+ * Nngtw mascot for the 404 page, inlined so the eye group can be toggled for
  * the blink loop (hiding a remote <img>'s internals isn't possible). The
  * contact shadow is the first path in the art. Exported from Figma ("dino").
  */

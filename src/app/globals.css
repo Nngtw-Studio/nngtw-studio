@@ -369,7 +369,7 @@ h6 {
   .editorial-heading {
     font-family: var(--font-display), Georgia, serif;
     font-weight: 900;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     line-height: 0.92;
     text-wrap: balance;
   }
@@ -381,6 +381,11 @@ h6 {
     letter-spacing: 0.22em;
     text-transform: uppercase;
     font-weight: 600;
+  }
+
+  /* Global body/description text matching Figma spec */
+  .body-description {
+    @apply font-secondary text-[16px] font-normal tracking-[0.02em] text-brand-white/50 leading-relaxed;
   }
 
   .accent-line {

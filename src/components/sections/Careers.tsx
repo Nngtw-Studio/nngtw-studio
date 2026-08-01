@@ -76,7 +76,7 @@ export async function Careers() {
               </h2>
             </div>
             <div className="lg:col-span-5 lg:col-start-7 lg:self-end">
-              <p className="text-base leading-9 text-brand-grey/70">
+              <p className="body-description">
                 We&apos;re building a team of passionate creators. Our UI/UX
                 Design Intern role is open now — and while most other roles are
                 future opportunities, we&apos;re always interested in hearing

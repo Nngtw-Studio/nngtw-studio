@@ -128,7 +128,7 @@ function TeamHeading({ eyebrow, title, subtitle }: TeamHeadingCopy) {
       <h3 className="editorial-heading text-3xl text-brand-white md:text-4xl">
         {title}
       </h3>
-      <p className="mt-5 max-w-xs text-sm leading-7 text-brand-grey/60">
+      <p className="mt-5 max-w-xs body-description">
         {subtitle}
       </p>
     </div>

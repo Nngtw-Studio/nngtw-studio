@@ -40,12 +40,12 @@ export default async function NewsDetailPage({ params }: Props) {
 
       <article className="mx-auto max-w-3xl px-6 pb-32 md:px-12">
         <FadeIn>
-          <time className="text-sm text-brand-grey">
+          <time className="body-description">
             {formatDate(article.publishedAt)}
           </time>
           <div className="mt-12 space-y-6">
             {article.content.split("\n\n").map((paragraph, i) => (
-              <p key={i} className="text-base leading-relaxed text-brand-grey md:text-lg">
+              <p key={i} className="body-description">
                 {paragraph}
               </p>
             ))}

@@ -43,7 +43,7 @@ export async function StudioPhilosophy() {
                   <h3 className="font-display text-lg font-semibold tracking-tight text-brand-white transition-colors duration-300 group-hover:text-brand-white">
                     {value.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-8 text-brand-grey/70">
+                  <p className="mt-3 body-description">
                     {value.description}
                   </p>
                 </div>

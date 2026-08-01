@@ -101,11 +101,11 @@ export default function CreditsPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-24 text-brand-white">
       <h1 className="text-xl font-medium">Credits</h1>
-      <p className="mt-2 text-sm text-brand-grey">
+      <p className="mt-2 body-description">
         Icons used across this site.
       </p>
 
-      <ul className="mt-10 space-y-4 text-sm text-brand-grey">
+      <ul className="mt-10 space-y-4 body-description">
         {credits.map((c) => (
           <li key={c.name}>
             <a

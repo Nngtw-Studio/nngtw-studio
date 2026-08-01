@@ -24,7 +24,7 @@ export function PageHeader({ label, title, description }: PageHeaderProps) {
             {title}
           </h1>
           {description && (
-            <p className="mt-8 max-w-2xl text-base leading-9 text-brand-grey/70 md:text-lg">
+            <p className="mt-8 max-w-2xl body-description">
               {description}
             </p>
           )}

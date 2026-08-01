@@ -43,7 +43,7 @@ export function StudioStory() {
               <span className="text-brand-orange/70">02</span>
               <span className="mx-3">·</span>Mission
             </p>
-            <p className="mt-6 border-l border-brand-orange/40 pl-8 text-base leading-9 text-brand-grey">
+            <p className="mt-6 border-l border-brand-orange/40 pl-8 body-description">
               We craft original games, animation, and interactive experiences that leave a lasting impression. Every project is designed with purpose, creativity, and attention to detail—not trends.
             </p>
           </FadeIn>

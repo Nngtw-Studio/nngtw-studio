@@ -69,7 +69,7 @@ export function GameHero({ game }: GameHeroProps) {
                   <h1 className="editorial-heading text-4xl text-brand-white md:text-5xl">
                     {game.title}
                   </h1>
-                  <p className="mt-5 max-w-md text-sm leading-8 text-brand-grey/85 md:text-base">
+                  <p className="mt-5 max-w-md body-description">
                     {game.description}
                   </p>
                   <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-brand-white/10 bg-brand-white/10">
@@ -127,7 +127,7 @@ export function GameHero({ game }: GameHeroProps) {
                         <h3 className="font-display text-sm font-bold tracking-tight text-brand-white">
                           {phase.phase}
                         </h3>
-                        <p className="text-[13px] leading-6 text-brand-grey/70">
+                        <p className="body-description">
                           {phase.description}
                         </p>
                       </div>

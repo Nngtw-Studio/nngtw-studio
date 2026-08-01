@@ -45,7 +45,7 @@ export function LifeAppsSection() {
             </h2>
           </FadeIn>
           <FadeIn delay={0.1} className="lg:col-span-4 lg:col-start-9 lg:pb-2">
-            <p className="text-base leading-8 text-brand-grey">
+            <p className="body-description">
               {lifeAppsContent.intro}
             </p>
           </FadeIn>
@@ -73,7 +73,7 @@ export function LifeAppsSection() {
                   <p className="mt-2 font-accent text-[10px] tracking-[0.26em] text-brand-white/45 uppercase">
                     {pillar.tagline}
                   </p>
-                  <p className="mt-5 flex-1 text-sm leading-7 text-brand-grey">
+                  <p className="mt-5 flex-1 body-description">
                     {pillar.description}
                   </p>
                 </div>
@@ -84,7 +84,7 @@ export function LifeAppsSection() {
 
         {/* Status note */}
         <FadeIn className="mt-14 md:mt-16">
-          <p className="mx-auto max-w-2xl text-center text-sm leading-8 text-brand-grey">
+          <p className="mx-auto max-w-2xl text-center body-description">
             {lifeAppsContent.note}
           </p>
         </FadeIn>

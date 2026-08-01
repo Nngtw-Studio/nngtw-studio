@@ -1,9 +1,13 @@
 /** @format */
 
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion/FadeIn';
 import { Button } from '@/components/ui/Button';
 import type { Career } from '@/types';
+import { AnimatePresence, motion } from 'framer-motion';
 
 /**
  * The careers page hero. Its job is to put whatever we're *actually*
@@ -22,6 +26,15 @@ export function CareersHero({
   totalRoles: number;
 }) {
   const hiringNow = openRoles.length > 0;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!hiringNow || openRoles.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % openRoles.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [hiringNow, openRoles.length]);
 
   return (
     <section
@@ -50,7 +63,7 @@ export function CareersHero({
                 with us.
               </h1>
 
-              <p className="mt-8 max-w-xl text-base leading-9 text-brand-grey/70">
+              <p className="mt-8 max-w-xl body-description">
                 We&apos;re a small studio making original games and interactive
                 products — which means the work you do here is visible in the
                 thing that ships, not buried three layers down someone
@@ -74,22 +87,43 @@ export function CareersHero({
           </div>
 
           {/* Right: the roles you can actually apply to today */}
-          <div className="lg:col-span-6 lg:col-start-7">
+          <div className="lg:col-span-7 lg:col-start-6">
             {hiringNow ? (
-              <StaggerContainer className="flex flex-col gap-4">
-                {openRoles.map((role) => (
-                  <StaggerItem key={role.id}>
-                    <SpotlightCard role={role} />
-                  </StaggerItem>
-                ))}
-              </StaggerContainer>
+              <div className="relative min-h-[360px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  >
+                    <SpotlightCard role={openRoles[currentIndex]} />
+                  </motion.div>
+                </AnimatePresence>
+                
+                {openRoles.length > 1 && (
+                  <div className="mt-8 flex items-center gap-3">
+                    {openRoles.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentIndex(i)}
+                        className={`h-1.5 rounded-full transition-all duration-500 ${
+                          i === currentIndex ? 'w-8 bg-brand-orange' : 'w-2 bg-brand-white/20 hover:bg-brand-white/40'
+                        }`}
+                        aria-label={`Go to slide ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             ) : (
               <FadeIn>
                 <div className="glass-panel rounded-2xl p-8">
                   <p className="label-overline mb-4 text-brand-grey/50">
                     No open roles
                   </p>
-                  <p className="text-base leading-8 text-brand-grey/70">
+                  <p className="body-description">
                     Nothing is open at this moment — but we hire in bursts, and
                     the roles below are the ones we expect to open next. Reach
                     out early and we&apos;ll come to you first.
@@ -151,7 +185,7 @@ function SpotlightCard({ role }: { role: Career }) {
         </Link>
 
         {/* Clamped: the hero is a hook, the detail page is the pitch. */}
-        <p className="mt-4 line-clamp-3 text-sm leading-7 text-brand-grey/60">
+        <p className="mt-4 line-clamp-3 body-description">
           {role.description}
         </p>
 

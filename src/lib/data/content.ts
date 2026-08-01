@@ -30,7 +30,7 @@ export const activeGames: Game[] = [
     trailerUrl: "/videos/arithmetic-destination-trailer.mp4",
     bannerImageUrl: "/banners/arithmetic-destination.svg",
     projectLink: "/games/arithmetic-destination",
-    followLink: "https://discord.gg/nngtw",
+    followLink: "https://discord.gg/t7xbGjXFd",
     gallery: [],
     roadmap: [
       { phase: "Core Mechanics", description: "Number-based puzzle systems and world traversal" },
@@ -59,7 +59,7 @@ export const activeGames: Game[] = [
     trailerUrl: "/videos/king-summon-trailer.mp4",
     bannerImageUrl: "/banners/king-summon.svg",
     projectLink: "/games/king-summon",
-    followLink: "https://discord.gg/nngtw",
+    followLink: "https://discord.gg/t7xbGjXFd",
     gallery: [],
     roadmap: [
       { phase: "Combat Prototype", description: "Core summoning and battle loop" },
@@ -134,7 +134,7 @@ export const teamMembers: TeamMember[] = [
     name: "Reagan Sagolsem",
     role: "Founder & Creative Director",
     contribution:
-      "Leading NNGTW's vision, product strategy, creative direction, studio culture and long-term roadmap.",
+      "Leading Nngtw's vision, product strategy, creative direction, studio culture and long-term roadmap.",
     bio: "Vision, creative direction, and studio leadership.",
     image: teamAvatar("reagan.png"),
     profileUrl: "https://reagan.nngtw.com",

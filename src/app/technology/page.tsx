@@ -26,7 +26,7 @@ export default function TechnologyPage() {
                 <h2 className="font-display text-xl tracking-wide text-brand-white uppercase lg:text-2xl">
                   {section.title}
                 </h2>
-                <p className="text-base leading-relaxed text-brand-grey lg:col-span-2">
+                <p className="lg:col-span-2 body-description">
                   {section.description}
                 </p>
               </div>

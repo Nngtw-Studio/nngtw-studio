@@ -60,7 +60,7 @@ export function RoleCard({ role }: { role: Career }) {
           {role.title}
         </h3>
 
-        <p className="mt-3 line-clamp-3 text-sm leading-7 text-brand-grey/55">
+        <p className="mt-3 line-clamp-3 body-description">
           {role.description}
         </p>
 

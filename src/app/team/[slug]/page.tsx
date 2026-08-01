@@ -35,7 +35,7 @@ export default async function TeamMemberPage({ params }: Props) {
         <h1 className="editorial-heading mt-4 text-5xl text-brand-white md:text-7xl">
           {member ? member.name : 'Coming Soon'}
         </h1>
-        <p className="mt-6 max-w-md text-sm text-brand-grey">
+        <p className="mt-6 max-w-md body-description">
           {member
             ? `${member.name.split(' ')[0]}'s full profile is on its way. Check back soon.`
             : "This profile hasn't been published yet."}

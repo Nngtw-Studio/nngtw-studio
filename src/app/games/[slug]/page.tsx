@@ -47,7 +47,7 @@ export default async function GameDetailPage({ params }: Props) {
             <h2 className="font-display text-2xl tracking-wide text-brand-white uppercase">
               Overview
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-brand-grey md:text-lg">
+            <p className="mt-6 body-description">
               {game.overview ?? game.description}
             </p>
             {game.concept && (
@@ -55,7 +55,7 @@ export default async function GameDetailPage({ params }: Props) {
                 <h2 className="mt-12 font-display text-2xl tracking-wide text-brand-white uppercase">
                   Concept
                 </h2>
-                <p className="mt-6 text-base leading-relaxed text-brand-grey">
+                <p className="mt-6 body-description">
                   {game.concept}
                 </p>
               </>
@@ -94,7 +94,7 @@ export default async function GameDetailPage({ params }: Props) {
                     <h3 className="mt-2 font-display text-lg tracking-wide text-brand-white uppercase transition-colors group-hover:text-brand-orange">
                       {article.title}
                     </h3>
-                    <p className="mt-2 text-sm text-brand-grey">{article.excerpt}</p>
+                    <p className="mt-2 body-description">{article.excerpt}</p>
                   </Link>
                 </StaggerItem>
               ))}

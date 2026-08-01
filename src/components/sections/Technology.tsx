@@ -33,7 +33,7 @@ export async function Technology() {
             </h2>
           </div>
           <div className="lg:col-span-5 lg:col-start-7 lg:self-end">
-            <p className="text-base leading-9 text-brand-grey">
+            <p className="body-description">
               The platforms, engines, and frameworks we use to build games,
               applications, and immersive experiences — chosen for craft,
               not convenience.
