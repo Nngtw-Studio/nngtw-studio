@@ -6,6 +6,7 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeI
 import { Button } from "@/components/ui/Button";
 import { BRAND, SOCIAL } from "@/lib/constants";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { ConnectDino } from "@/components/ui/ConnectDino";
 
 export const metadata: Metadata = {
   title: "Connect",
@@ -108,13 +109,7 @@ export default function ConnectPage() {
           <div className="mx-auto grid max-w-[1600px] gap-12 px-6 md:px-12 lg:grid-cols-12 lg:px-20 xl:px-28">
             <div className="lg:col-span-8 xl:col-span-7 xl:col-start-6 flex items-end pointer-events-auto">
               <FadeIn delay={0.15} className="w-full">
-                <Image 
-                  src="/connect-dino.svg" 
-                  alt="Contact Dino" 
-                  width={1200} 
-                  height={900} 
-                  className="w-full object-contain drop-shadow-2xl" 
-                />
+                <ConnectDino className="w-full h-auto drop-shadow-2xl" />
               </FadeIn>
             </div>
           </div>
