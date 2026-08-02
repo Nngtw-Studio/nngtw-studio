@@ -107,7 +107,7 @@ export default function ConnectPage() {
 
         <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
           <div className="mx-auto grid max-w-[1600px] gap-12 px-6 md:px-12 lg:grid-cols-12 lg:px-20 xl:px-28">
-            <div className="lg:col-span-8 xl:col-span-7 xl:col-start-6 flex items-end pointer-events-auto">
+            <div className="lg:col-span-8 lg:col-start-5 xl:col-span-7 xl:col-start-6 flex items-end justify-end pointer-events-auto">
               <FadeIn delay={0.15} className="w-full">
                 <ConnectDino className="w-full h-auto drop-shadow-2xl" />
               </FadeIn>
