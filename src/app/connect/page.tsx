@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/FadeIn";
@@ -78,7 +79,7 @@ export default function ConnectPage() {
       {/* ═══════════════════════════════════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════════════════════════════════ */}
-      <section data-hero className="relative overflow-hidden pt-36 pb-16 md:pt-44">
+      <section data-hero className="relative overflow-hidden pt-36 md:pt-44 pb-72 md:pb-[36rem] lg:pb-0">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
@@ -88,27 +89,34 @@ export default function ConnectPage() {
           }}
         />
 
-        <div className="relative mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28">
-          <FadeIn>
-            <SectionLabel variant="main" className="mb-8">
-              Communication Hub
-            </SectionLabel>
-          </FadeIn>
-
-          <div className="grid items-end gap-10 lg:grid-cols-12">
-            <FadeIn className="lg:col-span-7">
+        <div className="relative z-10 mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28 pointer-events-none">
+          <div className="grid gap-12 lg:grid-cols-12">
+            <FadeIn className="lg:col-span-7 pb-16 pointer-events-auto">
+              <SectionLabel variant="main" className="mb-8">
+                Communication Hub
+              </SectionLabel>
               <h1 className="editorial-heading text-5xl text-brand-white md:text-7xl lg:text-8xl">
                 Hey<span className="text-brand-secondary">.</span> Need
                 <br />
                 <span className="text-brand-orange">something?</span>
               </h1>
             </FadeIn>
+          </div>
+        </div>
 
-            <FadeIn delay={0.15} className="lg:col-span-4 lg:col-start-9">
-              <p className="max-w-md body-description">
-                Drop a signal straight to the studio. Whatever you need, we&apos;ll make sure it lands on exactly the right desk.
-              </p>
-            </FadeIn>
+        <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+          <div className="mx-auto grid max-w-[1600px] gap-12 px-6 md:px-12 lg:grid-cols-12 lg:px-20 xl:px-28">
+            <div className="lg:col-span-8 xl:col-span-7 xl:col-start-6 flex items-end pointer-events-auto">
+              <FadeIn delay={0.15} className="w-full">
+                <Image 
+                  src="/connect-dino.svg" 
+                  alt="Contact Dino" 
+                  width={1200} 
+                  height={900} 
+                  className="w-full object-contain drop-shadow-2xl" 
+                />
+              </FadeIn>
+            </div>
           </div>
         </div>
       </section>
@@ -146,35 +154,34 @@ export default function ConnectPage() {
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-16 xl:gap-24">
             <div className="lg:col-span-5">
               <FadeIn>
-              <SectionLabel>Reach us</SectionLabel>
+              <SectionLabel>REACH US</SectionLabel>
                 <h2 className="editorial-heading mt-6 text-4xl text-brand-white md:text-5xl">
-                  Let&apos;s get
+                  Let&apos;s build
                   <br />
-                  in touch.
+                  something together.
                 </h2>
                 <p className="mt-7 max-w-md body-description">
-                  Tell us what it&apos;s about in the form and we&apos;ll route it to the
-                  right person — no need to guess an inbox. Keep it short and specific and
-                  the reply comes faster.
+                  Whether it&apos;s a question, feedback, partnership, or opportunity, send us a message and we&apos;ll make sure it reaches the right place.
                 </p>
               </FadeIn>
 
               <FadeIn delay={0.1}>
                 <dl className="mt-10 max-w-md space-y-0 border-t border-brand-white/8">
-                  {[
-                    { term: "Typical reply", detail: "Within 2 business days" },
-                    { term: "Faster answers", detail: "Ask in Discord — the team is there daily" },
-                  ].map((row) => (
-                    <div
-                      key={row.term}
-                      className="flex items-baseline gap-6 border-b border-brand-white/8 py-4"
-                    >
-                      <dt className="w-32 shrink-0 text-xs tracking-[0.18em] text-brand-grey uppercase">
-                        {row.term}
-                      </dt>
-                      <dd className="text-sm text-brand-white/80">{row.detail}</dd>
-                    </div>
-                  ))}
+                  <div className="flex items-baseline gap-6 border-b border-brand-white/8 py-4">
+                    <dt className="w-40 shrink-0 whitespace-nowrap font-accent text-xs tracking-[0.18em] text-brand-grey uppercase">
+                      Response time
+                    </dt>
+                    <dd className="font-body text-sm text-brand-white/80">Within 2 business days</dd>
+                  </div>
+                  
+                  <a href="#discord" className="group flex items-baseline gap-6 border-b border-brand-white/8 py-4 transition-colors">
+                    <dt className="w-40 shrink-0 whitespace-nowrap font-accent text-xs tracking-[0.18em] text-brand-grey uppercase transition-colors duration-300">
+                      Stay connected
+                    </dt>
+                    <dd className="font-body text-sm text-brand-white/80 transition-colors duration-300 group-hover:text-brand-white">
+                      Continue the conversation on Discord and stay up to date with development.
+                    </dd>
+                  </a>
                 </dl>
               </FadeIn>
 
@@ -297,35 +304,29 @@ export default function ConnectPage() {
 
 function SocialCard() {
   return (
-    <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7">
+    <div className="flex flex-col justify-between pt-4">
       <div>
-        <p className="text-xs tracking-[0.2em] text-brand-grey uppercase">Follow the studio</p>
+        <p className="font-accent text-xs tracking-[0.2em] text-brand-grey uppercase">Follow the studio</p>
         <p className="mt-3 body-description">
-          Announcements and behind-the-scenes from the team.
+          Development updates, announcements, and behind-the-scenes.
         </p>
       </div>
 
-      <div className="mt-6 flex flex-col gap-2.5">
+      <div className="mt-8 flex w-full flex-row items-center justify-between px-4">
         {socials.map((social) => (
           <a
             key={social.label}
             href={social.href}
             target="_blank"
             rel="noopener noreferrer"
-            style={
-              {
-                "--accent": social.accent,
-                "--accent-soft": `color-mix(in srgb, ${social.accent} 40%, transparent)`,
-              } as React.CSSProperties
-            }
-            className="cursor-target group flex items-center gap-3 rounded-2xl border border-brand-white/8 bg-brand-white/[0.02] p-3 transition-colors duration-300 hover:border-(--accent-soft) hover:bg-brand-white/[0.05]"
+            aria-label={social.label}
+            style={{
+              "--accent": social.accent,
+            } as React.CSSProperties}
+            className="group relative inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-brand-secondary/25 bg-brand-secondary/[0.06] text-brand-white/60 transition-all duration-300 ease-out hover:-translate-y-[2px] hover:border-brand-secondary/50 hover:bg-brand-secondary/[0.09] hover:text-brand-white/80"
           >
-            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-brand-white/10 text-brand-grey/60 transition-colors duration-300 group-hover:border-(--accent-soft) group-hover:text-(--accent)">
+            <span className="flex items-center justify-center [&>svg]:!h-6 [&>svg]:!w-6 [&>svg]:transition-all [&>svg]:duration-300 group-hover:[&>svg]:!h-8 group-hover:[&>svg]:!w-8">
               {social.icon}
-            </span>
-            <span className="min-w-0">
-              <span className="block text-sm text-brand-white">{social.label}</span>
-              <span className="block truncate text-xs text-brand-grey">{social.handle}</span>
             </span>
           </a>
         ))}
@@ -346,10 +347,11 @@ function DiscordCardBento() {
 
   return (
     <a
+      id="discord"
       href={SOCIAL.discord}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[#5865F2]/25 bg-[#5865F2]/[0.06] backdrop-blur-[2px] p-8 transition-all duration-500 ease-out hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.09] md:p-12 lg:flex-row lg:items-center lg:gap-6 lg:p-16"
+      className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[#5865F2]/25 bg-[#5865F2]/[0.06] backdrop-blur-[2px] p-8 transition-all duration-500 ease-out hover:border-[#5865F2]/50 hover:bg-[#5865F2]/[0.09] md:p-12 lg:flex-row lg:items-center lg:gap-6 lg:p-16 scroll-mt-32"
     >
       {/* Sweeping Shine Effect */}
       <div 
@@ -385,7 +387,7 @@ function DiscordCardBento() {
             {`Our community lives\non Discord.`}
           </h3>
         </div>
-        <p className="mt-6 font-secondary font-normal tracking-[0.02em] whitespace-pre-line text-[16px] leading-normal text-brand-white/60">
+        <p className="mt-6 font-body font-normal tracking-[0.02em] whitespace-pre-line text-[16px] leading-normal text-brand-white/60">
           {`Stay connected with Nngtw. Follow development, discover upcoming projects, share feedback, and connect with the people building them.`}
         </p>
 
