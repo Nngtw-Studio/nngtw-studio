@@ -27,19 +27,20 @@ export function CareersHero({
 }) {
   const hiringNow = openRoles.length > 0;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    if (!hiringNow || openRoles.length <= 1) return;
+    if (!hiringNow || openRoles.length <= 1 || isHovered) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % openRoles.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [hiringNow, openRoles.length]);
+  }, [hiringNow, openRoles.length, isHovered]);
 
   return (
     <section
       data-hero
-      className="relative overflow-hidden pt-36 pb-16 md:pt-44 md:pb-20"
+      className="relative overflow-hidden pt-36 pb-8 md:pt-44 md:pb-12"
     >
       {/* Lighting rig — the two-corner radial convention every section uses. */}
       <div className="pointer-events-none absolute inset-0">
@@ -89,7 +90,11 @@ export function CareersHero({
           {/* Right: the roles you can actually apply to today */}
           <div className="lg:col-span-7 lg:col-start-6">
             {hiringNow ? (
-              <div className="relative min-h-[360px]">
+              <div 
+                className="relative min-h-[360px] group/slider"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentIndex}
@@ -98,7 +103,10 @@ export function CareersHero({
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                   >
-                    <SpotlightCard role={openRoles[currentIndex]} />
+                    <SpotlightCard 
+                      role={openRoles[currentIndex]} 
+                      onNext={openRoles.length > 1 ? () => setCurrentIndex((prev) => (prev + 1) % openRoles.length) : undefined} 
+                    />
                   </motion.div>
                 </AnimatePresence>
                 
@@ -136,7 +144,7 @@ export function CareersHero({
 
         {/* The scroll cue — deliberately small. It's a signpost to the rest
             of the roster, not a competing call to action. */}
-        <FadeIn className="mt-16 md:mt-20">
+        <FadeIn className="mt-10 md:mt-12">
           <Link
             href="#all-roles"
             className="group inline-flex items-center gap-3 text-brand-grey/40 transition-colors duration-300 hover:text-brand-orange"
@@ -160,39 +168,38 @@ export function CareersHero({
  * `RoleCard` used in the full list so "you can apply to this today" reads
  * differently from "this exists."
  */
-function SpotlightCard({ role }: { role: Career }) {
+function SpotlightCard({ role, onNext }: { role: Career; onNext?: () => void }) {
   const applyHref = role.applyUrl ?? '/connect';
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-brand-white/8 bg-brand-white/2 p-7 transition-all duration-500 hover:border-brand-orange/30 md:p-8">
-      {/* Sheen that sweeps in from the leading edge on hover. */}
-      <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-brand-orange/4 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+    <div className="group relative h-[340px] overflow-hidden rounded-2xl border border-brand-white/8 bg-brand-white/2 p-7 transition-all duration-500 hover:border-brand-orange/30 md:h-[360px] md:p-8">
+      <div className="relative flex h-full flex-col">
+        <div>
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <span className="border border-brand-orange/25 bg-brand-orange/10 px-2.5 py-0.5 label-overline text-brand-orange">
+              {role.type}
+            </span>
+            <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/40">
+              {role.department}&ensp;·&ensp;{role.location}
+            </p>
+          </div>
 
-      <div className="relative">
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <span className="border border-brand-orange/25 bg-brand-orange/10 px-2.5 py-0.5 label-overline text-brand-orange">
-            {role.type}
-          </span>
-          <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/40">
-            {role.department}&ensp;·&ensp;{role.location}
+          <Link href={`/careers/${role.slug}`} className="">
+            <h2 className="editorial-heading text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-orange md:text-3xl">
+              {role.title}
+            </h2>
+          </Link>
+
+          {/* Clamped: the hero is a hook, the detail page is the pitch. */}
+          <p className="mt-4 line-clamp-3 body-description">
+            {role.description}
           </p>
         </div>
 
-        <Link href={`/careers/${role.slug}`} className="">
-          <h2 className="editorial-heading text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-orange md:text-3xl">
-            {role.title}
-          </h2>
-        </Link>
-
-        {/* Clamped: the hero is a hook, the detail page is the pitch. */}
-        <p className="mt-4 line-clamp-3 body-description">
-          {role.description}
-        </p>
-
-        <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-3">
+        <div className="mt-auto flex flex-wrap items-center gap-x-8 gap-y-3">
           {/* -ml-5 pulls the CtaButton's reserved 320px slot back into
               alignment with the text above it — the documented fix. */}
-          <div className="-ml-5">
+          <div className="-ml-5 flex flex-wrap items-center">
             <Button
               href={applyHref}
               variant="primary"
@@ -200,15 +207,35 @@ function SpotlightCard({ role }: { role: Career }) {
             >
               Apply Now
             </Button>
+            <Button
+              href={`/careers/${role.slug}`}
+              variant="secondary"
+            >
+              Read Full Role
+            </Button>
           </div>
-          <Link
-            href={`/careers/${role.slug}`}
-            className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/40 transition-colors duration-300 hover:text-brand-white"
-          >
-            Read the full role &rarr;
-          </Link>
         </div>
       </div>
+
+      {onNext && (
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-20 flex w-[56px] items-center justify-end opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          {/* Gradient fade from right to left (orange) */}
+          <div className="absolute inset-0 bg-gradient-to-l from-brand-orange/40 via-brand-orange/10 to-transparent" />
+          
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onNext();
+            }}
+            className="pointer-events-auto relative z-30 flex h-full w-full items-center justify-end pl-2 pr-1 text-brand-orange transition-transform duration-300 hover:scale-110"
+            aria-label="Next role"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

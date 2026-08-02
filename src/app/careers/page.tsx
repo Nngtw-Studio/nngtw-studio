@@ -52,7 +52,7 @@ export default async function CareersPage() {
               </p>
             </FadeIn>
 
-            <StaggerContainer className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <StaggerContainer className="flex flex-col gap-5">
               {openRoles.map((career) => (
                 <StaggerItem key={career.id}>
                   <RoleCard role={career} />
@@ -75,7 +75,7 @@ export default async function CareersPage() {
               </p>
             </FadeIn>
 
-            <StaggerContainer className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <StaggerContainer className="flex flex-col gap-5">
               {futureRoles.map((career) => (
                 <StaggerItem key={career.id}>
                   <RoleCard role={career} />

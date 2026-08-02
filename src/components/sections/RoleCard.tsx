@@ -26,10 +26,10 @@ export function RoleCard({ role }: { role: Career }) {
     <Link
       href={`/careers/${role.slug}`}
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 transition-all duration-500',
+        'group relative flex w-full flex-col overflow-hidden rounded-[28px] border p-7 transition-all duration-500 md:p-10',
         isOpen
-          ? 'border-brand-orange/20 bg-brand-orange/3 hover:border-brand-orange/45'
-          : 'border-brand-white/7 bg-brand-white/2 hover:border-brand-white/18',
+          ? 'border-brand-orange/20 bg-brand-orange/3 hover:border-brand-orange/45 hover:bg-brand-orange/5'
+          : 'border-brand-white/7 bg-brand-white/2 hover:border-brand-white/18 hover:bg-brand-white/[0.04]',
       )}
     >
       {/* Corner glow — warm for a live role, neutral for a future one, so
@@ -41,35 +41,36 @@ export function RoleCard({ role }: { role: Career }) {
         )}
       />
 
-      <div className="relative flex h-full flex-col">
-        <div className="mb-5 flex flex-wrap items-center gap-3">
-          <span
-            className={cn(
-              'inline-block border px-2.5 py-0.5 label-overline',
-              statusStyles[role.status],
-            )}
-          >
-            {careerStatusLabels[role.status]}
-          </span>
-          <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/35">
-            {role.department}
+      <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 w-full">
+        <div className="flex-1">
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <span
+              className={cn(
+                'inline-block border px-2.5 py-0.5 label-overline',
+                statusStyles[role.status],
+              )}
+            >
+              {careerStatusLabels[role.status]}
+            </span>
+            <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/35">
+              {role.department}
+            </p>
+          </div>
+
+          <h3 className="font-display text-xl font-semibold tracking-tight text-brand-white/90 transition-colors duration-300 group-hover:text-brand-orange md:text-2xl">
+            {role.title}
+          </h3>
+
+          <p className="mt-3 line-clamp-2 max-w-4xl body-description">
+            {role.description}
           </p>
         </div>
 
-        <h3 className="font-display text-lg font-semibold tracking-tight text-brand-white/90 transition-colors duration-300 group-hover:text-brand-orange md:text-xl">
-          {role.title}
-        </h3>
-
-        <p className="mt-3 line-clamp-3 body-description">
-          {role.description}
-        </p>
-
-        {/* mt-auto pins the footer to the card bottom so a 2-line and a
-            4-line description still produce aligned rows in the grid. */}
-        <div className="mt-auto flex items-end justify-between gap-4 pt-6">
-          <p className="font-accent text-[10px] leading-relaxed tracking-[0.2em] uppercase text-brand-grey/35">
+        <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between lg:justify-end gap-6 shrink-0 border-t border-brand-white/10 lg:border-t-0 pt-6 lg:pt-0">
+          <p className="font-accent text-[10px] leading-relaxed tracking-[0.2em] uppercase text-brand-grey/35 text-left lg:text-right">
             {role.location}
-            <br />
+            <br className="hidden lg:block" />
+            <span className="lg:hidden"> · </span>
             {role.type}
           </p>
           <span className="font-accent text-[10px] tracking-[0.25em] uppercase text-brand-grey/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-brand-orange">
