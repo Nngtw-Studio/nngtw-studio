@@ -5,6 +5,7 @@
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { animate, motion, useMotionValue, type AnimationPlaybackControls } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 /**
  * The header's hairline bottom border doubling as a route-loading bar. On any
@@ -17,7 +18,7 @@ import { animate, motion, useMotionValue, type AnimationPlaybackControls } from 
  * during bubble, so by then `defaultPrevented` can't distinguish client-side
  * navigation from a genuinely cancelled click.
  */
-export function RouteProgress() {
+export function RouteProgress({ className }: { className?: string }) {
   const pathname = usePathname();
   const scaleX = useMotionValue(0);
   const opacity = useMotionValue(0);
@@ -88,7 +89,7 @@ export function RouteProgress() {
     <motion.span
       aria-hidden="true"
       style={{ scaleX, opacity }}
-      className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-0.5 origin-left bg-brand-orange shadow-[0_0_10px_var(--color-brand-orange)]"
+      className={cn("pointer-events-none absolute inset-x-0 bottom-0 z-10 h-0.5 origin-left bg-brand-orange shadow-[0_0_10px_var(--color-brand-orange)]", className)}
     />
   );
 }

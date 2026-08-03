@@ -131,14 +131,19 @@ export function Footer() {
           <p className="label-overline text-brand-grey/30">
             &copy; {new Date().getFullYear()} {BRAND.name}. All rights reserved.
           </p>
-          <a
-            href="/credits"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-brand-grey/30 underline transition-colors duration-300 hover:text-brand-grey/60"
-          >
-            Credits
-          </a>
+          <div className="flex flex-col items-start md:items-center gap-2">
+            <a
+              href="/credits"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-brand-grey/30 underline transition-colors duration-300 hover:text-brand-grey/60"
+            >
+              Credits
+            </a>
+            <div className="text-[10px] text-brand-grey/30">
+              Icons made from <a href="https://www.onlinewebfonts.com/icon" target="_blank" rel="noopener noreferrer" className="underline transition-colors duration-300 hover:text-brand-grey/60">svg icons</a> is licensed by CC BY 4.0
+            </div>
+          </div>
           <p className="label-overline text-brand-grey/30">
             Imagine. Explore. Evolve.
           </p>

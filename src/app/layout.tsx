@@ -19,6 +19,32 @@ const chillax = localFont({
   fallback: ['Georgia', 'serif'],
 });
 
+const petrovSans = localFont({
+  src: [
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-Thin.ttf', weight: '100', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-ThinItalic.ttf', weight: '100', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-ExtraLight.ttf', weight: '200', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-ExtraLightItalic.ttf', weight: '200', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-Light.ttf', weight: '300', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-LightItalic.ttf', weight: '300', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-Regular.ttf', weight: '400', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-RegularItalic.ttf', weight: '400', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-Book.ttf', weight: '500', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-BookItalic.ttf', weight: '500', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-SemiBold.ttf', weight: '600', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-SemiBoldItalic.ttf', weight: '600', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-Bold.ttf', weight: '700', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-BoldItalic.ttf', weight: '700', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-ExtraBold.ttf', weight: '800', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-ExtraBoldItalic.ttf', weight: '800', style: 'italic' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-Black.ttf', weight: '900', style: 'normal' },
+    { path: '../../public/fonts/Petrov Sans/PetrovSans-BlackItalic.ttf', weight: '900', style: 'italic' },
+  ],
+  variable: '--font-body',
+  display: 'swap',
+  fallback: ['system-ui', 'sans-serif'],
+});
+
 const cabinetGrotesk = localFont({
   src: [
     {
@@ -26,7 +52,7 @@ const cabinetGrotesk = localFont({
       style: 'normal',
     },
   ],
-  variable: '--font-body',
+  variable: '--font-cabinet',
   display: 'swap',
   fallback: ['system-ui', 'sans-serif'],
 });
@@ -79,6 +105,11 @@ const posteramaText = localFont({
     {
       path: '../../public/fonts/PosteramaText/Posterama Text W01 Thin.woff',
       weight: '100',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/PosteramaText/Posterama Text W07 Light.woff2',
+      weight: '300',
       style: 'normal',
     },
     {
@@ -147,7 +178,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${chillax.variable} ${cabinetGrotesk.variable} ${posterama2001.variable} ${posteramaText.variable}`}
+      className={`${chillax.variable} ${petrovSans.variable} ${cabinetGrotesk.variable} ${posterama2001.variable} ${posteramaText.variable}`}
     >
       <body className="antialiased" suppressHydrationWarning>
         <SiteChrome>{children}</SiteChrome>

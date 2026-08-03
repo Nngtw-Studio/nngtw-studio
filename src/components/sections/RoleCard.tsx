@@ -6,10 +6,10 @@ import type { Career } from '@/types';
 import { cn } from '@/lib/utils';
 
 const statusStyles: Record<string, string> = {
-  open: 'border-green-500/25 bg-green-500/8 text-green-400',
-  internship: 'border-brand-orange/25 bg-brand-orange/8 text-brand-orange',
-  future: 'border-brand-white/12 bg-brand-white/4 text-brand-grey/50',
-  closed: 'border-red-500/15 bg-red-500/5 text-red-400/50',
+  open: 'border-green-500/25 bg-green-500/8 text-green-400 inline-block border px-2.5 py-0.5 label-overline',
+  internship: 'selected-pills',
+  future: 'border-brand-white/12 bg-brand-white/4 text-brand-grey/50 inline-block border px-2.5 py-0.5 label-overline',
+  closed: 'border-red-500/15 bg-red-500/5 text-red-400/50 inline-block border px-2.5 py-0.5 label-overline',
 };
 
 /**
@@ -46,7 +46,6 @@ export function RoleCard({ role }: { role: Career }) {
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <span
               className={cn(
-                'inline-block border px-2.5 py-0.5 label-overline',
                 statusStyles[role.status],
               )}
             >

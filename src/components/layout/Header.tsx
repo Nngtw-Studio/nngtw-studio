@@ -428,10 +428,15 @@ export function Header() {
             )}
           </AnimatePresence>
         </div>
-
-        {/* Loading bar riding the header's hairline border */}
-        <RouteProgress />
       </header>
+
+      {/* Loading bar riding the header's hairline border, persisting even if header hides */}
+      <RouteProgress
+        className={cn(
+          '!fixed !bottom-auto !z-50 transition-all duration-500',
+          (!navVisible && !mobileOpen && !introActive) ? 'top-0' : 'top-20'
+        )}
+      />
 
       {/* Mobile menu */}
       <AnimatePresence>

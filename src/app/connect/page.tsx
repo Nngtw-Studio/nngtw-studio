@@ -80,7 +80,7 @@ export default function ConnectPage() {
       {/* ═══════════════════════════════════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════════════════════════════════ */}
-      <section data-hero className="relative overflow-hidden pt-36 md:pt-44 pb-72 md:pb-[36rem] lg:pb-0">
+      <section data-hero className="relative overflow-hidden pt-36 md:pt-44 pb-40 md:pb-[24rem] lg:pb-0">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
@@ -96,7 +96,7 @@ export default function ConnectPage() {
               <SectionLabel variant="main" className="mb-8">
                 Communication Hub
               </SectionLabel>
-              <h1 className="editorial-heading text-5xl text-brand-white md:text-7xl lg:text-8xl">
+              <h1 className="editorial-heading text-5xl text-brand-white md:text-7xl lg:text-8xl w-max whitespace-nowrap">
                 Hey<span className="text-brand-secondary">.</span> Need
                 <br />
                 <span className="text-brand-orange">something?</span>
@@ -106,8 +106,8 @@ export default function ConnectPage() {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-          <div className="mx-auto grid max-w-[1600px] gap-12 px-6 md:px-12 lg:grid-cols-12 lg:px-20 xl:px-28">
-            <div className="lg:col-span-8 lg:col-start-5 xl:col-span-7 xl:col-start-6 flex items-end justify-end pointer-events-auto">
+          <div className="mx-auto grid max-w-[1600px] gap-14 px-6 md:px-12 lg:grid-cols-12 lg:gap-16 lg:px-20 xl:gap-24 xl:px-28">
+            <div className="lg:col-span-7 lg:col-start-6 flex items-end justify-end pointer-events-auto">
               <FadeIn delay={0.15} className="w-full">
                 <ConnectDino className="w-full h-auto drop-shadow-2xl" />
               </FadeIn>
@@ -147,7 +147,7 @@ export default function ConnectPage() {
 
         <div className="relative z-10 mx-auto max-w-[1600px] px-6 pt-16 pb-16 md:px-12 md:pt-20 md:pb-24 lg:px-20 lg:pt-20 xl:px-28">
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-16 xl:gap-24">
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-5 flex flex-col">
               <FadeIn>
               <SectionLabel>REACH US</SectionLabel>
                 <h2 className="editorial-heading mt-6 text-4xl text-brand-white md:text-5xl">
@@ -162,14 +162,14 @@ export default function ConnectPage() {
 
               <FadeIn delay={0.1}>
                 <dl className="mt-10 max-w-md space-y-0 border-t border-brand-white/8">
-                  <div className="flex items-baseline gap-6 border-b border-brand-white/8 py-4">
+                  <div className="flex items-baseline gap-6 border-b border-brand-white/8 py-6">
                     <dt className="w-40 shrink-0 whitespace-nowrap font-accent text-xs tracking-[0.18em] text-brand-grey uppercase">
                       Response time
                     </dt>
                     <dd className="font-body text-sm text-brand-white/80">Within 2 business days</dd>
                   </div>
                   
-                  <a href="#discord" className="group flex items-baseline gap-6 border-b border-brand-white/8 py-4 transition-colors">
+                  <a href="#discord" className="group flex items-baseline gap-6 border-b border-brand-white/8 py-6 transition-colors">
                     <dt className="w-40 shrink-0 whitespace-nowrap font-accent text-xs tracking-[0.18em] text-brand-grey uppercase transition-colors duration-300">
                       Stay connected
                     </dt>
@@ -180,13 +180,13 @@ export default function ConnectPage() {
                 </dl>
               </FadeIn>
 
-              <FadeIn delay={0.2} className="mt-12">
+              <FadeIn delay={0.2} className="mt-20 lg:mt-auto lg:pb-8">
                 <SocialCard />
               </FadeIn>
             </div>
 
             <FadeIn delay={0.15} direction="left" className="lg:col-span-7">
-              <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] p-7 md:p-10">
+              <div className="flex h-full flex-col justify-between rounded-3xl border border-brand-white/8 bg-brand-white/[0.02] backdrop-blur-[2px] p-7 md:p-10">
                 <ContactForm />
               </div>
             </FadeIn>

@@ -3,6 +3,7 @@
 'use client';
 
 import { motion, MotionConfig } from 'framer-motion';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -121,15 +122,27 @@ export function StudioHero({ teamCount }: StudioHeroProps) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: EASE_OUT }}
-              className="lg:col-span-4 lg:col-start-9 lg:self-end flex flex-col gap-4"
+              className="lg:col-span-5 lg:col-start-8 lg:self-end flex flex-col justify-end gap-4 relative min-h-[400px]"
             >
-              <div className="accent-line" />
-              <p className="max-w-70 body-description">
-                An independent game studio.
-                <br />
-                <span className="text-brand-orange font-medium">Craft</span>{' '}
-                <span className="text-brand-white/80">over scale.</span>
-              </p>
+              <div className="absolute right-0 bottom-[-15px] md:right-[30px] md:bottom-[-100px] -z-10 pointer-events-none">
+                <Image 
+                  src="/explore-jaddoo.png" 
+                  alt="Explorer Slime" 
+                  width={600} 
+                  height={600} 
+                  className="w-[300px] md:w-[600px] max-w-none object-contain drop-shadow-2xl opacity-50 md:opacity-100" 
+                />
+              </div>
+
+              <div className="relative z-10 mt-auto -translate-y-[2px] md:-left-[147px] bg-brand-black/40 p-4 rounded-xl backdrop-blur-sm lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+                <div className="accent-line mb-4" />
+                <p className="max-w-70 body-description drop-shadow-lg">
+                  An independent game studio.
+                  <br />
+                  <span className="text-brand-orange font-light font-secondary drop-shadow-lg">Craft</span>{' '}
+                  <span className="text-brand-white/80 drop-shadow-lg">over scale.</span>
+                </p>
+              </div>
             </motion.div>
           </div>
 

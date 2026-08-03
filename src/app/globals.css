@@ -356,6 +356,18 @@ h6 {
 }
 
 @layer utilities {
+  .error-title {
+    font-family: var(--font-accent), 'Times New Roman', serif;
+  }
+
+  .selected-pills {
+    @apply inline-flex items-center justify-center rounded-xl border border-brand-orange px-3 py-2.5 text-center text-xs tracking-[0.25em] uppercase font-bold text-brand-orange transition-all duration-300 bg-transparent;
+  }
+
+  .hover-pills {
+    @apply inline-flex items-center justify-center rounded-xl border border-brand-white/10 px-3 py-2.5 text-center text-xs tracking-[0.25em] uppercase font-semibold text-brand-grey transition-all duration-300 hover:border-brand-orange/60 hover:text-brand-orange/80 bg-transparent;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -385,7 +397,7 @@ h6 {
 
   /* Global body/description text matching Figma spec */
   .body-description {
-    @apply font-secondary text-[16px] font-normal tracking-[0.02em] text-brand-white/50 leading-relaxed;
+    @apply font-body text-[16px] font-normal tracking-[0.02em] text-brand-white/50 leading-relaxed;
   }
 
   .accent-line {

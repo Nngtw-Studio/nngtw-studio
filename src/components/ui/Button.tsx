@@ -57,7 +57,7 @@ export function Button({
   const classes = cn(
     'group/btn cursor-target relative isolate inline-flex items-center justify-center overflow-hidden',
     fullWidth ? 'w-full hover:w-full' : 'w-[280px] hover:w-[320px]',
-    'h-[56px] rounded-[16px]',
+    'h-[56px] rounded-[16px] hover:rounded-none',
     'font-secondary text-[18px] font-semibold',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-black',
     variants[variant],

@@ -116,7 +116,7 @@ export default function NotFound() {
     <section data-hero className="flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-brand-bg relative">
       <div className="flex flex-col items-center justify-center w-full px-6 z-10">
         <p 
-          className={`relative text-center font-accent font-bold text-brand-white/80 text-[120px] sm:text-[180px] md:text-[260px] lg:text-[320px] xl:text-[380px] leading-none ${isGlitching ? styles.error : ''}`}
+          className={`relative text-center font-display font-bold text-brand-white/60 text-[120px] sm:text-[180px] md:text-[260px] lg:text-[320px] xl:text-[380px] leading-none ${isGlitching ? styles.error : ''}`}
         >
           404
         </p>
@@ -126,16 +126,19 @@ export default function NotFound() {
         {/* Ground: a soft oval drawn at 150% width but clipped to the viewport,
             so only its flat middle shows and it tapers off past the edges. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
-          <div className="h-3 w-[125%] shrink-0 rounded-[50%] bg-[#D6D5D5] sm:h-4 md:h-5 lg:h-6" />
+          <div className="h-3 w-[125%] shrink-0 rounded-[50%] bg-brand-white sm:h-4 md:h-5 lg:h-6" />
         </div>
         <Dino404
           blinking={isBlinking}
-          className="pointer-events-none absolute bottom-0 left-1/2 h-40 w-auto -translate-x-1/2 select-none sm:h-56 md:h-72 lg:h-80 xl:h-88"
+          className="pointer-events-none absolute bottom-1 sm:bottom-1.5 md:bottom-2 lg:bottom-2.5 left-1/2 h-40 w-auto -translate-x-1/2 select-none sm:h-56 md:h-72 lg:h-80"
         />
       </div>
 
       <div className="flex flex-col items-center justify-center w-full px-6 z-10">
-        <h2 className={`font-secondary font-bold text-brand-white text-[24px] md:text-[28px] lg:text-[32px] ${isGlitching ? styles.info : ''}`}>
+        <h2 
+          className={`error-title font-black text-brand-white text-[24px] md:text-[28px] lg:text-[32px] ${isGlitching ? styles.info : ''}`}
+          style={{ fontFamily: 'var(--font-secondary)' }}
+        >
           Page Not Found
         </h2>
         

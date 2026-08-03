@@ -59,7 +59,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-7">
       {/* Topic */}
       <div>
-        <p className="mb-3 block font-secondary font-bold text-sm tracking-[0.1em] text-brand-white transition-colors duration-300">What can we help with?</p>
+        <p className="mb-6 block font-secondary font-bold text-sm tracking-[0.1em] text-brand-white transition-colors duration-300">What can we help with?</p>
         <div className="flex flex-wrap w-full gap-2.5">
           {TOPICS.map((topic) => (
             <motion.button
@@ -69,10 +69,10 @@ export function ContactForm() {
               initial="idle"
               whileHover="hover"
               className={cn(
-                "relative flex-1 rounded-xl border px-3 py-2.5 text-center text-xs tracking-[0.25em] uppercase transition-colors duration-300 min-w-[120px]",
+                "relative flex-1 min-w-[120px]",
                 formData.type === topic.value
-                  ? "border-brand-orange text-brand-orange font-bold"
-                  : "border-brand-white/10 text-brand-grey font-semibold hover:border-brand-orange/60 hover:text-brand-orange/80"
+                  ? "selected-pills"
+                  : "hover-pills"
               )}
             >
               {/* Hover Indicator */}

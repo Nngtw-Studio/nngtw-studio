@@ -31,10 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const statusStyles: Record<string, string> = {
-  open: "border-green-500/30 bg-green-500/10 text-green-400",
-  internship: "border-brand-orange/30 bg-brand-orange/10 text-brand-orange",
-  future: "border-brand-white/20 bg-brand-white/5 text-brand-grey",
-  closed: "border-red-500/20 bg-red-500/5 text-red-400/60",
+  open: "border-green-500/30 bg-green-500/10 text-green-400 inline-block border px-3 py-1 text-[10px] tracking-[0.15em] uppercase",
+  internship: "selected-pills",
+  future: "border-brand-white/20 bg-brand-white/5 text-brand-grey inline-block border px-3 py-1 text-[10px] tracking-[0.15em] uppercase",
+  closed: "border-red-500/20 bg-red-500/5 text-red-400/60 inline-block border px-3 py-1 text-[10px] tracking-[0.15em] uppercase",
 };
 
 export default async function CareerDetailPage({ params }: Props) {
@@ -54,7 +54,6 @@ export default async function CareerDetailPage({ params }: Props) {
         <FadeIn>
           <span
             className={cn(
-              "inline-block border px-3 py-1 text-[10px] tracking-[0.15em] uppercase",
               statusStyles[career.status]
             )}
           >
