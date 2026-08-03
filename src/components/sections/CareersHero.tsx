@@ -40,7 +40,7 @@ export function CareersHero({
   return (
     <section
       data-hero
-      className="relative overflow-hidden pt-36 pb-8 md:pt-44 md:pb-12"
+      className="relative flex min-h-[100dvh] flex-col justify-center overflow-hidden pt-24 pb-8 md:pt-32 md:pb-12"
     >
       {/* Lighting rig — the two-corner radial convention every section uses. */}
       <div className="pointer-events-none absolute inset-0">
@@ -48,7 +48,7 @@ export function CareersHero({
         <div className="absolute -right-40 -bottom-52 h-[34rem] w-[34rem] rounded-full bg-brand-secondary/6 blur-[170px]" />
       </div>
 
-      <div className="relative mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28">
+      <div className="relative mx-auto w-full max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
           {/* Left: the pitch */}
           <div className="lg:col-span-5">
@@ -172,34 +172,51 @@ function SpotlightCard({ role, onNext }: { role: Career; onNext?: () => void }) 
   const applyHref = role.applyUrl ?? '/connect';
 
   return (
-    <div className="group relative h-[340px] overflow-hidden rounded-2xl border border-brand-white/8 bg-brand-white/2 p-7 transition-all duration-500 hover:border-brand-orange/30 md:h-[360px] md:p-8">
-      <div className="relative flex h-full flex-col">
+    <div className="group relative h-[420px] overflow-hidden rounded-[32px] border border-brand-white/8 bg-brand-white/[0.03] backdrop-blur-[2px] p-6 transition-colors duration-500 hover:border-brand-orange/50 md:h-[460px]">
+      {/* Ambient Glows */}
+      <div
+        className="pointer-events-none absolute top-16 left-0 z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px] transition-all duration-700 bg-brand-orange/[0.04] group-hover:bg-brand-orange/[0.05]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute bottom-0 right-0 z-0 h-[800px] w-[800px] translate-x-1/2 translate-y-1/2 rounded-full blur-[110px] transition-all duration-700 bg-brand-orange/[0.04] group-hover:bg-brand-orange/[0.05]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute top-1/2 left-1/2 z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 animate-sway rounded-full blur-[150px] transition-all duration-700 bg-brand-secondary/[0.02] group-hover:bg-brand-secondary/[0.04]"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 flex h-full flex-col">
         <div>
-          <div className="mb-4 flex flex-wrap items-center gap-3">
-            <span className="border border-brand-orange/25 bg-brand-orange/10 px-2.5 py-0.5 label-overline text-brand-orange">
-              {role.type}
-            </span>
-            <p className="font-accent text-[10px] tracking-[0.2em] uppercase text-brand-grey/40">
-              {role.department}&ensp;·&ensp;{role.location}
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <Link href={`/careers/${role.slug}`} className="block max-w-[70%]">
+              <p className="label-overline mb-3 text-brand-grey/60">Role</p>
+              <h2 className="editorial-heading text-2xl text-brand-white transition-colors duration-300 md:text-3xl">
+                {role.title}
+              </h2>
+            </Link>
+            <div className="flex flex-col items-end text-right gap-1 mt-1">
+              <span className="label-overline font-semibold text-brand-white/90">REMOTE</span>
+              <span className="label-overline font-semibold text-brand-white/90">{role.type}</span>
+            </div>
           </div>
 
-          <Link href={`/careers/${role.slug}`} className="">
-            <h2 className="editorial-heading text-2xl text-brand-white transition-colors duration-300 group-hover:text-brand-orange md:text-3xl">
-              {role.title}
-            </h2>
-          </Link>
-
-          {/* Clamped: the hero is a hook, the detail page is the pitch. */}
-          <p className="mt-4 line-clamp-3 body-description">
-            {role.description}
-          </p>
+          <div className="mt-6">
+            <p className="label-overline mb-3 text-brand-grey/60">Requirements</p>
+            <div className="flex flex-col gap-2.5">
+              {role.requirements.filter(r => !r.toLowerCase().startsWith('nice to have:')).map((req, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <span className="text-brand-orange">—</span>
+                  <span className="body-description line-clamp-2">{req}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-x-8 gap-y-3">
-          {/* -ml-5 pulls the CtaButton's reserved 320px slot back into
-              alignment with the text above it — the documented fix. */}
-          <div className="-ml-5 flex flex-wrap items-center">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-0 sm:-space-x-2">
             <Button
               href={applyHref}
               variant="primary"
@@ -218,16 +235,16 @@ function SpotlightCard({ role, onNext }: { role: Career; onNext?: () => void }) 
       </div>
 
       {onNext && (
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-20 flex w-[56px] items-center justify-end opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-20 flex w-[64px] items-center justify-end opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           {/* Gradient fade from right to left (orange) */}
-          <div className="absolute inset-0 bg-gradient-to-l from-brand-orange/40 via-brand-orange/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-l from-brand-orange/10 to-transparent" />
           
           <button
             onClick={(e) => {
               e.preventDefault();
               onNext();
             }}
-            className="pointer-events-auto relative z-30 flex h-full w-full items-center justify-end pl-2 pr-1 text-brand-orange transition-transform duration-300 hover:scale-110"
+            className="pointer-events-auto relative z-30 flex h-full w-full items-center justify-end pl-2 pr-[6px] text-brand-white transition-transform duration-300 hover:scale-110"
             aria-label="Next role"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

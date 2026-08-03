@@ -26,22 +26,36 @@ export function RoleCard({ role }: { role: Career }) {
     <Link
       href={`/careers/${role.slug}`}
       className={cn(
-        'group relative flex w-full flex-col overflow-hidden rounded-[28px] border p-7 transition-all duration-500 md:p-10',
+        'group relative flex w-full flex-col overflow-hidden rounded-[28px] border p-7 transition-colors duration-500 md:p-10',
         isOpen
-          ? 'border-brand-orange/20 bg-brand-orange/3 hover:border-brand-orange/45 hover:bg-brand-orange/5'
+          ? 'border-brand-orange/25 bg-brand-white/[0.03] backdrop-blur-[2px] hover:border-brand-orange/50'
           : 'border-brand-white/7 bg-brand-white/2 hover:border-brand-white/18 hover:bg-brand-white/[0.04]',
       )}
     >
-      {/* Corner glow — warm for a live role, neutral for a future one, so
-          the grid still reads at a glance when scanned quickly. */}
+      {/* Ambient Glows */}
       <div
         className={cn(
-          'pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full opacity-0 blur-[70px] transition-opacity duration-700 group-hover:opacity-100',
-          isOpen ? 'bg-brand-orange/25' : 'bg-brand-white/10',
+          "pointer-events-none absolute top-16 left-0 z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px] transition-all duration-700",
+          isOpen ? "bg-brand-orange/[0.08] group-hover:bg-brand-orange/[0.12]" : "bg-brand-white/[0.03] group-hover:bg-brand-white/[0.06]"
         )}
+        aria-hidden="true"
+      />
+      <div
+        className={cn(
+          "pointer-events-none absolute bottom-0 right-0 z-0 h-[800px] w-[800px] translate-x-1/2 translate-y-1/2 rounded-full blur-[110px] transition-all duration-700",
+          isOpen ? "bg-brand-orange/[0.08] group-hover:bg-brand-orange/[0.12]" : "bg-brand-white/[0.03] group-hover:bg-brand-white/[0.06]"
+        )}
+        aria-hidden="true"
+      />
+      <div
+        className={cn(
+          "pointer-events-none absolute top-1/2 left-1/2 z-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 animate-sway rounded-full blur-[150px] transition-all duration-700",
+          isOpen ? "bg-brand-secondary/[0.08] group-hover:bg-brand-secondary/[0.12]" : "bg-brand-white/[0.03] group-hover:bg-brand-white/[0.06]"
+        )}
+        aria-hidden="true"
       />
 
-      <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 w-full">
+      <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 w-full">
         <div className="flex-1">
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <span
@@ -56,7 +70,7 @@ export function RoleCard({ role }: { role: Career }) {
             </p>
           </div>
 
-          <h3 className="font-display text-xl font-semibold tracking-tight text-brand-white/90 transition-colors duration-300 group-hover:text-brand-orange md:text-2xl">
+          <h3 className="font-display text-xl font-semibold tracking-tight text-brand-white/90 transition-colors duration-300 md:text-2xl">
             {role.title}
           </h3>
 

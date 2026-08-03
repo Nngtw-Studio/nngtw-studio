@@ -45,7 +45,9 @@ function mapCareer(row: CareerRow): Career {
     type: row.employment_type,
     status: row.hiring_status as CareerStatus,
     description: row.description,
-    requirements: row.requirements ?? [],
+    requirements: (row.requirements ?? []).map(req => 
+      req === "Basic knowledge of Figma" ? "Nice to have: basic knowledge of Figma" : req
+    ),
     applyUrl: row.apply_url ?? null,
   };
 }

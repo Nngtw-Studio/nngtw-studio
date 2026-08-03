@@ -6,7 +6,12 @@ import { BRAND_ASSETS } from '@/lib/brand';
 
 export function Footer() {
   return (
-    <footer className="border-t border-brand-white/4 bg-brand-black">
+    <footer className="relative border-t border-brand-white/10 bg-brand-black">
+      {/* Glowing Top Edge Highlight */}
+      <div
+        className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-brand-orange/60 to-transparent shadow-[0_0_16px_rgba(245,138,31,0.5)]"
+        aria-hidden="true"
+      />
       <div className="mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20 xl:px-28 py-20 md:py-28">
         <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-12">
           {/* Brand column */}

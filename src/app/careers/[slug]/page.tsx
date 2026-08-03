@@ -50,7 +50,7 @@ export default async function CareerDetailPage({ params }: Props) {
         description={`${career.department} · ${career.location} · ${career.type}`}
       />
 
-      <section className="mx-auto max-w-3xl px-6 pb-32 md:px-12">
+      <section className="mx-auto max-w-3xl px-6 pb-16 md:px-12">
         <FadeIn>
           <span
             className={cn(
@@ -71,13 +71,32 @@ export default async function CareerDetailPage({ params }: Props) {
             Requirements
           </h2>
           <ul className="mt-6 space-y-3">
-            {career.requirements.map((req) => (
+            {career.requirements.filter(r => !r.toLowerCase().startsWith('nice to have:')).map((req) => (
               <li key={req} className="flex items-start gap-4 body-description">
                 <span className="mt-2 h-px w-4 shrink-0 bg-brand-orange" />
                 {req}
               </li>
             ))}
           </ul>
+
+          {career.requirements.some(r => r.toLowerCase().startsWith('nice to have:')) && (
+            <>
+              <h2 className="mt-12 font-display text-xl tracking-wide text-brand-white uppercase">
+                Nice To Have
+              </h2>
+              <ul className="mt-6 space-y-3">
+                {career.requirements
+                  .filter(r => r.toLowerCase().startsWith('nice to have:'))
+                  .map(r => r.replace(/^Nice to have:\s*/i, ''))
+                  .map((req) => (
+                    <li key={req} className="flex items-start gap-4 body-description">
+                      <span className="mt-2 h-px w-4 shrink-0 bg-brand-orange" />
+                      {req.charAt(0).toUpperCase() + req.slice(1)}
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )}
 
           <div className="mt-12 flex flex-col gap-4 sm:flex-row">
             {career.status === "open" || career.status === "internship" ? (
@@ -93,18 +112,18 @@ export default async function CareerDetailPage({ params }: Props) {
                 Express Interest
               </Button>
             )}
-            <Button href="/careers" variant="ghost">
-              All Careers
-            </Button>
           </div>
         </FadeIn>
 
-        <FadeIn className="mt-16 border-t border-brand-white/5 pt-8">
+      </section>
+
+      <section className="mx-auto max-w-[1600px] px-6 pb-32 md:px-12 lg:px-20 xl:px-28">
+        <FadeIn className="border-t border-brand-white/5 pt-8">
           <Link
             href="/careers"
             className="text-xs tracking-[0.2em] text-brand-grey uppercase transition-colors hover:text-brand-orange"
           >
-            &larr; Back to Careers
+            &larr; Back to All Careers
           </Link>
         </FadeIn>
       </section>

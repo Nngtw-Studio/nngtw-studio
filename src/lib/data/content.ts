@@ -344,10 +344,10 @@ export const careers: Career[] = [
       "Help design engaging, user-friendly experiences for our web, mobile, and gamified applications. You'll create wireframes, mockups, and interactive prototypes, run basic user research, iterate on designs with feedback throughout development, and keep visual consistency across products — with room to explore new UI trends, creative solutions, and AI tools that speed up design workflows. Expect hands-on work on real products, regular design feedback and mentorship, credits for your contributions where applicable, and a certificate on successful completion.",
     requirements: [
       "Basic understanding of UI/UX design principles",
-      "Basic knowledge of Figma",
       "Willingness to learn, explore new tools, and improve continuously",
       "Passion for UI/UX design with attention to detail",
       "Comfortable receiving feedback and iterating on designs",
+      "Nice to have: basic knowledge of Figma",
       "Nice to have: portfolio, resume, or personal projects",
       "Nice to have: understanding of color theory, typography, or visual hierarchy",
       "Nice to have: basic knowledge of responsive design",
